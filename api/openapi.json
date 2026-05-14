@@ -268,13 +268,7 @@
           "id"
         ]
       },
-      "TaskHistory": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/TaskHistoryItems"
-        }
-      },
-      "TaskHistoryItems": {
+      "TaskActivity": {
         "type": "object",
         "properties": {
           "date": {
@@ -301,6 +295,12 @@
           "scoredUp",
           "scoredDown"
         ]
+      },
+      "TaskHistory": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/TaskActivity"
+        }
       },
       "TaskList": {
         "type": "object",

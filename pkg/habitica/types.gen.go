@@ -67,16 +67,16 @@ type Task struct {
 	IsDue             bool        `json:"isDue,omitempty"`
 }
 
-// TaskHistory defines a model
-type TaskHistory []TaskHistoryItems
-
-// TaskHistoryItems defines a model
-type TaskHistoryItems struct {
+// TaskActivity defines a model
+type TaskActivity struct {
 	Date       int     `json:"date,omitzero"`
 	Value      float64 `json:"value"`
 	ScoredUp   int     `json:"scoredUp,omitzero"`
 	ScoredDown int     `json:"scoredDown,omitzero"`
 }
+
+// TaskHistory defines a model
+type TaskHistory []TaskActivity
 
 // TaskList defines a model
 type TaskList struct {
