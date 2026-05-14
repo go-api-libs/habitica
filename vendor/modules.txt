@@ -10,26 +10,26 @@ github.com/MarkRosemaker/json2yaml
 # github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24
 ## explicit; go 1.24.0
 github.com/MarkRosemaker/jsonutil
-# github.com/MarkRosemaker/openapi v0.0.0-20260514172353-b42047a8ec76
+# github.com/MarkRosemaker/openapi v0.0.0-20260514204240-0ae557fd3c62
 ## explicit; go 1.25.0
 github.com/MarkRosemaker/openapi
-# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260514180357-023896f6e897
+# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260514220308-3be8aa9fdb00
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/cmd/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/ir
 github.com/MarkRosemaker/openapi-codegen/render
-# github.com/MarkRosemaker/openapi-compress v0.0.0-20260514172804-42b52cdeca9e
+# github.com/MarkRosemaker/openapi-compress v0.0.0-20260514213514-be94758c5b54
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-compress
 github.com/MarkRosemaker/openapi-compress/cmd/openapi-compress
-# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260514172627-a951de41e5a9
+# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260514213236-46b5c280b9ae
 ## explicit; go 1.26.0
 github.com/MarkRosemaker/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/cassette
 github.com/MarkRosemaker/openapi-enrich/cmd/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/recorder
-# github.com/MarkRosemaker/openapi-flatten v0.0.0-20260514172709-009942899108
+# github.com/MarkRosemaker/openapi-flatten v0.0.0-20260514213404-e10b1d2b8a32
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-flatten
 github.com/MarkRosemaker/openapi-flatten/cmd/openapi-flatten

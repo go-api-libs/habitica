@@ -13,9 +13,11 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"testing"
-	{{if .InteractionCalls}}
+	{{ if .InteractionCalls -}}
 	"github.com/MarkRosemaker/openapi-enrich/cassette"
-	{{end}}
+	{{end -}}
+	"github.com/go-api-libs/api"
+	"github.com/google/uuid"
 )
 
 func newTestServer(t *testing.T, status int) *httptest.Server {
@@ -37,8 +39,8 @@ func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) {
 func TestClient_Error(t *testing.T) {
 {{range .Operations}}
 	t.Run({{printf "%q" .Name}}, func(t *testing.T) {
-		{{- if $.Security.Bearer.Name}}
-		t.Setenv({{printf "%q" $.Security.Bearer.Name}}, "**************************************************")
+		{{- if $.Auth.Bearer.Name}}
+		t.Setenv({{printf "%q" $.Auth.Bearer.Name}}, "**************************************************")
 		{{end}}
 		t.Run("transport error", func(t *testing.T) {
 			c, err := NewClient(WithHTTPClient(&http.Client{Transport: roundTripFunc(
@@ -188,8 +190,8 @@ func replay(t *testing.T) http.RoundTripper {
 
 func TestClient_Interactions(t *testing.T) {
 	ctx := t.Context()
-	{{if .Security.Bearer.Name}}
-	t.Setenv({{printf "%q" .Security.Bearer.Name}}, "**************************************************")
+	{{if .Auth.Bearer.Name}}
+	t.Setenv({{printf "%q" .Auth.Bearer.Name}}, "**************************************************")
 	{{end}}
 	c, err := NewClient(WithHTTPClient(&http.Client{Transport: replay(t)}))
 	if err != nil {

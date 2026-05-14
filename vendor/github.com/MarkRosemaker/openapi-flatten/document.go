@@ -21,5 +21,7 @@ func Document(d *openapi.Document) error {
 		return &errpath.ErrField{Field: "components", Err: err}
 	}
 
+	hoistParams(d)
+
 	return nil
 }

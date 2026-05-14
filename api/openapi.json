@@ -11,22 +11,22 @@
   ],
   "paths": {
     "/api/v3/tasks/user": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/X-Client"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/type"
+        }
+      ],
       "get": {
         "operationId": "ListTasks",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/X-Client"
-          },
-          {
-            "$ref": "#/components/parameters/X-Api-Key"
-          },
-          {
-            "$ref": "#/components/parameters/X-Api-User"
-          },
-          {
-            "$ref": "#/components/parameters/type"
-          }
-        ],
         "responses": {
           "200": {
             "$ref": "#/components/responses/TaskList"

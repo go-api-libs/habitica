@@ -7,8 +7,10 @@ package habitica
 import (
 	"context"
 	"encoding/json/v2"
+	"errors"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/go-api-libs/api"
@@ -19,15 +21,14 @@ const defaultUserAgent = "Habitica API Library (github.com/go-api-libs/habitica)
 var defaultBaseURL = &url.URL{
 	Scheme: "https",
 	Host:   "habitica.com",
-	Path:   "",
 }
 
 // Client is an HTTP client for the habitica API.
 type Client struct {
 	// The HTTP client to use for requests.
 	cli *http.Client
-	// The bearer token
-	bearer string
+	// The API key
+	apiKey string
 	// The base URL
 	baseURL *url.URL
 	// The user agent
@@ -52,6 +53,11 @@ func WithHTTPClient(cli *http.Client) ClientOption {
 	return func(c *Client) { c.cli = cli }
 }
 
+// WithAPIKey returns a [ClientOption] that sets a custom API key.
+func WithAPIKey(apiKey string) ClientOption {
+	return func(c *Client) { c.apiKey = apiKey }
+}
+
 // NewClient creates a new Client.
 func NewClient(opts ...ClientOption) (*Client, error) {
 	c := &Client{
@@ -60,8 +66,14 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 		userAgent: defaultUserAgent,
 	}
 
+	c.apiKey = os.Getenv("HABITICA_API_KEY")
+
 	for _, opt := range opts {
 		opt(c)
+	}
+
+	if c.apiKey == "" {
+		return nil, errors.New("api key HABITICA_API_KEY not provided")
 	}
 
 	return c, nil

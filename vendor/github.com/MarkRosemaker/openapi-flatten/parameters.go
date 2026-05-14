@@ -1,6 +1,9 @@
 package flatten
 
 import (
+	"iter"
+	"slices"
+
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/openapi"
 )
@@ -16,4 +19,43 @@ func parameters(d *openapi.Document, ps openapi.Parameters) error {
 	}
 
 	return nil
+}
+
+func hoistParams(d *openapi.Document) {
+	for _, pi := range d.Paths {
+		candidates := openapi.ParameterList{}
+		for _, op := range pi.Operations {
+			candidates = append(candidates, op.Parameters...)
+		}
+
+		for _, candidate := range candidates {
+			alreadyHoisted := slices.ContainsFunc(pi.Parameters, func(param *openapi.ParameterRef) bool {
+				return candidate.Value == param.Value
+			})
+
+			if alreadyHoisted || allOpsHave(pi.Operations, candidate.Value) {
+				if !alreadyHoisted {
+					pi.Parameters = append(pi.Parameters, candidate)
+				}
+
+				for _, op := range pi.Operations {
+					op.Parameters = slices.DeleteFunc(op.Parameters, func(p *openapi.ParameterRef) bool {
+						return p.Value == candidate.Value
+					})
+				}
+			}
+		}
+	}
+}
+
+func allOpsHave(ops iter.Seq2[string, *openapi.Operation], candidate *openapi.Parameter) bool {
+	for _, op := range ops {
+		if !slices.ContainsFunc(op.Parameters, func(p *openapi.ParameterRef) bool {
+			return candidate == p.Value
+		}) {
+			return false
+		}
+	}
+
+	return true
 }

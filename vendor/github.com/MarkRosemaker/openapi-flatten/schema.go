@@ -80,7 +80,7 @@ func schema(d *openapi.Document, s *openapi.Schema, name string) error {
 	}
 
 	if s.Items != nil {
-		if err := schemaRef(d, s.Items, name+"Items", moveIfNecessary); err != nil {
+		if err := schemaRef(d, s.Items, name+"Item", moveIfNecessary); err != nil {
 			return &errpath.ErrField{Field: "items", Err: err}
 		}
 	}

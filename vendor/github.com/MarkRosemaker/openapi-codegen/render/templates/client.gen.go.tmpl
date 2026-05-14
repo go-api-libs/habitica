@@ -27,7 +27,9 @@ const defaultUserAgent = "{{.UserAgent}}"
 var defaultBaseURL = &url.URL{
 		Scheme: "{{ .Scheme }}",
 		Host:   "{{ .Host }}",
-		Path:   "{{ .Path }}",
+		{{ with .Path -}}
+		Path:   "{{ . }}",
+		{{ end -}}
 	}
 {{- end }}
 
@@ -35,8 +37,14 @@ var defaultBaseURL = &url.URL{
 type Client struct {
 	// The HTTP client to use for requests.
 	cli *http.Client
+	{{ with .Auth.Bearer.Name -}}
 	// The bearer token
 	bearer string
+	{{ end -}}
+	{{ with .Auth.APIKey.Name -}}
+	// The API key
+	apiKey string
+	{{ end -}}
 	// The base URL
 	baseURL   *url.URL
 	// The user agent
@@ -61,27 +69,55 @@ func WithHTTPClient(cli *http.Client) ClientOption {
 	return func(c *Client) { c.cli = cli }
 }
 
-// NewClient creates a new Client{{ with .Security.Bearer.Name }}, reading the bearer token from [os.Getenv]("{{ . }}"){{ end }}.
-func NewClient(opts ...ClientOption) (*Client, error) {
-	{{ with .Security.Bearer.Name }}
-	bearer := os.Getenv("{{ . }}")
-	if bearer == "" {
-		return nil, errors.New("bearer token {{ . }} not provided")
+{{ with .Auth.Bearer.Name }}
+// WithBearer returns a [ClientOption] that sets a custom bearer.
+func WithBearer(bearer string) ClientOption {
+	return func(c *Client) { 
+		if bearer != "" {
+			c.bearer = "Bearer " + strings.TrimPrefix(bearer, "Bearer ")
+		}
 	}
-	{{ end }}
+}
+{{ end }}
 
+{{ with .Auth.APIKey.EnvName }}
+// WithAPIKey returns a [ClientOption] that sets a custom API key.
+func WithAPIKey(apiKey string) ClientOption {
+	return func(c *Client) { c.apiKey = apiKey }
+}
+{{ end }}
+
+// NewClient creates a new Client{{ with .Auth.Bearer.Name }}, reading the bearer token from [os.Getenv]("{{ . }}"){{ end }}.
+func NewClient(opts ...ClientOption) (*Client, error) {
 	c := &Client{
-		{{ if .Security.Bearer.Name -}}
-		bearer:    "Bearer " + strings.TrimPrefix(bearer, "Bearer "),
-		{{ end -}}
 		cli:       http.DefaultClient,
 		baseURL:   defaultBaseURL,
 		userAgent: defaultUserAgent,
 	}
 
+	{{ with .Auth.Bearer.Name }}
+	WithBearer(os.Getenv("{{ . }}"))(c)
+	{{ end }}
+
+	{{ with .Auth.APIKey.EnvName }}
+	c.apiKey = os.Getenv("{{ . }}")
+	{{ end }}
+
 	for _, opt := range opts {
 		opt(c)
 	}
+
+	{{ with .Auth.Bearer.Name }}
+	if c.bearer == "" {
+		return nil, errors.New("bearer token {{ . }} not provided")
+	}
+	{{ end }}
+
+	{{ with .Auth.APIKey.EnvName }}
+	if c.apiKey == "" {
+		return nil, errors.New("api key {{ . }} not provided")
+	}
+	{{ end }}
 
 	return c, nil
 }
@@ -154,7 +190,7 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 {{- else}}
 	req := (&http.Request{
 		Header: http.Header{
-			{{ if $.Security.Bearer.Name -}}
+			{{ if $.Auth.Bearer.Name -}}
 			"Authorization":  []string{c.bearer},
 			{{- end }}
 			{{ range .HeaderParam -}}

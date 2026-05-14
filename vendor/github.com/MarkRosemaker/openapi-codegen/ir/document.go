@@ -8,6 +8,7 @@ import (
 	"github.com/MarkRosemaker/openapi"
 	compress "github.com/MarkRosemaker/openapi-compress"
 	flatten "github.com/MarkRosemaker/openapi-flatten"
+	"github.com/ettle/strcase"
 )
 
 // FromDocument converts a fully-loaded and flattened openapi.Document to an IR Document.
@@ -49,8 +50,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		return nil, fmt.Errorf("paths: %w", err)
 	}
 
-	security := fromSecurity(doc.Components.SecuritySchemes)
-
+	auth := getAuth(doc)
 	hasURL, hasDuration, hasDate := needsSpecialImports(schemas, operations)
 
 	return &Document{
@@ -59,7 +59,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		UserAgent:         userAgent,
 		Schemas:           schemas,
 		Operations:        operations,
-		Security:          security,
+		Auth:              auth,
 		HasURLFields:      hasURL,
 		HasDurationFields: hasDuration,
 		HasDateFields:     hasDate,
@@ -97,16 +97,24 @@ func fromPaths(paths openapi.Paths) ([]Operation, error) {
 	return ops, nil
 }
 
-func fromSecurity(schemes openapi.SecuritySchemes) Security {
-	s := Security{}
+func getAuth(doc *openapi.Document) Auth {
+	s := Auth{}
 
-	for _, sec := range schemes {
+	for _, sec := range doc.Components.SecuritySchemes {
 		v := sec.Value
 		switch v.Scheme {
 		case openapi.SecuritySchemeBearer:
 			s.Bearer = Bearer{
 				Name: v.Name,
 			}
+		}
+	}
+
+	if p := doc.Components.Parameters["X-Api-Key"]; p != nil {
+		s.APIKey = APIKey{
+			EnvName: strcase.ToSNAKE(fmt.Sprintf("%s_KEY", doc.Info.Title)),
+			Name:    p.Value.Name,
+			In:      p.Value.In,
 		}
 	}
 

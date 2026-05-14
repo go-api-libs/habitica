@@ -1,5 +1,7 @@
 package ir
 
+import "github.com/MarkRosemaker/openapi"
+
 // Document is the top-level IR type passed to templates.
 type Document struct {
 	PackageName       string
@@ -7,7 +9,7 @@ type Document struct {
 	UserAgent         string
 	Operations        []Operation
 	Schemas           []Schema
-	Security          Security `json:"Security,omitzero"`
+	Auth              Auth `json:"Security,omitzero"`
 	HasURLFields      bool
 	HasDurationFields bool
 	HasDateFields     bool
@@ -177,10 +179,17 @@ type ReqBody struct {
 	Required    bool
 }
 
-type Security struct {
+type Auth struct {
 	Bearer Bearer `json:"Bearer,omitzero"`
+	APIKey APIKey `json:"APIKey,omitzero"`
 }
 
 type Bearer struct {
 	Name string
+}
+
+type APIKey struct {
+	EnvName string
+	Name    string
+	In      openapi.ParameterLocation
 }
