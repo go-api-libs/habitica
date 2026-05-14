@@ -3,5 +3,430 @@
   "info": {
     "title": "Habitica API",
     "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "https://habitica.com"
+    }
+  ],
+  "paths": {
+    "/api/v3/tasks/user": {
+      "get": {
+        "operationId": "ListAPIV3TasksUser",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/X-Client"
+          },
+          {
+            "$ref": "#/components/parameters/X-Api-Key"
+          },
+          {
+            "$ref": "#/components/parameters/X-Api-User"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListApiv3TasksUserOkResponse"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ListApiv3TasksUserOkJSONResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseData"
+          },
+          "notifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "userV": {
+            "type": "integer",
+            "example": 15599
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "5.47.9"
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "notifications",
+          "userV",
+          "appVersion"
+        ]
+      },
+      "ListApiv3TasksUserOkJSONResponseData": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItems"
+        }
+      },
+      "ListApiv3TasksUserOkJSONResponseDataItems": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
+          },
+          "challenge": {
+            "type": "object"
+          },
+          "group": {
+            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsGroup"
+          },
+          "up": {
+            "type": "boolean",
+            "example": true
+          },
+          "down": {
+            "type": "boolean",
+            "example": true
+          },
+          "counterUp": {
+            "type": "integer",
+            "example": 0
+          },
+          "counterDown": {
+            "type": "integer",
+            "example": 0
+          },
+          "frequency": {
+            "type": "string",
+            "example": "daily"
+          },
+          "history": {
+            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsHistory"
+          },
+          "type": {
+            "type": "string",
+            "example": "habit"
+          },
+          "notes": {
+            "type": "string",
+            "example": ""
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "47db4ec6-0985-48a5-9311-175d170c2798"
+            }
+          },
+          "value": {
+            "type": "number",
+            "format": "double",
+            "example": 29.599561531838347
+          },
+          "priority": {
+            "type": "integer",
+            "example": 1
+          },
+          "attribute": {
+            "type": "string",
+            "example": "str"
+          },
+          "byHabitica": {
+            "type": "boolean",
+            "example": false
+          },
+          "text": {
+            "type": "string",
+            "example": "Eating Healthy"
+          },
+          "reminders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-07-18T23:26:04.322Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-07-11T21:51:02.911Z"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "8027d396-e2bb-4389-b002-782025424e75"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
+          },
+          "repeat": {
+            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsRepeat"
+          },
+          "everyX": {
+            "type": "integer",
+            "example": 1
+          },
+          "streak": {
+            "type": "integer",
+            "example": 1194
+          },
+          "nextDue": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-05-14T22:00:00.000Z"
+            }
+          },
+          "yesterDaily": {
+            "type": "boolean",
+            "example": true
+          },
+          "completed": {
+            "type": "boolean",
+            "example": false
+          },
+          "collapseChecklist": {
+            "type": "boolean",
+            "example": false
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-07-17T22:00:00.000Z"
+          },
+          "daysOfMonth": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "weeksOfMonth": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "checklist": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "isDue": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "_id",
+          "challenge",
+          "group",
+          "up",
+          "down",
+          "counterUp",
+          "counterDown",
+          "frequency",
+          "history",
+          "type",
+          "notes",
+          "tags",
+          "value",
+          "priority",
+          "attribute",
+          "byHabitica",
+          "text",
+          "reminders",
+          "createdAt",
+          "updatedAt",
+          "userId",
+          "id"
+        ]
+      },
+      "ListApiv3TasksUserOkJSONResponseDataItemsGroup": {
+        "type": "object",
+        "properties": {
+          "approval": {
+            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsGroupApproval"
+          },
+          "assignedUsers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "sharedCompletion": {
+            "type": "string",
+            "example": "singleCompletion"
+          }
+        },
+        "required": [
+          "approval",
+          "assignedUsers",
+          "sharedCompletion"
+        ]
+      },
+      "ListApiv3TasksUserOkJSONResponseDataItemsGroupApproval": {
+        "type": "object",
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "example": false
+          },
+          "approved": {
+            "type": "boolean",
+            "example": false
+          },
+          "requested": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "required",
+          "approved",
+          "requested"
+        ]
+      },
+      "ListApiv3TasksUserOkJSONResponseDataItemsHistory": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsHistoryItems"
+        }
+      },
+      "ListApiv3TasksUserOkJSONResponseDataItemsHistoryItems": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "integer",
+            "example": 1626804748216
+          },
+          "value": {
+            "type": "number",
+            "format": "double",
+            "example": 1.9747
+          },
+          "scoredUp": {
+            "type": "integer",
+            "example": 1
+          },
+          "scoredDown": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "date",
+          "value",
+          "scoredUp",
+          "scoredDown"
+        ]
+      },
+      "ListApiv3TasksUserOkJSONResponseDataItemsRepeat": {
+        "type": "object",
+        "properties": {
+          "m": {
+            "type": "boolean",
+            "example": true
+          },
+          "t": {
+            "type": "boolean",
+            "example": true
+          },
+          "w": {
+            "type": "boolean",
+            "example": true
+          },
+          "th": {
+            "type": "boolean",
+            "example": true
+          },
+          "f": {
+            "type": "boolean",
+            "example": true
+          },
+          "s": {
+            "type": "boolean",
+            "example": true
+          },
+          "su": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "m",
+          "t",
+          "w",
+          "th",
+          "f",
+          "s",
+          "su"
+        ]
+      }
+    },
+    "responses": {
+      "ListApiv3TasksUserOkResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponse"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "X-Api-Key": {
+        "name": "X-Api-Key",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid",
+          "example": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      "X-Api-User": {
+        "name": "X-Api-User",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid",
+          "example": "8027d396-e2bb-4389-b002-782025424e75"
+        }
+      },
+      "X-Client": {
+        "name": "X-Client",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica"
+        }
+      }
+    }
   }
 }
