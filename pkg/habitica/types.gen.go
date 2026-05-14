@@ -15,83 +15,83 @@ var jsonOpts = json.JoinOptions(
 	json.RejectUnknownMembers(true),
 )
 
-// ListApiv3TasksUserOkJSONResponse defines a model
-type ListApiv3TasksUserOkJSONResponse struct {
-	Success       bool                                 `json:"success,omitzero"`
-	Data          ListApiv3TasksUserOkJSONResponseData `json:"data,omitempty"`
-	Notifications []struct{}                           `json:"notifications,omitempty"`
-	UserV         int                                  `json:"userV,omitzero"`
-	AppVersion    string                               `json:"appVersion,omitzero"`
+// ListTasks defines a model
+type ListTasks struct {
+	Success       bool          `json:"success,omitzero"`
+	Data          ListTasksData `json:"data,omitempty"`
+	Notifications []struct{}    `json:"notifications,omitempty"`
+	UserV         int           `json:"userV,omitzero"`
+	AppVersion    string        `json:"appVersion,omitzero"`
 }
 
-// ListApiv3TasksUserOkJSONResponseData defines a model
-type ListApiv3TasksUserOkJSONResponseData []ListApiv3TasksUserOkJSONResponseDataItems
+// ListTasksData defines a model
+type ListTasksData []ListTasksDataItems
 
-// ListApiv3TasksUserOkJSONResponseDataItems defines a model
-type ListApiv3TasksUserOkJSONResponseDataItems struct {
-	UnderscoreID      uuid.UUID                                        `json:"_id,omitzero"`
-	Challenge         struct{}                                         `json:"challenge"`
-	Group             ListApiv3TasksUserOkJSONResponseDataItemsGroup   `json:"group"`
-	Up                bool                                             `json:"up,omitzero"`
-	Down              bool                                             `json:"down,omitzero"`
-	CounterUp         int                                              `json:"counterUp,omitzero"`
-	CounterDown       int                                              `json:"counterDown,omitzero"`
-	Frequency         string                                           `json:"frequency,omitzero"`
-	History           ListApiv3TasksUserOkJSONResponseDataItemsHistory `json:"history,omitempty"`
-	Type              string                                           `json:"type,omitzero"`
-	Notes             string                                           `json:"notes,omitzero"`
-	Tags              []uuid.UUID                                      `json:"tags,omitempty"`
-	Value             float64                                          `json:"value"`
-	Priority          int                                              `json:"priority,omitzero"`
-	Attribute         string                                           `json:"attribute,omitzero"`
-	ByHabitica        bool                                             `json:"byHabitica,omitzero"`
-	Text              string                                           `json:"text,omitzero"`
-	Reminders         []struct{}                                       `json:"reminders,omitempty"`
-	CreatedAt         time.Time                                        `json:"createdAt,omitzero"`
-	UpdatedAt         time.Time                                        `json:"updatedAt,omitzero"`
-	UserID            uuid.UUID                                        `json:"userId,omitzero"`
-	ID                uuid.UUID                                        `json:"id,omitzero"`
-	Repeat            *ListApiv3TasksUserOkJSONResponseDataItemsRepeat `json:"repeat,omitempty"`
-	EveryX            *int                                             `json:"everyX,omitempty"`
-	Streak            *int                                             `json:"streak,omitempty"`
-	NextDue           []time.Time                                      `json:"nextDue,omitempty"`
-	YesterDaily       bool                                             `json:"yesterDaily,omitempty"`
-	Completed         bool                                             `json:"completed,omitempty"`
-	CollapseChecklist bool                                             `json:"collapseChecklist,omitempty"`
-	StartDate         time.Time                                        `json:"startDate,omitempty"`
-	DaysOfMonth       []struct{}                                       `json:"daysOfMonth,omitempty"`
-	WeeksOfMonth      []struct{}                                       `json:"weeksOfMonth,omitempty"`
-	Checklist         []struct{}                                       `json:"checklist,omitempty"`
-	IsDue             bool                                             `json:"isDue,omitempty"`
+// ListTasksDataItems defines a model
+type ListTasksDataItems struct {
+	UnderscoreID      uuid.UUID                 `json:"_id,omitzero"`
+	Challenge         struct{}                  `json:"challenge"`
+	Group             ListTasksDataItemsGroup   `json:"group"`
+	Up                bool                      `json:"up,omitzero"`
+	Down              bool                      `json:"down,omitzero"`
+	CounterUp         int                       `json:"counterUp,omitzero"`
+	CounterDown       int                       `json:"counterDown,omitzero"`
+	Frequency         string                    `json:"frequency,omitzero"`
+	History           ListTasksDataItemsHistory `json:"history,omitempty"`
+	Type              string                    `json:"type,omitzero"`
+	Notes             string                    `json:"notes,omitzero"`
+	Tags              []uuid.UUID               `json:"tags,omitempty"`
+	Value             float64                   `json:"value"`
+	Priority          int                       `json:"priority,omitzero"`
+	Attribute         string                    `json:"attribute,omitzero"`
+	ByHabitica        bool                      `json:"byHabitica,omitzero"`
+	Text              string                    `json:"text,omitzero"`
+	Reminders         []struct{}                `json:"reminders,omitempty"`
+	CreatedAt         time.Time                 `json:"createdAt,omitzero"`
+	UpdatedAt         time.Time                 `json:"updatedAt,omitzero"`
+	UserID            uuid.UUID                 `json:"userId,omitzero"`
+	ID                uuid.UUID                 `json:"id,omitzero"`
+	Repeat            *ListTasksDataItemsRepeat `json:"repeat,omitempty"`
+	EveryX            *int                      `json:"everyX,omitempty"`
+	Streak            *int                      `json:"streak,omitempty"`
+	NextDue           []time.Time               `json:"nextDue,omitempty"`
+	YesterDaily       bool                      `json:"yesterDaily,omitempty"`
+	Completed         bool                      `json:"completed,omitempty"`
+	CollapseChecklist bool                      `json:"collapseChecklist,omitempty"`
+	StartDate         time.Time                 `json:"startDate,omitempty"`
+	DaysOfMonth       []struct{}                `json:"daysOfMonth,omitempty"`
+	WeeksOfMonth      []struct{}                `json:"weeksOfMonth,omitempty"`
+	Checklist         []struct{}                `json:"checklist,omitempty"`
+	IsDue             bool                      `json:"isDue,omitempty"`
 }
 
-// ListApiv3TasksUserOkJSONResponseDataItemsGroup defines a model
-type ListApiv3TasksUserOkJSONResponseDataItemsGroup struct {
-	Approval         ListApiv3TasksUserOkJSONResponseDataItemsGroupApproval `json:"approval"`
-	AssignedUsers    []struct{}                                             `json:"assignedUsers,omitempty"`
-	SharedCompletion string                                                 `json:"sharedCompletion,omitzero"`
+// ListTasksDataItemsGroup defines a model
+type ListTasksDataItemsGroup struct {
+	Approval         ListTasksDataItemsGroupApproval `json:"approval"`
+	AssignedUsers    []struct{}                      `json:"assignedUsers,omitempty"`
+	SharedCompletion string                          `json:"sharedCompletion,omitzero"`
 }
 
-// ListApiv3TasksUserOkJSONResponseDataItemsGroupApproval defines a model
-type ListApiv3TasksUserOkJSONResponseDataItemsGroupApproval struct {
+// ListTasksDataItemsGroupApproval defines a model
+type ListTasksDataItemsGroupApproval struct {
 	Required  bool `json:"required,omitzero"`
 	Approved  bool `json:"approved,omitzero"`
 	Requested bool `json:"requested,omitzero"`
 }
 
-// ListApiv3TasksUserOkJSONResponseDataItemsHistory defines a model
-type ListApiv3TasksUserOkJSONResponseDataItemsHistory []ListApiv3TasksUserOkJSONResponseDataItemsHistoryItems
+// ListTasksDataItemsHistory defines a model
+type ListTasksDataItemsHistory []ListTasksDataItemsHistoryItems
 
-// ListApiv3TasksUserOkJSONResponseDataItemsHistoryItems defines a model
-type ListApiv3TasksUserOkJSONResponseDataItemsHistoryItems struct {
+// ListTasksDataItemsHistoryItems defines a model
+type ListTasksDataItemsHistoryItems struct {
 	Date       int     `json:"date,omitzero"`
 	Value      float64 `json:"value"`
 	ScoredUp   int     `json:"scoredUp,omitzero"`
 	ScoredDown int     `json:"scoredDown,omitzero"`
 }
 
-// ListApiv3TasksUserOkJSONResponseDataItemsRepeat defines a model
-type ListApiv3TasksUserOkJSONResponseDataItemsRepeat struct {
+// ListTasksDataItemsRepeat defines a model
+type ListTasksDataItemsRepeat struct {
 	M  bool `json:"m,omitzero"`
 	T  bool `json:"t,omitzero"`
 	W  bool `json:"w,omitzero"`

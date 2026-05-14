@@ -68,8 +68,8 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 }
 
 // GET /api/v3/tasks/user
-func (c *Client) ListApiv3TasksUser(ctx context.Context) (*ListApiv3TasksUserOkJSONResponse, error) {
-	return ListApiv3TasksUser[ListApiv3TasksUserOkJSONResponse](ctx, c)
+func (c *Client) ListApiv3TasksUser(ctx context.Context) (*ListTasks, error) {
+	return ListApiv3TasksUser[ListTasks](ctx, c)
 }
 
 // GET /api/v3/tasks/user
@@ -78,7 +78,9 @@ func ListApiv3TasksUser[R any](ctx context.Context, c *Client) (*R, error) {
 
 	req := (&http.Request{
 		Header: http.Header{
-			"X-Client": []string{"8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica"}, "X-Api-Key": []string{}, "X-Api-User": []string{},
+			"X-Client":   []string{"8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica"},
+			"X-Api-Key":  []string{},
+			"X-Api-User": []string{},
 			"User-Agent": []string{c.userAgent},
 		},
 		Host:       u.Host,

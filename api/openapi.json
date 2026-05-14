@@ -34,7 +34,7 @@
   },
   "components": {
     "schemas": {
-      "ListApiv3TasksUserOkJSONResponse": {
+      "ListTasks": {
         "type": "object",
         "properties": {
           "success": {
@@ -42,7 +42,7 @@
             "example": true
           },
           "data": {
-            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseData"
+            "$ref": "#/components/schemas/ListTasksData"
           },
           "notifications": {
             "type": "array",
@@ -68,13 +68,13 @@
           "appVersion"
         ]
       },
-      "ListApiv3TasksUserOkJSONResponseData": {
+      "ListTasksData": {
         "type": "array",
         "items": {
-          "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItems"
+          "$ref": "#/components/schemas/ListTasksDataItems"
         }
       },
-      "ListApiv3TasksUserOkJSONResponseDataItems": {
+      "ListTasksDataItems": {
         "type": "object",
         "properties": {
           "_id": {
@@ -86,7 +86,7 @@
             "type": "object"
           },
           "group": {
-            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsGroup"
+            "$ref": "#/components/schemas/ListTasksDataItemsGroup"
           },
           "up": {
             "type": "boolean",
@@ -109,7 +109,7 @@
             "example": "daily"
           },
           "history": {
-            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsHistory"
+            "$ref": "#/components/schemas/ListTasksDataItemsHistory"
           },
           "type": {
             "type": "string",
@@ -176,7 +176,7 @@
             "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
           },
           "repeat": {
-            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsRepeat"
+            "$ref": "#/components/schemas/ListTasksDataItemsRepeat"
           },
           "everyX": {
             "type": "integer",
@@ -262,11 +262,11 @@
           "id"
         ]
       },
-      "ListApiv3TasksUserOkJSONResponseDataItemsGroup": {
+      "ListTasksDataItemsGroup": {
         "type": "object",
         "properties": {
           "approval": {
-            "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsGroupApproval"
+            "$ref": "#/components/schemas/ListTasksDataItemsGroupApproval"
           },
           "assignedUsers": {
             "type": "array",
@@ -286,7 +286,7 @@
           "sharedCompletion"
         ]
       },
-      "ListApiv3TasksUserOkJSONResponseDataItemsGroupApproval": {
+      "ListTasksDataItemsGroupApproval": {
         "type": "object",
         "properties": {
           "required": {
@@ -308,13 +308,13 @@
           "requested"
         ]
       },
-      "ListApiv3TasksUserOkJSONResponseDataItemsHistory": {
+      "ListTasksDataItemsHistory": {
         "type": "array",
         "items": {
-          "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponseDataItemsHistoryItems"
+          "$ref": "#/components/schemas/ListTasksDataItemsHistoryItems"
         }
       },
-      "ListApiv3TasksUserOkJSONResponseDataItemsHistoryItems": {
+      "ListTasksDataItemsHistoryItems": {
         "type": "object",
         "properties": {
           "date": {
@@ -342,7 +342,7 @@
           "scoredDown"
         ]
       },
-      "ListApiv3TasksUserOkJSONResponseDataItemsRepeat": {
+      "ListTasksDataItemsRepeat": {
         "type": "object",
         "properties": {
           "m": {
@@ -391,7 +391,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ListApiv3TasksUserOkJSONResponse"
+              "$ref": "#/components/schemas/ListTasks"
             }
           }
         }
