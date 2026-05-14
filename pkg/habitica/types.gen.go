@@ -67,10 +67,11 @@ type Task struct {
 	Completed         bool        `json:"completed,omitempty"`
 	CollapseChecklist bool        `json:"collapseChecklist,omitempty"`
 	StartDate         time.Time   `json:"startDate,omitempty"`
-	DaysOfMonth       []struct{}  `json:"daysOfMonth,omitempty"`
+	DaysOfMonth       []int       `json:"daysOfMonth,omitempty"`
 	WeeksOfMonth      []struct{}  `json:"weeksOfMonth,omitempty"`
 	Checklist         []struct{}  `json:"checklist,omitempty"`
 	IsDue             bool        `json:"isDue,omitempty"`
+	Date              time.Time   `json:"date,omitempty"`
 }
 
 // TaskActivity defines a model
@@ -79,6 +80,8 @@ type TaskActivity struct {
 	Value      float64 `json:"value"`
 	ScoredUp   int     `json:"scoredUp,omitzero"`
 	ScoredDown int     `json:"scoredDown,omitzero"`
+	IsDue      bool    `json:"isDue,omitempty"`
+	Completed  bool    `json:"completed,omitempty"`
 }
 
 // TaskHistory defines a model

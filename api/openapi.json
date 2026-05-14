@@ -227,8 +227,8 @@
           "daysOfMonth": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "integer",
+              "example": 1
             }
           },
           "weeksOfMonth": {
@@ -248,6 +248,11 @@
           "isDue": {
             "type": "boolean",
             "example": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-26T00:13:00.000Z"
           }
         },
         "required": [
@@ -294,6 +299,14 @@
           "scoredDown": {
             "type": "integer",
             "example": 0
+          },
+          "isDue": {
+            "type": "boolean",
+            "example": true
+          },
+          "completed": {
+            "type": "boolean",
+            "example": true
           }
         },
         "required": [
@@ -440,6 +453,13 @@
         "in": "query",
         "schema": {
           "type": "string",
+          "enum": [
+            "habits",
+            "dailys",
+            "todos",
+            "rewards",
+            "completedTodos"
+          ],
           "example": "habits"
         }
       }
