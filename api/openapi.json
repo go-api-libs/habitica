@@ -12,7 +12,7 @@
   "paths": {
     "/api/v3/tasks/user": {
       "get": {
-        "operationId": "ListAPIV3TasksUser",
+        "operationId": "ListTasks",
         "parameters": [
           {
             "$ref": "#/components/parameters/X-Client"
@@ -26,7 +26,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/ListTasks"
+            "$ref": "#/components/responses/TaskList"
           }
         }
       }
@@ -78,40 +78,6 @@
           "approval",
           "assignedUsers",
           "sharedCompletion"
-        ]
-      },
-      "ListTasks": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/Tasks"
-          },
-          "notifications": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
-          },
-          "userV": {
-            "type": "integer",
-            "example": 15599
-          },
-          "appVersion": {
-            "type": "string",
-            "example": "5.47.9"
-          }
-        },
-        "required": [
-          "success",
-          "data",
-          "notifications",
-          "userV",
-          "appVersion"
         ]
       },
       "Task": {
@@ -336,6 +302,40 @@
           "scoredDown"
         ]
       },
+      "TaskList": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/Tasks"
+          },
+          "notifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "userV": {
+            "type": "integer",
+            "example": 15599
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "5.47.9"
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "notifications",
+          "userV",
+          "appVersion"
+        ]
+      },
       "TaskRepeat": {
         "type": "object",
         "properties": {
@@ -386,12 +386,12 @@
       }
     },
     "responses": {
-      "ListTasks": {
+      "TaskList": {
         "description": "OK",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ListTasks"
+              "$ref": "#/components/schemas/TaskList"
             }
           }
         }

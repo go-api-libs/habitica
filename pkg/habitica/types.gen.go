@@ -29,15 +29,6 @@ type Group struct {
 	SharedCompletion string     `json:"sharedCompletion,omitzero"`
 }
 
-// ListTasks defines a model
-type ListTasks struct {
-	Success       bool       `json:"success,omitzero"`
-	Data          Tasks      `json:"data,omitempty"`
-	Notifications []struct{} `json:"notifications,omitempty"`
-	UserV         int        `json:"userV,omitzero"`
-	AppVersion    string     `json:"appVersion,omitzero"`
-}
-
 // Task defines a model
 type Task struct {
 	UnderscoreID      uuid.UUID   `json:"_id,omitzero"`
@@ -85,6 +76,15 @@ type TaskHistoryItems struct {
 	Value      float64 `json:"value"`
 	ScoredUp   int     `json:"scoredUp,omitzero"`
 	ScoredDown int     `json:"scoredDown,omitzero"`
+}
+
+// TaskList defines a model
+type TaskList struct {
+	Success       bool       `json:"success,omitzero"`
+	Data          Tasks      `json:"data,omitempty"`
+	Notifications []struct{} `json:"notifications,omitempty"`
+	UserV         int        `json:"userV,omitzero"`
+	AppVersion    string     `json:"appVersion,omitzero"`
 }
 
 // TaskRepeat defines a model

@@ -38,7 +38,7 @@ func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) {
 }
 
 func TestClient_Error(t *testing.T) {
-	t.Run("ListApiv3TasksUser", func(t *testing.T) {
+	t.Run("ListTasks", func(t *testing.T) {
 		t.Run("transport error", func(t *testing.T) {
 			c, err := NewClient(WithHTTPClient(&http.Client{Transport: roundTripFunc(
 				func(*http.Request) (*http.Response, error) { return nil, io.EOF },
@@ -47,7 +47,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListApiv3TasksUser(t.Context()); err == nil {
+			if _, err := c.ListTasks(t.Context()); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, io.EOF) {
 				t.Fatalf("want: %v, got: %v", io.EOF, err)
@@ -67,7 +67,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListApiv3TasksUser(t.Context()); err == nil {
+			if _, err := c.ListTasks(t.Context()); err == nil {
 				t.Fatal("expected error")
 			} else if apiErr, ok := errors.AsType[*api.Error](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -95,7 +95,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListApiv3TasksUser(t.Context()); err == nil {
+			if _, err := c.ListTasks(t.Context()); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, api.ErrUnknownContentType) {
 				t.Fatalf("want: %v, got: %v", api.ErrUnknownContentType, err)
@@ -120,7 +120,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListApiv3TasksUser(t.Context()); err == nil {
+			if _, err := c.ListTasks(t.Context()); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -189,7 +189,7 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := c.ListApiv3TasksUser(ctx); err != nil {
+	if _, err := c.ListTasks(ctx); err != nil {
 		t.Fatal(err)
 	}
 }

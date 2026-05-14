@@ -68,12 +68,12 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 }
 
 // GET /api/v3/tasks/user
-func (c *Client) ListApiv3TasksUser(ctx context.Context) (*ListTasks, error) {
-	return ListApiv3TasksUser[ListTasks](ctx, c)
+func (c *Client) ListTasks(ctx context.Context) (*TaskList, error) {
+	return ListTasks[TaskList](ctx, c)
 }
 
 // GET /api/v3/tasks/user
-func ListApiv3TasksUser[R any](ctx context.Context, c *Client) (*R, error) {
+func ListTasks[R any](ctx context.Context, c *Client) (*R, error) {
 	u := c.baseURL.JoinPath("api", "v3", "tasks", "user")
 
 	req := (&http.Request{
