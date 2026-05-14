@@ -15,6 +15,11 @@ var jsonOpts = json.JoinOptions(
 	json.RejectUnknownMembers(true),
 )
 
+// ListTasksParams holds the query parameters for ListTasks.
+type ListTasksParams struct {
+	Type string
+}
+
 // Approval defines a model
 type Approval struct {
 	Required  bool `json:"required,omitzero"`
@@ -27,6 +32,7 @@ type Group struct {
 	Approval         Approval   `json:"approval"`
 	AssignedUsers    []struct{} `json:"assignedUsers,omitempty"`
 	SharedCompletion string     `json:"sharedCompletion,omitzero"`
+	CompletedBy      *struct{}  `json:"completedBy,omitempty"`
 }
 
 // Task defines a model
@@ -44,7 +50,7 @@ type Task struct {
 	Notes             string      `json:"notes,omitzero"`
 	Tags              []uuid.UUID `json:"tags,omitempty"`
 	Value             float64     `json:"value"`
-	Priority          int         `json:"priority,omitzero"`
+	Priority          float64     `json:"priority"`
 	Attribute         string      `json:"attribute,omitzero"`
 	ByHabitica        bool        `json:"byHabitica,omitzero"`
 	Text              string      `json:"text,omitzero"`
