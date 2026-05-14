@@ -9,10 +9,14 @@ OpenAPI allows schemas to be defined inline anywhere they are used. While conven
 ## Installation
 
 ```bash
-go get github.com/MarkRosemaker/openapi-flatten
+go get -tool github.com/MarkRosemaker/openapi-flatten/cmd/openapi-flatten
 ```
 
-Requires Go 1.25 or later.
+or
+
+```bash
+go get github.com/MarkRosemaker/openapi-flatten
+```
 
 ## Usage
 

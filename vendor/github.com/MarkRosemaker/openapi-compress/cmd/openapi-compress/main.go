@@ -33,6 +33,8 @@ func run(ctx context.Context) error {
 		return err
 	}
 
+	wasValid := doc.Validate() == nil
+
 	if err := compress.Document(doc, compress.Config{
 		MinSimilarity:  minSimilarity,
 		SimilarityStep: similarityStep,
@@ -48,8 +50,10 @@ func run(ctx context.Context) error {
 	}
 	doc.Components.SortMaps()
 
-	if err := doc.Validate(); err != nil {
-		return fmt.Errorf("produced invalid doc: %w", err)
+	if wasValid {
+		if err := doc.Validate(); err != nil {
+			return fmt.Errorf("produced invalid doc: %w", err)
+		}
 	}
 
 	if err := doc.WriteToFile(specPath); err != nil {
