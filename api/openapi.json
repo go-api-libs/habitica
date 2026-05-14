@@ -26,7 +26,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/ListApiv3TasksUserOkResponse"
+            "$ref": "#/components/responses/ListTasks"
           }
         }
       }
@@ -386,7 +386,7 @@
       }
     },
     "responses": {
-      "ListApiv3TasksUserOkResponse": {
+      "ListTasks": {
         "description": "OK",
         "content": {
           "application/json": {
