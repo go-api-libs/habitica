@@ -35,43 +35,54 @@ type Group struct {
 	CompletedBy      *struct{}  `json:"completedBy,omitempty"`
 }
 
+// RepeatWeekly defines a model
+type RepeatWeekly struct {
+	M  bool `json:"m,omitzero"`
+	T  bool `json:"t,omitzero"`
+	W  bool `json:"w,omitzero"`
+	Th bool `json:"th,omitzero"`
+	F  bool `json:"f,omitzero"`
+	S  bool `json:"s,omitzero"`
+	Su bool `json:"su,omitzero"`
+}
+
 // Task defines a model
 type Task struct {
-	UnderscoreID      uuid.UUID   `json:"_id,omitzero"`
-	Challenge         struct{}    `json:"challenge"`
-	Group             Group       `json:"group"`
-	Up                bool        `json:"up,omitzero"`
-	Down              bool        `json:"down,omitzero"`
-	CounterUp         int         `json:"counterUp,omitzero"`
-	CounterDown       int         `json:"counterDown,omitzero"`
-	Frequency         string      `json:"frequency,omitzero"`
-	History           TaskHistory `json:"history,omitempty"`
-	Type              string      `json:"type,omitzero"`
-	Notes             string      `json:"notes,omitzero"`
-	Tags              []uuid.UUID `json:"tags,omitempty"`
-	Value             float64     `json:"value"`
-	Priority          float64     `json:"priority"`
-	Attribute         string      `json:"attribute,omitzero"`
-	ByHabitica        bool        `json:"byHabitica,omitzero"`
-	Text              string      `json:"text,omitzero"`
-	Reminders         []struct{}  `json:"reminders,omitempty"`
-	CreatedAt         time.Time   `json:"createdAt,omitzero"`
-	UpdatedAt         time.Time   `json:"updatedAt,omitzero"`
-	UserID            uuid.UUID   `json:"userId,omitzero"`
-	ID                uuid.UUID   `json:"id,omitzero"`
-	Repeat            *TaskRepeat `json:"repeat,omitempty"`
-	EveryX            *int        `json:"everyX,omitempty"`
-	Streak            *int        `json:"streak,omitempty"`
-	NextDue           []time.Time `json:"nextDue,omitempty"`
-	YesterDaily       bool        `json:"yesterDaily,omitempty"`
-	Completed         bool        `json:"completed,omitempty"`
-	CollapseChecklist bool        `json:"collapseChecklist,omitempty"`
-	StartDate         time.Time   `json:"startDate,omitempty"`
-	DaysOfMonth       []int       `json:"daysOfMonth,omitempty"`
-	WeeksOfMonth      []struct{}  `json:"weeksOfMonth,omitempty"`
-	Checklist         []struct{}  `json:"checklist,omitempty"`
-	IsDue             bool        `json:"isDue,omitempty"`
-	Date              time.Time   `json:"date,omitempty"`
+	UnderscoreID      uuid.UUID     `json:"_id,omitzero"`
+	Challenge         struct{}      `json:"challenge"`
+	Group             Group         `json:"group"`
+	Up                bool          `json:"up,omitzero"`
+	Down              bool          `json:"down,omitzero"`
+	CounterUp         int           `json:"counterUp,omitzero"`
+	CounterDown       int           `json:"counterDown,omitzero"`
+	Frequency         string        `json:"frequency,omitzero"`
+	History           TaskHistory   `json:"history,omitempty"`
+	Type              string        `json:"type,omitzero"`
+	Notes             string        `json:"notes,omitzero"`
+	Tags              []uuid.UUID   `json:"tags,omitempty"`
+	Value             float64       `json:"value"`
+	Priority          float64       `json:"priority"`
+	Attribute         string        `json:"attribute,omitzero"`
+	ByHabitica        bool          `json:"byHabitica,omitzero"`
+	Text              string        `json:"text,omitzero"`
+	Reminders         []struct{}    `json:"reminders,omitempty"`
+	CreatedAt         time.Time     `json:"createdAt,omitzero"`
+	UpdatedAt         time.Time     `json:"updatedAt,omitzero"`
+	UserID            uuid.UUID     `json:"userId,omitzero"`
+	ID                uuid.UUID     `json:"id,omitzero"`
+	Repeat            *RepeatWeekly `json:"repeat,omitempty"`
+	EveryX            *int          `json:"everyX,omitempty"`
+	Streak            *int          `json:"streak,omitempty"`
+	NextDue           []time.Time   `json:"nextDue,omitempty"`
+	YesterDaily       bool          `json:"yesterDaily,omitempty"`
+	Completed         bool          `json:"completed,omitempty"`
+	CollapseChecklist bool          `json:"collapseChecklist,omitempty"`
+	StartDate         time.Time     `json:"startDate,omitempty"`
+	DaysOfMonth       []int         `json:"daysOfMonth,omitempty"`
+	WeeksOfMonth      []struct{}    `json:"weeksOfMonth,omitempty"`
+	Checklist         []struct{}    `json:"checklist,omitempty"`
+	IsDue             bool          `json:"isDue,omitempty"`
+	Date              time.Time     `json:"date,omitempty"`
 }
 
 // TaskActivity defines a model
@@ -94,17 +105,6 @@ type TaskList struct {
 	Notifications []struct{} `json:"notifications,omitempty"`
 	UserV         int        `json:"userV,omitzero"`
 	AppVersion    string     `json:"appVersion,omitzero"`
-}
-
-// TaskRepeat defines a model
-type TaskRepeat struct {
-	M  bool `json:"m,omitzero"`
-	T  bool `json:"t,omitzero"`
-	W  bool `json:"w,omitzero"`
-	Th bool `json:"th,omitzero"`
-	F  bool `json:"f,omitzero"`
-	S  bool `json:"s,omitzero"`
-	Su bool `json:"su,omitzero"`
 }
 
 // Tasks defines a model

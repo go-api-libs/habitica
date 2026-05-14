@@ -86,6 +86,48 @@
           "sharedCompletion"
         ]
       },
+      "RepeatWeekly": {
+        "type": "object",
+        "properties": {
+          "m": {
+            "type": "boolean",
+            "example": true
+          },
+          "t": {
+            "type": "boolean",
+            "example": true
+          },
+          "w": {
+            "type": "boolean",
+            "example": true
+          },
+          "th": {
+            "type": "boolean",
+            "example": true
+          },
+          "f": {
+            "type": "boolean",
+            "example": true
+          },
+          "s": {
+            "type": "boolean",
+            "example": true
+          },
+          "su": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "m",
+          "t",
+          "w",
+          "th",
+          "f",
+          "s",
+          "su"
+        ]
+      },
       "Task": {
         "type": "object",
         "properties": {
@@ -189,7 +231,7 @@
             "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
           },
           "repeat": {
-            "$ref": "#/components/schemas/TaskRepeat"
+            "$ref": "#/components/schemas/RepeatWeekly"
           },
           "everyX": {
             "type": "integer",
@@ -355,48 +397,6 @@
           "notifications",
           "userV",
           "appVersion"
-        ]
-      },
-      "TaskRepeat": {
-        "type": "object",
-        "properties": {
-          "m": {
-            "type": "boolean",
-            "example": true
-          },
-          "t": {
-            "type": "boolean",
-            "example": true
-          },
-          "w": {
-            "type": "boolean",
-            "example": true
-          },
-          "th": {
-            "type": "boolean",
-            "example": true
-          },
-          "f": {
-            "type": "boolean",
-            "example": true
-          },
-          "s": {
-            "type": "boolean",
-            "example": true
-          },
-          "su": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "m",
-          "t",
-          "w",
-          "th",
-          "f",
-          "s",
-          "su"
         ]
       },
       "Tasks": {
