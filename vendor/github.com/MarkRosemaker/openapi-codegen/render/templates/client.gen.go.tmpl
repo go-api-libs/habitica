@@ -159,7 +159,7 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 			{{- end }}
 			{{ range .HeaderParam -}}
 			"{{ .JSONName }}": []string{ {{- .Value -}} },
-			{{- end }}
+			{{ end -}}
 			"User-Agent":     []string{c.userAgent},
 		},
 		Host:       u.Host,

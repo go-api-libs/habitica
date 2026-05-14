@@ -338,6 +338,10 @@ func fieldGoName(jsonName string) string {
 		return "PDF"
 	}
 
+	if suffix, ok := strings.CutPrefix(jsonName, "_"); ok {
+		jsonName = fmt.Sprintf("Underscore %s", suffix)
+	}
+
 	// replace special characters before PascalCasing
 	r := strings.NewReplacer(
 		"+", " Plus ",

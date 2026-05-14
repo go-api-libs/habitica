@@ -18,6 +18,7 @@ import (
 	"testing"
 
 	"github.com/MarkRosemaker/openapi-enrich/cassette"
+	"github.com/go-api-libs/api"
 )
 
 func newTestServer(t *testing.T, status int) *httptest.Server {

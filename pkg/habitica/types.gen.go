@@ -29,7 +29,7 @@ type ListApiv3TasksUserOkJSONResponseData []ListApiv3TasksUserOkJSONResponseData
 
 // ListApiv3TasksUserOkJSONResponseDataItems defines a model
 type ListApiv3TasksUserOkJSONResponseDataItems struct {
-	ID                uuid.UUID                                        `json:"_id,omitzero"`
+	UnderscoreID      uuid.UUID                                        `json:"_id,omitzero"`
 	Challenge         struct{}                                         `json:"challenge"`
 	Group             ListApiv3TasksUserOkJSONResponseDataItemsGroup   `json:"group"`
 	Up                bool                                             `json:"up,omitzero"`
