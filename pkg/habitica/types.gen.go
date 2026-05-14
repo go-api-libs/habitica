@@ -17,81 +17,78 @@ var jsonOpts = json.JoinOptions(
 
 // ListTasks defines a model
 type ListTasks struct {
-	Success       bool          `json:"success,omitzero"`
-	Data          ListTasksData `json:"data,omitempty"`
-	Notifications []struct{}    `json:"notifications,omitempty"`
-	UserV         int           `json:"userV,omitzero"`
-	AppVersion    string        `json:"appVersion,omitzero"`
+	Success       bool       `json:"success,omitzero"`
+	Data          Tasks      `json:"data,omitempty"`
+	Notifications []struct{} `json:"notifications,omitempty"`
+	UserV         int        `json:"userV,omitzero"`
+	AppVersion    string     `json:"appVersion,omitzero"`
 }
 
-// ListTasksData defines a model
-type ListTasksData []ListTasksDataItems
-
-// ListTasksDataItems defines a model
-type ListTasksDataItems struct {
-	UnderscoreID      uuid.UUID                 `json:"_id,omitzero"`
-	Challenge         struct{}                  `json:"challenge"`
-	Group             ListTasksDataItemsGroup   `json:"group"`
-	Up                bool                      `json:"up,omitzero"`
-	Down              bool                      `json:"down,omitzero"`
-	CounterUp         int                       `json:"counterUp,omitzero"`
-	CounterDown       int                       `json:"counterDown,omitzero"`
-	Frequency         string                    `json:"frequency,omitzero"`
-	History           ListTasksDataItemsHistory `json:"history,omitempty"`
-	Type              string                    `json:"type,omitzero"`
-	Notes             string                    `json:"notes,omitzero"`
-	Tags              []uuid.UUID               `json:"tags,omitempty"`
-	Value             float64                   `json:"value"`
-	Priority          int                       `json:"priority,omitzero"`
-	Attribute         string                    `json:"attribute,omitzero"`
-	ByHabitica        bool                      `json:"byHabitica,omitzero"`
-	Text              string                    `json:"text,omitzero"`
-	Reminders         []struct{}                `json:"reminders,omitempty"`
-	CreatedAt         time.Time                 `json:"createdAt,omitzero"`
-	UpdatedAt         time.Time                 `json:"updatedAt,omitzero"`
-	UserID            uuid.UUID                 `json:"userId,omitzero"`
-	ID                uuid.UUID                 `json:"id,omitzero"`
-	Repeat            *ListTasksDataItemsRepeat `json:"repeat,omitempty"`
-	EveryX            *int                      `json:"everyX,omitempty"`
-	Streak            *int                      `json:"streak,omitempty"`
-	NextDue           []time.Time               `json:"nextDue,omitempty"`
-	YesterDaily       bool                      `json:"yesterDaily,omitempty"`
-	Completed         bool                      `json:"completed,omitempty"`
-	CollapseChecklist bool                      `json:"collapseChecklist,omitempty"`
-	StartDate         time.Time                 `json:"startDate,omitempty"`
-	DaysOfMonth       []struct{}                `json:"daysOfMonth,omitempty"`
-	WeeksOfMonth      []struct{}                `json:"weeksOfMonth,omitempty"`
-	Checklist         []struct{}                `json:"checklist,omitempty"`
-	IsDue             bool                      `json:"isDue,omitempty"`
+// Task defines a model
+type Task struct {
+	UnderscoreID      uuid.UUID   `json:"_id,omitzero"`
+	Challenge         struct{}    `json:"challenge"`
+	Group             TaskGroup   `json:"group"`
+	Up                bool        `json:"up,omitzero"`
+	Down              bool        `json:"down,omitzero"`
+	CounterUp         int         `json:"counterUp,omitzero"`
+	CounterDown       int         `json:"counterDown,omitzero"`
+	Frequency         string      `json:"frequency,omitzero"`
+	History           TaskHistory `json:"history,omitempty"`
+	Type              string      `json:"type,omitzero"`
+	Notes             string      `json:"notes,omitzero"`
+	Tags              []uuid.UUID `json:"tags,omitempty"`
+	Value             float64     `json:"value"`
+	Priority          int         `json:"priority,omitzero"`
+	Attribute         string      `json:"attribute,omitzero"`
+	ByHabitica        bool        `json:"byHabitica,omitzero"`
+	Text              string      `json:"text,omitzero"`
+	Reminders         []struct{}  `json:"reminders,omitempty"`
+	CreatedAt         time.Time   `json:"createdAt,omitzero"`
+	UpdatedAt         time.Time   `json:"updatedAt,omitzero"`
+	UserID            uuid.UUID   `json:"userId,omitzero"`
+	ID                uuid.UUID   `json:"id,omitzero"`
+	Repeat            *TaskRepeat `json:"repeat,omitempty"`
+	EveryX            *int        `json:"everyX,omitempty"`
+	Streak            *int        `json:"streak,omitempty"`
+	NextDue           []time.Time `json:"nextDue,omitempty"`
+	YesterDaily       bool        `json:"yesterDaily,omitempty"`
+	Completed         bool        `json:"completed,omitempty"`
+	CollapseChecklist bool        `json:"collapseChecklist,omitempty"`
+	StartDate         time.Time   `json:"startDate,omitempty"`
+	DaysOfMonth       []struct{}  `json:"daysOfMonth,omitempty"`
+	WeeksOfMonth      []struct{}  `json:"weeksOfMonth,omitempty"`
+	Checklist         []struct{}  `json:"checklist,omitempty"`
+	IsDue             bool        `json:"isDue,omitempty"`
 }
 
-// ListTasksDataItemsGroup defines a model
-type ListTasksDataItemsGroup struct {
-	Approval         ListTasksDataItemsGroupApproval `json:"approval"`
-	AssignedUsers    []struct{}                      `json:"assignedUsers,omitempty"`
-	SharedCompletion string                          `json:"sharedCompletion,omitzero"`
+// TaskGroup defines a model
+type TaskGroup struct {
+	Approval         TaskGroupApproval `json:"approval"`
+	AssignedUsers    []struct{}        `json:"assignedUsers,omitempty"`
+	SharedCompletion string            `json:"sharedCompletion,omitzero"`
 }
 
-// ListTasksDataItemsGroupApproval defines a model
-type ListTasksDataItemsGroupApproval struct {
+// TaskGroupApproval defines a model
+type TaskGroupApproval struct {
 	Required  bool `json:"required,omitzero"`
 	Approved  bool `json:"approved,omitzero"`
 	Requested bool `json:"requested,omitzero"`
 }
 
-// ListTasksDataItemsHistory defines a model
-type ListTasksDataItemsHistory []ListTasksDataItemsHistoryItems
+// TaskHistory defines a model
+type TaskHistory []TaskHistoryItems
 
-// ListTasksDataItemsHistoryItems defines a model
-type ListTasksDataItemsHistoryItems struct {
+// TaskHistoryItems defines a model
+type TaskHistoryItems struct {
 	Date       int     `json:"date,omitzero"`
 	Value      float64 `json:"value"`
 	ScoredUp   int     `json:"scoredUp,omitzero"`
 	ScoredDown int     `json:"scoredDown,omitzero"`
 }
 
-// ListTasksDataItemsRepeat defines a model
-type ListTasksDataItemsRepeat struct {
+// TaskRepeat defines a model
+type TaskRepeat struct {
 	M  bool `json:"m,omitzero"`
 	T  bool `json:"t,omitzero"`
 	W  bool `json:"w,omitzero"`
@@ -100,3 +97,6 @@ type ListTasksDataItemsRepeat struct {
 	S  bool `json:"s,omitzero"`
 	Su bool `json:"su,omitzero"`
 }
+
+// Tasks defines a model
+type Tasks []Task

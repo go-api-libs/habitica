@@ -42,7 +42,7 @@
             "example": true
           },
           "data": {
-            "$ref": "#/components/schemas/ListTasksData"
+            "$ref": "#/components/schemas/Tasks"
           },
           "notifications": {
             "type": "array",
@@ -68,13 +68,7 @@
           "appVersion"
         ]
       },
-      "ListTasksData": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ListTasksDataItems"
-        }
-      },
-      "ListTasksDataItems": {
+      "Task": {
         "type": "object",
         "properties": {
           "_id": {
@@ -86,7 +80,7 @@
             "type": "object"
           },
           "group": {
-            "$ref": "#/components/schemas/ListTasksDataItemsGroup"
+            "$ref": "#/components/schemas/TaskGroup"
           },
           "up": {
             "type": "boolean",
@@ -109,7 +103,7 @@
             "example": "daily"
           },
           "history": {
-            "$ref": "#/components/schemas/ListTasksDataItemsHistory"
+            "$ref": "#/components/schemas/TaskHistory"
           },
           "type": {
             "type": "string",
@@ -176,7 +170,7 @@
             "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
           },
           "repeat": {
-            "$ref": "#/components/schemas/ListTasksDataItemsRepeat"
+            "$ref": "#/components/schemas/TaskRepeat"
           },
           "everyX": {
             "type": "integer",
@@ -262,11 +256,11 @@
           "id"
         ]
       },
-      "ListTasksDataItemsGroup": {
+      "TaskGroup": {
         "type": "object",
         "properties": {
           "approval": {
-            "$ref": "#/components/schemas/ListTasksDataItemsGroupApproval"
+            "$ref": "#/components/schemas/TaskGroupApproval"
           },
           "assignedUsers": {
             "type": "array",
@@ -286,7 +280,7 @@
           "sharedCompletion"
         ]
       },
-      "ListTasksDataItemsGroupApproval": {
+      "TaskGroupApproval": {
         "type": "object",
         "properties": {
           "required": {
@@ -308,13 +302,13 @@
           "requested"
         ]
       },
-      "ListTasksDataItemsHistory": {
+      "TaskHistory": {
         "type": "array",
         "items": {
-          "$ref": "#/components/schemas/ListTasksDataItemsHistoryItems"
+          "$ref": "#/components/schemas/TaskHistoryItems"
         }
       },
-      "ListTasksDataItemsHistoryItems": {
+      "TaskHistoryItems": {
         "type": "object",
         "properties": {
           "date": {
@@ -342,7 +336,7 @@
           "scoredDown"
         ]
       },
-      "ListTasksDataItemsRepeat": {
+      "TaskRepeat": {
         "type": "object",
         "properties": {
           "m": {
@@ -383,6 +377,12 @@
           "s",
           "su"
         ]
+      },
+      "Tasks": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Task"
+        }
       }
     },
     "responses": {
