@@ -1,8 +1,8 @@
 [
 	{
 		"request": {
-			"method": "",
-			"url": ""
+			"method": "GET",
+			"url": "https://habitica.com/api/v3/tasks/user"
 		}
 	}
 ]
