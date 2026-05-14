@@ -34,6 +34,52 @@
   },
   "components": {
     "schemas": {
+      "Approval": {
+        "type": "object",
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "example": false
+          },
+          "approved": {
+            "type": "boolean",
+            "example": false
+          },
+          "requested": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "required",
+          "approved",
+          "requested"
+        ]
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "approval": {
+            "$ref": "#/components/schemas/Approval"
+          },
+          "assignedUsers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "sharedCompletion": {
+            "type": "string",
+            "example": "singleCompletion"
+          }
+        },
+        "required": [
+          "approval",
+          "assignedUsers",
+          "sharedCompletion"
+        ]
+      },
       "ListTasks": {
         "type": "object",
         "properties": {
@@ -80,7 +126,7 @@
             "type": "object"
           },
           "group": {
-            "$ref": "#/components/schemas/TaskGroup"
+            "$ref": "#/components/schemas/Group"
           },
           "up": {
             "type": "boolean",
@@ -254,52 +300,6 @@
           "updatedAt",
           "userId",
           "id"
-        ]
-      },
-      "TaskGroup": {
-        "type": "object",
-        "properties": {
-          "approval": {
-            "$ref": "#/components/schemas/TaskGroupApproval"
-          },
-          "assignedUsers": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
-          },
-          "sharedCompletion": {
-            "type": "string",
-            "example": "singleCompletion"
-          }
-        },
-        "required": [
-          "approval",
-          "assignedUsers",
-          "sharedCompletion"
-        ]
-      },
-      "TaskGroupApproval": {
-        "type": "object",
-        "properties": {
-          "required": {
-            "type": "boolean",
-            "example": false
-          },
-          "approved": {
-            "type": "boolean",
-            "example": false
-          },
-          "requested": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "required",
-          "approved",
-          "requested"
         ]
       },
       "TaskHistory": {

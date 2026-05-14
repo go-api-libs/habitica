@@ -15,6 +15,20 @@ var jsonOpts = json.JoinOptions(
 	json.RejectUnknownMembers(true),
 )
 
+// Approval defines a model
+type Approval struct {
+	Required  bool `json:"required,omitzero"`
+	Approved  bool `json:"approved,omitzero"`
+	Requested bool `json:"requested,omitzero"`
+}
+
+// Group defines a model
+type Group struct {
+	Approval         Approval   `json:"approval"`
+	AssignedUsers    []struct{} `json:"assignedUsers,omitempty"`
+	SharedCompletion string     `json:"sharedCompletion,omitzero"`
+}
+
 // ListTasks defines a model
 type ListTasks struct {
 	Success       bool       `json:"success,omitzero"`
@@ -28,7 +42,7 @@ type ListTasks struct {
 type Task struct {
 	UnderscoreID      uuid.UUID   `json:"_id,omitzero"`
 	Challenge         struct{}    `json:"challenge"`
-	Group             TaskGroup   `json:"group"`
+	Group             Group       `json:"group"`
 	Up                bool        `json:"up,omitzero"`
 	Down              bool        `json:"down,omitzero"`
 	CounterUp         int         `json:"counterUp,omitzero"`
@@ -60,20 +74,6 @@ type Task struct {
 	WeeksOfMonth      []struct{}  `json:"weeksOfMonth,omitempty"`
 	Checklist         []struct{}  `json:"checklist,omitempty"`
 	IsDue             bool        `json:"isDue,omitempty"`
-}
-
-// TaskGroup defines a model
-type TaskGroup struct {
-	Approval         TaskGroupApproval `json:"approval"`
-	AssignedUsers    []struct{}        `json:"assignedUsers,omitempty"`
-	SharedCompletion string            `json:"sharedCompletion,omitzero"`
-}
-
-// TaskGroupApproval defines a model
-type TaskGroupApproval struct {
-	Required  bool `json:"required,omitzero"`
-	Approved  bool `json:"approved,omitzero"`
-	Requested bool `json:"requested,omitzero"`
 }
 
 // TaskHistory defines a model
