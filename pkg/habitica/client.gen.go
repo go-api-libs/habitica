@@ -14,7 +14,7 @@ import (
 	"github.com/go-api-libs/api"
 )
 
-const defaultUserAgent = "Habitica API"
+const defaultUserAgent = "Habitica API Library (github.com/go-api-libs/habitica)"
 
 var defaultBaseURL = &url.URL{
 	Scheme: "https",
