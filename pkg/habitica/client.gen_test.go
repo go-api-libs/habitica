@@ -192,4 +192,10 @@ func TestClient_Interactions(t *testing.T) {
 	if _, err := c.ListTasks(ctx, nil); err != nil {
 		t.Fatal(err)
 	}
+
+	if _, err := c.ListTasks(ctx, &ListTasksParams{
+		Type: "dailys",
+	}); err != nil {
+		t.Fatal(err)
+	}
 }

@@ -196,5 +196,90 @@
 				"appVersion": "5.47.9"
 			}
 		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "https://habitica.com/api/v3/tasks/user?type=dailys",
+			"header": {
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "8027d396-e2bb-4389-b002-782025424e75",
+				"X-Client": "8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			"body": {
+				"success": true,
+				"data": [
+					{
+						"_id": "e8b371c0-9eaf-4129-b4cf-f45ba71d2810",
+						"repeat": {
+							"m": true,
+							"t": true,
+							"w": true,
+							"th": true,
+							"f": true,
+							"s": true,
+							"su": true
+						},
+						"challenge": {},
+						"group": {
+							"approval": {
+								"required": false,
+								"approved": false,
+								"requested": false
+							},
+							"assignedUsers": [],
+							"sharedCompletion": "singleCompletion"
+						},
+						"frequency": "weekly",
+						"everyX": 1,
+						"streak": 1194,
+						"nextDue": [
+							"2026-05-14T22:00:00.000Z",
+							"2026-05-15T22:00:00.000Z",
+							"2026-05-17T22:00:00.000Z",
+							"2026-05-18T22:00:00.000Z",
+							"2026-05-19T22:00:00.000Z",
+							"2026-05-20T22:00:00.000Z"
+						],
+						"yesterDaily": true,
+						"history": [
+							{
+								"date": 1626652382989,
+								"value": 69.6600188088956
+							}
+						],
+						"completed": false,
+						"collapseChecklist": false,
+						"type": "daily",
+						"notes": "*Successfully completed my duolingo language learning session for today.*",
+						"tags": [],
+						"value": 697.3245124186678,
+						"priority": 1,
+						"attribute": "str",
+						"byHabitica": false,
+						"startDate": "2021-07-17T22:00:00.000Z",
+						"daysOfMonth": [],
+						"weeksOfMonth": [],
+						"reminders": [],
+						"text": "**Daily Duo Session** :books:",
+						"checklist": [],
+						"createdAt": "2021-07-18T23:52:47.375Z",
+						"updatedAt": "2026-05-14T01:17:58.398Z",
+						"userId": "8027d396-e2bb-4389-b002-782025424e75",
+						"isDue": true,
+						"id": "e8b371c0-9eaf-4129-b4cf-f45ba71d2810"
+					}
+				],
+				"notifications": [],
+				"userV": 15600,
+				"appVersion": "5.47.9"
+			}
+		}
 	}
 ]
