@@ -1,6 +1,8 @@
 package ir
 
-import "github.com/MarkRosemaker/openapi"
+import (
+	"slices"
+)
 
 // Document is the top-level IR type passed to templates.
 type Document struct {
@@ -8,6 +10,7 @@ type Document struct {
 	BaseURL           URLParts
 	UserAgent         string
 	Operations        []Operation
+	GlobalParams      Params `json:"GlobalParams,omitempty"`
 	Schemas           []Schema
 	Auth              Auth `json:"Security,omitzero"`
 	HasURLFields      bool
@@ -47,9 +50,9 @@ type Operation struct {
 	Method          string     `json:"Method,omitzero"`
 	PathTemplate    string     `json:"PathTemplate,omitzero"`
 	JoinPathArgs    []string   `json:"JoinPathArgs,omitempty"`
-	PathParams      []Param    `json:"PathParams,omitempty"`
-	QueryParams     []Param    `json:"QueryParams,omitempty"`
-	HeaderParam     []Param    `json:"HeaderParam,omitempty"`
+	PathParams      Params     `json:"PathParams,omitempty"`
+	QueryParams     Params     `json:"QueryParams,omitempty"`
+	HeaderParams    Params     `json:"HeaderParam,omitempty"`
 	HasParams       bool       `json:"HasParams,omitzero"`
 	ParamStructName string     `json:"ParamStructName,omitzero"`
 	RequestBody     *ReqBody   `json:"RequestBody,omitempty"`
@@ -98,21 +101,46 @@ type EnumValue struct {
 	Value  string
 }
 
+type GlobalType string
+
+const (
+	GlobalAPIKey GlobalType = "APIKey"
+)
+
+type Params []Param
+
 // Param represents a path or query parameter.
 type Param struct {
+	GlobalType   GlobalType `json:"GlobalType,omitzero"`
+	VarName      string
+	EnvName      string `json:"EnvName,omitzero"`
 	GoName       string // camelCase, used as local variable name
 	FieldName    string // PascalCase, used as exported struct field name
 	JSONName     string
 	Type         string
-	Required     bool
-	NotZero      string
-	FormatExpr   string
+	Required     bool   `json:"Required,omitzero"`
 	ParseExpr    string // server-side: expression to parse string `s` into the param type
-	ParseCast    string // server-side: optional cast after ParseExpr, e.g. "int32"
+	ParseCast    string `json:"ParseCast,omitzero"` // server-side: optional cast after ParseExpr, e.g. "int32"
 	ParseErrFree bool   // server-side: true when ParseExpr cannot return an error
-	IsEnum       bool
-	Description  string
-	Value        string `json:"Value,omitzero"` // hardcoded value
+	IsEnum       bool   `json:"IsEnum,omitzero"`
+	Description  string `json:"Description,omitzero"`
+	Value        string `json:"Value,omitzero"`   // hardcoded value, always the same
+	Example      string `json:"Example,omitzero"` // hardcoded example for tests
+}
+
+func (doc Document) APIKey() *Param {
+	return doc.getGlobal(GlobalAPIKey)
+}
+
+func (doc Document) getGlobal(tp GlobalType) *Param {
+	if i := slices.IndexFunc(doc.GlobalParams, func(p Param) bool {
+		return p.GlobalType == tp
+	}); i > -1 {
+		p := doc.GlobalParams[i]
+		return &p
+	}
+
+	return nil
 }
 
 // GoType is a resolved Go type reference.
@@ -181,16 +209,8 @@ type ReqBody struct {
 
 type Auth struct {
 	Bearer Bearer `json:"Bearer,omitzero"`
-	APIKey APIKey `json:"APIKey,omitzero"`
 }
 
 type Bearer struct {
 	Name string
-}
-
-type APIKey struct {
-	EnvName string
-	Name    string
-	In      openapi.ParameterLocation
-	Example string
 }

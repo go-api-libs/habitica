@@ -41,9 +41,11 @@ type Client struct {
 	// The bearer token
 	bearer string
 	{{ end -}}
-	{{ with .Auth.APIKey.Name -}}
-	// The API key
-	apiKey string
+	{{ with .APIKey -}}
+		{{ with or .Description "The API key" -}}
+			{{ toGoComment . }}
+		{{ end -}}
+	{{ .VarName }} string
 	{{ end -}}
 	// The base URL
 	baseURL   *url.URL
@@ -80,10 +82,10 @@ func WithBearer(bearer string) ClientOption {
 }
 {{ end }}
 
-{{ with .Auth.APIKey.EnvName }}
+{{ with .APIKey }}
 // WithAPIKey returns a [ClientOption] that sets a custom API key.
-func WithAPIKey(apiKey string) ClientOption {
-	return func(c *Client) { c.apiKey = apiKey }
+func WithAPIKey({{ .VarName }} string) ClientOption {
+	return func(c *Client) { {{ .FormatExpr }} = {{ .VarName }} }
 }
 {{ end }}
 
@@ -99,9 +101,9 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 	WithBearer(os.Getenv("{{ . }}"))(c)
 	{{ end }}
 
-	{{ with .Auth.APIKey.EnvName }}
-	c.apiKey = os.Getenv("{{ . }}")
-	{{ end }}
+	{{ with .APIKey }}{{ if .EnvName }}
+	{{ .FormatExpr }} = os.Getenv("{{ .EnvName }}")
+	{{ end }}{{ end }}
 
 	for _, opt := range opts {
 		opt(c)
@@ -113,9 +115,13 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 	}
 	{{ end }}
 
-	{{ with .Auth.APIKey.EnvName }}
-	if c.apiKey == "" {
+	{{ with .APIKey }}
+	if {{ .FormatExpr }} == "" {
+		{{ with .EnvName -}}
 		return nil, errors.New("api key {{ . }} not provided")
+		{{ else -}}
+		return nil, errors.New("api key not provided")
+		{{ end -}}
 	}
 	{{ end }}
 
@@ -126,7 +132,7 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 {{$op := .}}
 
 {{ if .SuccessReturn }}
-{{ with .Description}}
+{{ with .Description }}
 	{{- toGoComment . }}
 	//
 {{- else }}
@@ -193,7 +199,10 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 			{{ if $.Auth.Bearer.Name -}}
 			"Authorization":  []string{c.bearer},
 			{{- end }}
-			{{ range .HeaderParam -}}
+			{{ range $.GlobalParams -}}
+			"{{ .JSONName }}": []string{ {{- or .Value .FormatExpr -}} },
+			{{ end -}}
+			{{ range .HeaderParams -}}
 			"{{ .JSONName }}": []string{ {{- or .Value .FormatExpr -}} },
 			{{ end -}}
 			"User-Agent":     []string{c.userAgent},

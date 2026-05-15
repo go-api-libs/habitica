@@ -3,12 +3,13 @@ package ir
 import (
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 
 	"github.com/MarkRosemaker/openapi"
 	compress "github.com/MarkRosemaker/openapi-compress"
 	flatten "github.com/MarkRosemaker/openapi-flatten"
-	"github.com/ettle/strcase"
+	"github.com/MarkRosemaker/ordmap"
 )
 
 // FromDocument converts a fully-loaded and flattened openapi.Document to an IR Document.
@@ -45,13 +46,27 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		return nil, fmt.Errorf("components.schemas: %w", err)
 	}
 
-	auth := getAuth(doc)
-	operations, err := fromPaths(doc.Paths, auth)
+	auth := fromSecurity(doc.Components.SecuritySchemes)
+
+	globalParamsMap, err := getGlobalParams(doc.Paths, doc.Info.Title)
+	if err != nil {
+		return nil, fmt.Errorf("getting global parameters: %w", err)
+	}
+
+	operations, err := fromPaths(doc.Paths, auth, globalParamsMap)
 	if err != nil {
 		return nil, fmt.Errorf("paths: %w", err)
 	}
 
 	hasURL, hasDuration, hasDate := needsSpecialImports(schemas, operations)
+
+	globalParams := make(Params, 0, len(globalParamsMap))
+	for _, p := range globalParamsMap.ByIndex() {
+		globalParams = append(globalParams, p)
+	}
+	slices.SortFunc(globalParams, func(a, b Param) int {
+		return strings.Compare(a.JSONName, b.JSONName)
+	})
 
 	return &Document{
 		PackageName:       packageName,
@@ -59,6 +74,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		UserAgent:         userAgent,
 		Schemas:           schemas,
 		Operations:        operations,
+		GlobalParams:      globalParams,
 		Auth:              auth,
 		HasURLFields:      hasURL,
 		HasDurationFields: hasDuration,
@@ -83,11 +99,11 @@ func parseBaseURL(doc *openapi.Document) (URLParts, error) {
 }
 
 // fromPaths iterates all path items and operations, converting each to ir.Operation.
-func fromPaths(paths openapi.Paths, auth Auth) ([]Operation, error) {
+func fromPaths(paths openapi.Paths, auth Auth, globalParams paramMap) ([]Operation, error) {
 	var ops []Operation
 	for path, item := range paths.ByIndex() {
 		for method, op := range item.Operations {
-			irOp, err := FromOperation(path, item.Parameters, method, op, auth)
+			irOp, err := FromOperation(path, item.Parameters, method, op, globalParams)
 			if err != nil {
 				return nil, fmt.Errorf("%s %s: %w", method, path, err)
 			}
@@ -97,10 +113,10 @@ func fromPaths(paths openapi.Paths, auth Auth) ([]Operation, error) {
 	return ops, nil
 }
 
-func getAuth(doc *openapi.Document) Auth {
+func fromSecurity(schemes openapi.SecuritySchemes) Auth {
 	s := Auth{}
 
-	for _, sec := range doc.Components.SecuritySchemes {
+	for _, sec := range schemes {
 		v := sec.Value
 		switch v.Scheme {
 		case openapi.SecuritySchemeBearer:
@@ -110,16 +126,61 @@ func getAuth(doc *openapi.Document) Auth {
 		}
 	}
 
-	if p := doc.Components.Parameters["X-Api-Key"]; p != nil {
-		s.APIKey = APIKey{
-			EnvName: strcase.ToSNAKE(fmt.Sprintf("%s_KEY", doc.Info.Title)),
-			Name:    p.Value.Name,
-			In:      p.Value.In,
-			Example: string(p.Value.Schema.Example),
+	return s
+}
+
+type paramMap = ordmap.OrderedMap[*openapi.Parameter, Param]
+
+func getGlobalParams(paths openapi.Paths, apiTitle string) (paramMap, error) {
+	params := paramMap{}
+
+	for _, pi := range paths {
+		for _, pRef := range pi.Parameters {
+			p := pRef.Value
+
+			param, err := fromParam(p, apiTitle)
+			if err != nil {
+				return nil, err
+			}
+
+			if param.GlobalType != "" {
+				params.Set(p, param)
+				continue
+			}
+
+			if p.Required && p.In == openapi.ParameterLocationHeader &&
+				p.Schema != nil && p.Schema.Type == openapi.TypeString {
+
+				// Check for hardcoded value
+				if len(p.Schema.Example) > 0 &&
+					(strings.HasSuffix(p.Name, "Version") || p.Name == "X-Client") {
+					param.Value = string(p.Schema.Example)
+				}
+
+				params.Set(p, param)
+			}
 		}
 	}
 
-	return s
+	for p := range params {
+		if !isInAll(paths, p) {
+			delete(params, p)
+		}
+	}
+
+	return params, nil
+}
+
+func isInAll(paths openapi.Paths, p *openapi.Parameter) bool {
+	for _, pi := range paths {
+		if !slices.ContainsFunc(pi.Parameters, func(param *openapi.ParameterRef) bool {
+			return param.Value == p
+		}) {
+			return false
+		}
+	}
+
+	return true
 }
 
 // needsSpecialImports scans schemas and operation types for url.URL, time.Duration, civil.Date.

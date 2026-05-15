@@ -42,8 +42,8 @@ func TestClient_Error(t *testing.T) {
 		{{- with $.Auth.Bearer.Name}}
 		t.Setenv({{printf "%q" . }}, "**************************************************")
 		{{end}}
-		{{- with $.Auth.APIKey.EnvName}}
-		t.Setenv({{printf "%q" . }}, {{ or $.Auth.APIKey.Example "**************************************************" }})
+		{{- with $.APIKey }}
+		t.Setenv({{printf "%q" .EnvName }}, {{ or .Example `"**************************************************"` }})
 		{{end}}
 		t.Run("transport error", func(t *testing.T) {
 			c, err := NewClient(WithHTTPClient(&http.Client{Transport: roundTripFunc(

@@ -2,6 +2,7 @@ package compress
 
 import (
 	"math"
+	"reflect"
 	"sort"
 	"strings"
 
@@ -14,6 +15,11 @@ import (
 // After compression, long names of merged schemas are shortened.
 func Document(d *openapi.Document, cfg Config) error {
 	cfg.setDefaults()
+	if err := cfg.validate(); err != nil {
+		return err
+	}
+
+	deduplicateParameters(d)
 
 	// Step down from exact equality to MinSimilarity, running each threshold
 	// until stable before moving to the next.
@@ -39,6 +45,9 @@ func Document(d *openapi.Document, cfg Config) error {
 		threshold = math.Max(cfg.MinSimilarity, threshold-cfg.SimilarityStep)
 	}
 
+	if cfg.SkipNameShortening {
+		return nil
+	}
 	return shortenMergedSchemaNames(d, mergedCanonicals)
 }
 
@@ -121,6 +130,107 @@ func deduplicateSchemasAtThreshold(d *openapi.Document, threshold float64) (map[
 	return canonicals, nil
 }
 
+// deduplicateParameters removes exact duplicate parameter definitions from
+// d.Components.Parameters, keeping the alphabetically-first name as canonical
+// and updating all $ref identifiers throughout the document.
+func deduplicateParameters(d *openapi.Document) {
+	params := d.Components.Parameters
+	if len(params) < 2 {
+		return
+	}
+
+	names := sortedParameterNames(params)
+	replacements := map[string]string{}
+
+	for i, nameA := range names {
+		if _, removed := replacements[nameA]; removed {
+			continue
+		}
+		refA := params[nameA]
+		if refA == nil || refA.Value == nil {
+			continue
+		}
+		for _, nameB := range names[i+1:] {
+			if _, removed := replacements[nameB]; removed {
+				continue
+			}
+			refB := params[nameB]
+			if refB == nil || refB.Value == nil {
+				continue
+			}
+			if reflect.DeepEqual(refA.Value, refB.Value) {
+				replacements[nameB] = nameA
+			}
+		}
+	}
+
+	if len(replacements) == 0 {
+		return
+	}
+
+	for name := range replacements {
+		delete(d.Components.Parameters, name)
+	}
+
+	replaceParameterRefsInDocument(d, replacements)
+}
+
+func sortedParameterNames(params openapi.Parameters) []string {
+	names := make([]string, 0, len(params))
+	for name := range params {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
+}
+
+// replaceParameterRefsInDocument updates $ref identifiers for parameters
+// throughout the entire document.
+func replaceParameterRefsInDocument(d *openapi.Document, replacements map[string]string) {
+	for _, p := range d.Paths {
+		replaceParameterRefsInPathItem(p, replacements)
+	}
+	for _, piRef := range d.Webhooks {
+		if piRef != nil && piRef.Value != nil {
+			replaceParameterRefsInPathItem(piRef.Value, replacements)
+		}
+	}
+	for _, piRef := range d.Components.PathItems {
+		if piRef != nil && piRef.Value != nil {
+			replaceParameterRefsInPathItem(piRef.Value, replacements)
+		}
+	}
+}
+
+func replaceParameterRefsInPathItem(p *openapi.PathItem, replacements map[string]string) {
+	if p == nil {
+		return
+	}
+	replaceParameterRefList(p.Parameters, replacements)
+	for _, op := range p.Operations {
+		if op != nil {
+			replaceParameterRefList(op.Parameters, replacements)
+		}
+	}
+}
+
+func replaceParameterRefList(params openapi.ParameterList, replacements map[string]string) {
+	for _, p := range params {
+		if p == nil || p.Ref == nil {
+			continue
+		}
+		name := parameterNameFromRef(p.Ref.Identifier)
+		if canonical, ok := replacements[name]; ok {
+			p.Ref.Identifier = "#/components/parameters/" + canonical
+		}
+	}
+}
+
+func parameterNameFromRef(identifier string) string {
+	const prefix = "#/components/parameters/"
+	return strings.TrimPrefix(identifier, prefix)
+}
+
 // replaceRefsInDocument updates $ref identifiers throughout the entire document.
 func replaceRefsInDocument(d *openapi.Document, replacements map[string]string) {
 	replaceRefsInComponents(&d.Components, replacements)
@@ -195,9 +305,7 @@ func replaceRefsInResponseRef(r *openapi.ResponseRef, replacements map[string]st
 func replaceRefsInComponents(c *openapi.Components, replacements map[string]string) {
 	replaceRefsInSchemas(c.Schemas, replacements)
 	for _, ref := range c.Responses {
-		if ref != nil && ref.Value != nil {
-			replaceRefsInContent(ref.Value.Content, replacements)
-		}
+		replaceRefsInResponseRef(ref, replacements)
 	}
 	for _, ref := range c.RequestBodies {
 		if ref != nil && ref.Value != nil {
@@ -206,11 +314,13 @@ func replaceRefsInComponents(c *openapi.Components, replacements map[string]stri
 	}
 	for _, ref := range c.Parameters {
 		if ref != nil && ref.Value != nil {
+			replaceRefsInSchema(ref.Value.Schema, replacements)
 			replaceRefsInContent(ref.Value.Content, replacements)
 		}
 	}
 	for _, ref := range c.Headers {
 		if ref != nil && ref.Value != nil {
+			replaceRefsInSchema(ref.Value.Schema, replacements)
 			replaceRefsInContent(ref.Value.Content, replacements)
 		}
 	}
@@ -227,29 +337,47 @@ func replaceRefsInContent(content openapi.Content, replacements map[string]strin
 	for _, mt := range content {
 		if mt != nil && mt.Schema != nil {
 			replaceSchemaRef(mt.Schema, replacements)
+			replaceRefsInSchema(mt.Schema.Value, replacements)
 		}
 	}
 }
 
 func replaceRefsInSchema(s *openapi.Schema, replacements map[string]string) {
-	if s == nil {
+	replaceRefsInSchemaRec(s, map[*openapi.Schema]bool{}, replacements)
+}
+
+func replaceRefsInSchemaRec(s *openapi.Schema, visited map[*openapi.Schema]bool, replacements map[string]string) {
+	if s == nil || visited[s] {
 		return
 	}
+	visited[s] = true
 
 	for _, ref := range s.Properties {
 		replaceSchemaRef(ref, replacements)
+		if ref != nil && ref.Ref == nil {
+			replaceRefsInSchemaRec(ref.Value, visited, replacements)
+		}
 	}
 
 	if s.Items != nil {
 		replaceSchemaRef(s.Items, replacements)
+		if s.Items.Ref == nil {
+			replaceRefsInSchemaRec(s.Items.Value, visited, replacements)
+		}
 	}
 
 	if s.AdditionalProperties != nil {
 		replaceSchemaRef(s.AdditionalProperties, replacements)
+		if s.AdditionalProperties.Ref == nil {
+			replaceRefsInSchemaRec(s.AdditionalProperties.Value, visited, replacements)
+		}
 	}
 
 	for _, ref := range s.AllOf {
 		replaceSchemaRef(ref, replacements)
+		if ref != nil && ref.Ref == nil {
+			replaceRefsInSchemaRec(ref.Value, visited, replacements)
+		}
 	}
 }
 

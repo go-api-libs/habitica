@@ -18,7 +18,7 @@ func FromOperation(
 	pathItemParams openapi.ParameterList,
 	method string,
 	op *openapi.Operation,
-	auth Auth,
+	globalParams paramMap,
 ) (*Operation, error) {
 	if op.OperationID == "" {
 		return nil, fmt.Errorf("operationId is required")
@@ -32,20 +32,20 @@ func FromOperation(
 	parsedPath := rawPath.Parse()
 
 	// Resolve each parameter and index by name for path arg computation.
-	var pathParams, queryParams, headerParam []Param
+	var pathParams, queryParams, headerParams []Param
 	paramByName := make(map[string]Param, len(merged))
 
 	for _, pRef := range merged {
 		p := pRef.Value
-		param, err := fromParam(p)
+		if _, ok := globalParams[p]; ok {
+			continue
+		}
+
+		param, err := fromParam(p, "")
 		if err != nil {
 			return nil, fmt.Errorf("param %q: %w", p.Name, err)
 		}
 		paramByName[p.Name] = param
-
-		if p.In == auth.APIKey.In && p.Name == auth.APIKey.Name {
-			param.FormatExpr = "c.apiKey"
-		}
 
 		switch p.In {
 		case openapi.ParameterLocationPath:
@@ -53,15 +53,15 @@ func FromOperation(
 		case openapi.ParameterLocationQuery:
 			queryParams = append(queryParams, param)
 		case openapi.ParameterLocationHeader:
-			headerParam = append(headerParam, param)
+			headerParams = append(headerParams, param)
 		}
 	}
 
 	joinArgs := buildJoinPathArgs(parsedPath, paramByName)
 
-	hasParams := len(pathParams)+len(queryParams) > 0
+	hasParams := len(pathParams)+len(queryParams)+len(headerParams) > 0
 	var paramStructName string
-	if len(queryParams) > 0 {
+	if len(queryParams)+len(headerParams) > 0 {
 		paramStructName = name + "Params"
 	}
 
@@ -88,7 +88,7 @@ func FromOperation(
 		JoinPathArgs:    joinArgs,
 		PathParams:      pathParams,
 		QueryParams:     queryParams,
-		HeaderParam:     headerParam,
+		HeaderParams:    headerParams,
 		HasParams:       hasParams,
 		ParamStructName: paramStructName,
 		RequestBody:     reqBody,
@@ -118,47 +118,46 @@ func mergeParams(pathItem, operation openapi.ParameterList) openapi.ParameterLis
 	return append(result, operation...)
 }
 
-func fromParam(p *openapi.Parameter) (Param, error) {
-	if p.Schema == nil {
-		return Param{}, fmt.Errorf("schema is required")
+func fromParam(p *openapi.Parameter, apiTitle string) (Param, error) {
+	param := Param{
+		JSONName:    p.Name,
+		Required:    p.Required,
+		Description: p.Description,
 	}
+	if p.Schema == nil {
+		return param, fmt.Errorf("schema is required")
+	}
+
+	param.IsEnum = len(p.Schema.Enum) > 0
 
 	tp, err := SchemaGoType(p.Schema)
 	if err != nil {
-		return Param{}, err
+		return param, err
+	}
+	param.Type = tp.String()
+
+	param.GoName = strcase.ToGoCamel(p.Name)
+	param.ParseExpr, param.ParseCast, param.ParseErrFree = tp.serverParseExpr()
+
+	param.FieldName = strcase.ToGoPascal(p.Name)
+
+	switch p.Name {
+	case "X-Api-Key":
+		param.GlobalType = GlobalAPIKey
+		param.VarName = "apiKey"
+		if apiTitle != "" {
+			param.EnvName = strcase.ToSNAKE(fmt.Sprintf("%s_KEY", apiTitle))
+		}
+		param.Example = p.Schema.Example.String()
+	default:
+		if p.In == openapi.ParameterLocationPath {
+			param.VarName = p.Name
+		} else {
+			param.VarName = "params." + param.FieldName
+		}
 	}
 
-	goName := strcase.ToGoCamel(p.Name)
-	parseExpr, parseCast, parseErrFree := tp.serverParseExpr()
-
-	v := ""
-	if p.Required && p.In == openapi.ParameterLocationHeader &&
-		tp.Name == "string" && p.Schema != nil {
-		v = string(p.Schema.Example)
-	}
-
-	fieldName := strcase.ToGoPascal(p.Name)
-	varName := "params." + fieldName
-
-	if p.In == openapi.ParameterLocationPath {
-		varName = p.Name
-	}
-
-	return Param{
-		GoName:       goName,
-		FieldName:    fieldName,
-		JSONName:     p.Name,
-		Type:         tp.String(),
-		Required:     p.Required,
-		NotZero:      tp.NotZero(varName),
-		FormatExpr:   tp.formatExpr(varName),
-		ParseExpr:    parseExpr,
-		ParseCast:    parseCast,
-		ParseErrFree: parseErrFree,
-		IsEnum:       len(p.Schema.Enum) > 0,
-		Description:  p.Description,
-		Value:        v,
-	}, nil
+	return param, nil
 }
 
 // serverParseExpr returns the expression that parses a string variable `s` into goType.
@@ -217,7 +216,7 @@ func buildJoinPathArgs(parsed openapi.ParsedPath, params map[string]Param) []str
 		if strings.HasPrefix(seg, "{") && strings.HasSuffix(seg, "}") {
 			paramName := seg[1 : len(seg)-1]
 			if p, ok := params[paramName]; ok {
-				args = append(args, p.FormatExpr)
+				args = append(args, p.FormatExpr())
 			} else {
 				args = append(args, strconv.Quote(paramName))
 			}
@@ -230,71 +229,75 @@ func buildJoinPathArgs(parsed openapi.ParsedPath, params map[string]Param) []str
 }
 
 // NotZero returns the Go boolean expression that is true when param is not the zero value.
-func (tp GoType) NotZero(varName string) string {
-	switch tp.Name {
+func (p Param) NotZero() string {
+	switch p.Type {
 	case "string":
-		return varName + ` != ""`
+		return p.VarName + ` != ""`
 	case "types.Email":
-		return varName + ` != ""`
+		return p.VarName + ` != ""`
 	case "bool":
-		return varName
+		return p.VarName
 	case "uuid.UUID":
-		return varName + " != uuid.Nil"
+		return p.VarName + " != uuid.Nil"
 	case "net.IP":
-		return varName + " != nil"
+		return p.VarName + " != nil"
 	case "url.URL":
-		return varName + `.Host != ""`
+		return p.VarName + `.Host != ""`
 	case "time.Time":
-		return "!" + varName + ".IsZero()"
+		return "!" + p.VarName + ".IsZero()"
 	case "civil.Date":
-		return varName + " != (civil.Date{})"
+		return p.VarName + " != (civil.Date{})"
 	case "time.Duration":
-		return varName + " != 0"
+		return p.VarName + " != 0"
 	default:
 		// int, int32, int64, uint*, float32, float64
-		return varName + " != 0"
+		return p.VarName + " != 0"
 	}
 }
 
 // formatExpr returns the Go expression that converts the param to a string for URL encoding.
-func (tp GoType) formatExpr(varName string) string {
-	switch tp.Name {
+func (p Param) FormatExpr() string {
+	if p.GlobalType != "" {
+		return "c." + p.VarName
+	}
+
+	switch p.Type {
 	case "string":
-		return varName
+		return p.VarName
 	case "types.Email":
-		return "string(" + varName + ")"
+		return "string(" + p.VarName + ")"
 	case "bool":
-		return "strconv.FormatBool(" + varName + ")"
+		return "strconv.FormatBool(" + p.VarName + ")"
 	case "int":
-		return "strconv.Itoa(" + varName + ")"
+		return "strconv.Itoa(" + p.VarName + ")"
 	case "int32":
-		return "strconv.FormatInt(int64(" + varName + "), 10)"
+		return "strconv.FormatInt(int64(" + p.VarName + "), 10)"
 	case "int64":
-		return "strconv.FormatInt(" + varName + ", 10)"
+		return "strconv.FormatInt(" + p.VarName + ", 10)"
 	case "uint":
-		return "strconv.FormatUint(uint64(" + varName + "), 10)"
+		return "strconv.FormatUint(uint64(" + p.VarName + "), 10)"
 	case "uint32":
-		return "strconv.FormatUint(uint64(" + varName + "), 10)"
+		return "strconv.FormatUint(uint64(" + p.VarName + "), 10)"
 	case "uint64":
-		return "strconv.FormatUint(" + varName + ", 10)"
+		return "strconv.FormatUint(" + p.VarName + ", 10)"
 	case "float32":
-		return "strconv.FormatFloat(float64(" + varName + "), 'f', -1, 32)"
+		return "strconv.FormatFloat(float64(" + p.VarName + "), 'f', -1, 32)"
 	case "float64":
-		return "strconv.FormatFloat(" + varName + ", 'f', -1, 64)"
+		return "strconv.FormatFloat(" + p.VarName + ", 'f', -1, 64)"
 	case "uuid.UUID":
-		return varName + ".String()"
+		return p.VarName + ".String()"
 	case "url.URL":
-		return varName + ".String()"
+		return p.VarName + ".String()"
 	case "time.Time":
-		return varName + ".Format(time.RFC3339)"
+		return p.VarName + ".Format(time.RFC3339)"
 	case "civil.Date":
-		return varName + ".String()"
+		return p.VarName + ".String()"
 	case "net.IP":
-		return varName + ".String()"
+		return p.VarName + ".String()"
 	case "time.Duration":
-		return "strconv.FormatInt(int64(" + varName + "/time.Second), 10)"
+		return "strconv.FormatInt(int64(" + p.VarName + "/time.Second), 10)"
 	default:
-		return "fmt.Sprint(" + varName + ")"
+		return "fmt.Sprint(" + p.VarName + ")"
 	}
 }
 

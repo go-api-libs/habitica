@@ -28,15 +28,21 @@ var jsonOpts = json.JoinOptions(
 		{{- end }}
 	)
 
-{{range .Operations}}{{- if .QueryParams}}
+{{range .Operations}}{{- if or .QueryParams .HeaderParams }}
 // {{.ParamStructName}} holds the query parameters for {{.Name}}.
 type {{.ParamStructName}} struct {
-	{{- range .QueryParams}}
+	{{- range .QueryParams }}
 		{{- if .Description }}
 			{{ toGoComment .Description }}
 		{{- end }}
-		{{.FieldName}} {{.Type}}
-	{{- end}}
+		{{ .FieldName}} {{.Type }}
+	{{- end }}
+	{{- range .HeaderParams }}
+		{{- if .Description }}
+			{{ toGoComment .Description }}
+		{{- end }}
+		{{ .FieldName}} {{.Type}}
+	{{- end }}
 }
 {{end}}{{end}}
 
