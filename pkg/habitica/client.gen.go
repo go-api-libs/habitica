@@ -100,9 +100,9 @@ func ListTasks[R any](ctx context.Context, c *Client, params *ListTasksParams) (
 
 	req := (&http.Request{
 		Header: http.Header{
+			"X-Api-Key":  []string{c.apiKey},
+			"X-Api-User": []string{params.XAPIUser.String()},
 			"X-Client":   []string{"8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica"},
-			"X-Api-Key":  []string{},
-			"X-Api-User": []string{},
 			"User-Agent": []string{c.userAgent},
 		},
 		Host:       u.Host,
