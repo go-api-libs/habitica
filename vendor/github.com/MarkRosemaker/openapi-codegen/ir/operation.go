@@ -18,6 +18,7 @@ func FromOperation(
 	pathItemParams openapi.ParameterList,
 	method string,
 	op *openapi.Operation,
+	auth Auth,
 ) (*Operation, error) {
 	if op.OperationID == "" {
 		return nil, fmt.Errorf("operationId is required")
@@ -41,6 +42,10 @@ func FromOperation(
 			return nil, fmt.Errorf("param %q: %w", p.Name, err)
 		}
 		paramByName[p.Name] = param
+
+		if p.In == auth.APIKey.In && p.Name == auth.APIKey.Name {
+			param.FormatExpr = "c.apiKey"
+		}
 
 		switch p.In {
 		case openapi.ParameterLocationPath:
@@ -133,10 +138,10 @@ func fromParam(p *openapi.Parameter) (Param, error) {
 	}
 
 	fieldName := strcase.ToGoPascal(p.Name)
-	paramName := "params." + fieldName
+	varName := "params." + fieldName
 
 	if p.In == openapi.ParameterLocationPath {
-		paramName = p.Name
+		varName = p.Name
 	}
 
 	return Param{
@@ -145,8 +150,8 @@ func fromParam(p *openapi.Parameter) (Param, error) {
 		JSONName:     p.Name,
 		Type:         tp.String(),
 		Required:     p.Required,
-		NotZero:      tp.notZeroExpr(paramName),
-		FormatExpr:   tp.formatExpr(paramName),
+		NotZero:      tp.NotZero(varName),
+		FormatExpr:   tp.formatExpr(varName),
 		ParseExpr:    parseExpr,
 		ParseCast:    parseCast,
 		ParseErrFree: parseErrFree,
@@ -224,8 +229,8 @@ func buildJoinPathArgs(parsed openapi.ParsedPath, params map[string]Param) []str
 	return args
 }
 
-// notZeroExpr returns the Go boolean expression that is true when param is not the zero value.
-func (tp GoType) notZeroExpr(varName string) string {
+// NotZero returns the Go boolean expression that is true when param is not the zero value.
+func (tp GoType) NotZero(varName string) string {
 	switch tp.Name {
 	case "string":
 		return varName + ` != ""`

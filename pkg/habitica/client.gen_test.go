@@ -39,6 +39,8 @@ func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) {
 
 func TestClient_Error(t *testing.T) {
 	t.Run("ListTasks", func(t *testing.T) {
+		t.Setenv("HABITICA_API_KEY", "00000000-0000-0000-0000-000000000000")
+
 		t.Run("transport error", func(t *testing.T) {
 			c, err := NewClient(WithHTTPClient(&http.Client{Transport: roundTripFunc(
 				func(*http.Request) (*http.Response, error) { return nil, io.EOF },

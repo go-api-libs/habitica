@@ -39,8 +39,11 @@ func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) {
 func TestClient_Error(t *testing.T) {
 {{range .Operations}}
 	t.Run({{printf "%q" .Name}}, func(t *testing.T) {
-		{{- if $.Auth.Bearer.Name}}
-		t.Setenv({{printf "%q" $.Auth.Bearer.Name}}, "**************************************************")
+		{{- with $.Auth.Bearer.Name}}
+		t.Setenv({{printf "%q" . }}, "**************************************************")
+		{{end}}
+		{{- with $.Auth.APIKey.EnvName}}
+		t.Setenv({{printf "%q" . }}, {{ or $.Auth.APIKey.Example "**************************************************" }})
 		{{end}}
 		t.Run("transport error", func(t *testing.T) {
 			c, err := NewClient(WithHTTPClient(&http.Client{Transport: roundTripFunc(

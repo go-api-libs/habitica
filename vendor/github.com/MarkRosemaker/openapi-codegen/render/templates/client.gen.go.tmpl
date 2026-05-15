@@ -194,7 +194,7 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 			"Authorization":  []string{c.bearer},
 			{{- end }}
 			{{ range .HeaderParam -}}
-			"{{ .JSONName }}": []string{ {{- .Value -}} },
+			"{{ .JSONName }}": []string{ {{- or .Value .FormatExpr -}} },
 			{{ end -}}
 			"User-Agent":     []string{c.userAgent},
 		},

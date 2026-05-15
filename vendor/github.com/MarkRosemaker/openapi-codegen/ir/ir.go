@@ -112,7 +112,7 @@ type Param struct {
 	ParseErrFree bool   // server-side: true when ParseExpr cannot return an error
 	IsEnum       bool
 	Description  string
-	Value        string `json:"Value,omitzero"`
+	Value        string `json:"Value,omitzero"` // hardcoded value
 }
 
 // GoType is a resolved Go type reference.
@@ -192,4 +192,5 @@ type APIKey struct {
 	EnvName string
 	Name    string
 	In      openapi.ParameterLocation
+	Example string
 }

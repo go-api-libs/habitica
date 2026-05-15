@@ -45,12 +45,12 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		return nil, fmt.Errorf("components.schemas: %w", err)
 	}
 
-	operations, err := fromPaths(doc.Paths)
+	auth := getAuth(doc)
+	operations, err := fromPaths(doc.Paths, auth)
 	if err != nil {
 		return nil, fmt.Errorf("paths: %w", err)
 	}
 
-	auth := getAuth(doc)
 	hasURL, hasDuration, hasDate := needsSpecialImports(schemas, operations)
 
 	return &Document{
@@ -83,11 +83,11 @@ func parseBaseURL(doc *openapi.Document) (URLParts, error) {
 }
 
 // fromPaths iterates all path items and operations, converting each to ir.Operation.
-func fromPaths(paths openapi.Paths) ([]Operation, error) {
+func fromPaths(paths openapi.Paths, auth Auth) ([]Operation, error) {
 	var ops []Operation
 	for path, item := range paths.ByIndex() {
 		for method, op := range item.Operations {
-			irOp, err := FromOperation(path, item.Parameters, method, op)
+			irOp, err := FromOperation(path, item.Parameters, method, op, auth)
 			if err != nil {
 				return nil, fmt.Errorf("%s %s: %w", method, path, err)
 			}
@@ -115,6 +115,7 @@ func getAuth(doc *openapi.Document) Auth {
 			EnvName: strcase.ToSNAKE(fmt.Sprintf("%s_KEY", doc.Info.Title)),
 			Name:    p.Value.Name,
 			In:      p.Value.In,
+			Example: string(p.Value.Schema.Example),
 		}
 	}
 
