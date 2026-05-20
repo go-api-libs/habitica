@@ -1,6 +1,7 @@
 package ir
 
 import (
+	"fmt"
 	"slices"
 )
 
@@ -64,6 +65,19 @@ type Operation struct {
 
 func (op Operation) ParamsInStruct() Params {
 	return append(op.QueryParams, op.HeaderParams...)
+}
+
+func (op Operation) NilParamsExpr() string {
+	params := op.ParamsInStruct()
+	if len(params) == 0 {
+		return ""
+	}
+
+	if params.Required() {
+		return fmt.Sprintf("%s{}", op.ParamStructName)
+	}
+
+	return "nil"
 }
 
 // Schema represents a named component schema.
