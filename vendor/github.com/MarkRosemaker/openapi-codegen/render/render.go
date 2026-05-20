@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"io/fs"
 	"path/filepath"
+	"strings"
 	"text/template"
 
+	"github.com/MarkRosemaker/openapi-codegen/ir"
 	"golang.org/x/tools/imports"
 	gofumpt "mvdan.cc/gofumpt/format"
-
-	"github.com/MarkRosemaker/openapi-codegen/ir"
 )
 
 //go:embed templates/*.tmpl
@@ -50,21 +50,27 @@ func FilesFromFS(fsys fs.FS, doc *ir.Document) ([]File, error) {
 
 	var files []File
 	for _, e := range entries {
-		if e.IsDir() || filepath.Ext(e.Name()) != ".tmpl" {
+		name := e.Name()
+		outName, isTpl := strings.CutSuffix(name, ".tmpl")
+		if e.IsDir() || !isTpl {
 			continue
 		}
 
-		data, err := fs.ReadFile(fsys, e.Name())
+		data, err := fs.ReadFile(fsys, name)
 		if err != nil {
 			return nil, err
 		}
 
-		rendered, err := RenderTemplate(e.Name(), string(data), doc)
+		var rendered []byte
+		if filepath.Ext(outName) == ".go" {
+			rendered, err = RenderTemplate(name, string(data), doc)
+		} else {
+			rendered, err = renderText(name, string(data), doc)
+		}
 		if err != nil {
-			return nil, fmt.Errorf("template %s: %w", e.Name(), err)
+			return nil, fmt.Errorf("template %s: %w", name, err)
 		}
 
-		outName := e.Name()[:len(e.Name())-len(".tmpl")]
 		files = append(files, File{Name: outName, Content: rendered})
 	}
 
@@ -95,4 +101,20 @@ func RenderTemplate(tmplName, tmplContent string, doc *ir.Document) ([]byte, err
 		LangVersion: "go1.25",
 		ModulePath:  "github.com/MarkRosemaker/openapi-codegen",
 	})
+}
+
+// renderText executes a template string against the IR document without any
+// language-specific post-processing. Used for non-Go output files (e.g. .js).
+func renderText(tmplName, tmplContent string, doc *ir.Document) ([]byte, error) {
+	tmpl, err := template.New(tmplName).Funcs(templateFuncs()).Parse(tmplContent)
+	if err != nil {
+		return nil, fmt.Errorf("parse: %w", err)
+	}
+
+	buf := bytes.Buffer{}
+	if err := tmpl.Execute(&buf, doc); err != nil {
+		return nil, fmt.Errorf("execute: %w", err)
+	}
+
+	return buf.Bytes(), nil
 }

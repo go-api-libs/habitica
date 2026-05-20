@@ -3,6 +3,7 @@ package ir
 import (
 	"fmt"
 	"slices"
+	"strings"
 )
 
 // Document is the top-level IR type passed to templates.
@@ -78,6 +79,16 @@ func (op Operation) NilParamsExpr() string {
 	}
 
 	return "nil"
+}
+
+// JSPathTemplate returns the path template with {jsonName} placeholders replaced
+// by ${goName} JavaScript template-literal interpolations.
+func (op Operation) JSPathTemplate() string {
+	result := op.PathTemplate
+	for _, p := range op.PathParams {
+		result = strings.ReplaceAll(result, "{"+p.JSONName+"}", "${"+p.GoName+"}")
+	}
+	return result
 }
 
 // Schema represents a named component schema.

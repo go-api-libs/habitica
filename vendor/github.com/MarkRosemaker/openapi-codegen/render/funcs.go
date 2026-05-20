@@ -6,6 +6,8 @@ import (
 	"strings"
 	"text/template"
 	"unicode"
+
+	"github.com/ettle/strcase"
 )
 
 // templateFuncs returns the function map available to all templates.
@@ -33,6 +35,7 @@ func templateFuncs() template.FuncMap {
 			r[0] = unicode.ToUpper(r[0])
 			return string(r)
 		},
+		"camelCase":   strcase.ToGoCamel,
 		"typeZeroVal": typeZeroVal,
 		"toGoComment": toGoComment,
 	}
