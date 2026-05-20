@@ -29,6 +29,8 @@ type Client struct {
 	cli *http.Client
 	// The API key
 	apiKey string
+	// The client parameter
+	client string
 	// The base URL
 	baseURL *url.URL
 	// The user agent
@@ -58,11 +60,17 @@ func WithAPIKey(apiKey string) ClientOption {
 	return func(c *Client) { c.apiKey = apiKey }
 }
 
+// WithClient returns a [ClientOption] that sets a custom client parameter.
+func WithClient(client string) ClientOption {
+	return func(c *Client) { c.client = client }
+}
+
 // NewClient creates a new Client.
 func NewClient(opts ...ClientOption) (*Client, error) {
 	c := &Client{
 		cli:       http.DefaultClient,
 		baseURL:   defaultBaseURL,
+		client:    "8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica",
 		userAgent: defaultUserAgent,
 	}
 
@@ -74,6 +82,10 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 
 	if c.apiKey == "" {
 		return nil, errors.New("api key HABITICA_API_KEY not provided")
+	}
+
+	if c.client == "" {
+		return nil, errors.New("client parameter not provided")
 	}
 
 	return c, nil
@@ -101,8 +113,8 @@ func ListTasks[R any](ctx context.Context, c *Client, params *ListTasksParams) (
 	req := (&http.Request{
 		Header: http.Header{
 			"X-Api-Key":  []string{c.apiKey},
+			"X-Client":   []string{c.client},
 			"X-Api-User": []string{params.XAPIUser.String()},
-			"X-Client":   []string{"8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica"},
 			"User-Agent": []string{c.userAgent},
 		},
 		Host:       u.Host,

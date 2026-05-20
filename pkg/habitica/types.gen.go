@@ -17,7 +17,8 @@ var jsonOpts = json.JoinOptions(
 
 // ListTasksParams holds the query parameters for ListTasks.
 type ListTasksParams struct {
-	Type string
+	Type     string
+	XAPIUser uuid.UUID
 }
 
 // Approval defines a model
