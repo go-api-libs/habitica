@@ -145,19 +145,6 @@ func getGlobalParams(paths openapi.Paths, apiTitle string) (paramMap, error) {
 
 			if param.GlobalType != "" {
 				params.Set(p, param)
-				continue
-			}
-
-			if p.Required && p.In == openapi.ParameterLocationHeader &&
-				p.Schema != nil && p.Schema.Type == openapi.TypeString {
-
-				// Check for hardcoded value
-				if len(p.Schema.Example) > 0 &&
-					(strings.HasSuffix(p.Name, "Version") || p.Name == "X-Client") {
-					param.Value = string(p.Schema.Example)
-				}
-
-				params.Set(p, param)
 			}
 		}
 	}

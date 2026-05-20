@@ -47,6 +47,12 @@ type Client struct {
 		{{ end -}}
 	{{ .VarName }} string
 	{{ end -}}
+	{{ with .Client -}}
+		{{ with or .Description "The client parameter" -}}
+			{{ toGoComment . }}
+		{{ end -}}
+	{{ .VarName }} string
+	{{ end -}}
 	// The base URL
 	baseURL   *url.URL
 	// The user agent
@@ -89,11 +95,21 @@ func WithAPIKey({{ .VarName }} string) ClientOption {
 }
 {{ end }}
 
+{{ with .Client }}
+// WithClient returns a [ClientOption] that sets a custom client parameter.
+func WithClient({{ .VarName }} string) ClientOption {
+	return func(c *Client) { {{ .FormatExpr }} = {{ .VarName }} }
+}
+{{ end }}
+
 // NewClient creates a new Client{{ with .Auth.Bearer.Name }}, reading the bearer token from [os.Getenv]("{{ . }}"){{ end }}.
 func NewClient(opts ...ClientOption) (*Client, error) {
 	c := &Client{
 		cli:       http.DefaultClient,
 		baseURL:   defaultBaseURL,
+		{{ with .Client }}{{ if .Example -}}
+		{{ .VarName }}: {{ .Example }},
+		{{ end }}{{ end -}}
 		userAgent: defaultUserAgent,
 	}
 
@@ -122,6 +138,12 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 		{{ else -}}
 		return nil, errors.New("api key not provided")
 		{{ end -}}
+	}
+	{{ end }}
+
+	{{ with .Client }}
+	if {{ .FormatExpr }} == "" {
+		return nil, errors.New("client parameter not provided")
 	}
 	{{ end }}
 

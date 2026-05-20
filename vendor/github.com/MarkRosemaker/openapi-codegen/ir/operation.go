@@ -141,20 +141,36 @@ func fromParam(p *openapi.Parameter, apiTitle string) (Param, error) {
 
 	param.FieldName = strcase.ToGoPascal(p.Name)
 
-	switch p.Name {
-	case "X-Api-Key":
-		param.GlobalType = GlobalAPIKey
-		param.VarName = "apiKey"
-		if apiTitle != "" {
-			param.EnvName = strcase.ToSNAKE(fmt.Sprintf("%s_KEY", apiTitle))
+	if p.Required {
+		switch p.Name {
+		case "X-Api-Key":
+			param.GlobalType = GlobalAPIKey
+			param.VarName = "apiKey"
+			if apiTitle != "" {
+				param.EnvName = strcase.ToSNAKE(fmt.Sprintf("%s_KEY", apiTitle))
+			}
+		case "X-Client":
+			param.GlobalType = GlobalClient
+			param.VarName = "client"
+		default:
+			if p.In == openapi.ParameterLocationHeader &&
+				strings.HasSuffix(p.Name, "Version") {
+				param.GlobalType = GlobalVersion
+				param.Value = p.Schema.Example.String()
+			}
 		}
-		param.Example = p.Schema.Example.String()
-	default:
+	}
+
+	if param.VarName == "" {
 		if p.In == openapi.ParameterLocationPath {
 			param.VarName = p.Name
 		} else {
 			param.VarName = "params." + param.FieldName
 		}
+	}
+
+	if param.GlobalType != "" {
+		param.Example = p.Schema.Example.String()
 	}
 
 	return param, nil

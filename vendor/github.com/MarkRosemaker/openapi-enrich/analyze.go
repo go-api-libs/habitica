@@ -3,9 +3,11 @@ package enrich
 import (
 	"encoding/base64"
 	"fmt"
+	"maps"
 	"mime"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -129,7 +131,9 @@ func getOrCreateOperation(pi *openapi.PathItem, method string) *openapi.Operatio
 }
 
 func processQueryParams(doc *openapi.Document, pi *openapi.PathItem, op *openapi.Operation, reqURL *url.URL) error {
-	for name, values := range reqURL.Query() {
+	query := reqURL.Query()
+	for _, name := range slices.Sorted(maps.Keys(query)) {
+		values := query[name]
 		value := strings.Join(values, ",")
 
 		var schema *openapi.Schema
@@ -178,7 +182,7 @@ func processQueryParams(doc *openapi.Document, pi *openapi.PathItem, op *openapi
 }
 
 func processRequestHeaders(doc *openapi.Document, piParams openapi.ParameterList, op *openapi.Operation, h http.Header, contentType *string) error {
-	for key := range h {
+	for _, key := range slices.Sorted(maps.Keys(h)) {
 		// assume all keys are stored in canonical form
 		if canonical := http.CanonicalHeaderKey(key); canonical != key {
 			return fmt.Errorf("header %q: not in canonical form (%q)", key, canonical)

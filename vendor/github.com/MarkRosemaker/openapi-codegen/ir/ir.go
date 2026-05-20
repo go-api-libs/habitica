@@ -104,7 +104,10 @@ type EnumValue struct {
 type GlobalType string
 
 const (
-	GlobalAPIKey GlobalType = "APIKey"
+	GlobalAPIKey    GlobalType = "APIKey"
+	GlobalVersion   GlobalType = "Version"
+	GlobalClient    GlobalType = "Client"
+	GlobalUserAgent GlobalType = "User-Agent"
 )
 
 type Params []Param
@@ -130,6 +133,10 @@ type Param struct {
 
 func (doc Document) APIKey() *Param {
 	return doc.getGlobal(GlobalAPIKey)
+}
+
+func (doc Document) Client() *Param {
+	return doc.getGlobal(GlobalClient)
 }
 
 func (doc Document) getGlobal(tp GlobalType) *Param {
