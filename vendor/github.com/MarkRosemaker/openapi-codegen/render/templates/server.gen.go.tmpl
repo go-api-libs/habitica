@@ -21,7 +21,7 @@ import (
 // Service defines the operations the server must implement.
 type Service interface {
 {{- range .Operations}}
-	{{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .QueryParams}}, params *{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) ({{if .SuccessReturn}}{{.SuccessReturn.Nilable}}, {{end}}error)
+	{{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .QueryParams}}, params {{ if not .ParamsInStruct.Required }}*{{ end }}{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) ({{if .SuccessReturn}}{{.SuccessReturn.Nilable}}, {{end}}error)
 {{- end}}
 }
 

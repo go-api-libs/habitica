@@ -24,9 +24,10 @@ type Document struct {
 
 // InteractionCall is one operation call extracted from a recorded interaction.
 type InteractionCall struct {
-	Op        *Operation         // matched operation
-	PathArgs  []string           // Go literal per path param, same order as Op.PathParams
-	QueryArgs []InteractionParam // set query params only (omitted = use nil params)
+	Op         *Operation         // matched operation
+	PathArgs   []string           // Go literal per path param, same order as Op.PathParams
+	QueryArgs  []InteractionParam // set query params only (omitted = use nil params)
+	HeaderArgs []InteractionParam // set query params only (omitted = use nil params)
 }
 
 // InteractionParam is one query param with its Go literal value.
@@ -59,6 +60,10 @@ type Operation struct {
 	Responses       []Response `json:"Responses,omitempty"`
 	SuccessReturn   *GoType    `json:"SuccessReturn,omitempty"`
 	Deprecated      bool       `json:"Deprecated,omitzero"`
+}
+
+func (op Operation) ParamsInStruct() Params {
+	return append(op.QueryParams, op.HeaderParams...)
 }
 
 // Schema represents a named component schema.
@@ -111,6 +116,16 @@ const (
 )
 
 type Params []Param
+
+func (ps Params) Required() bool {
+	for _, p := range ps {
+		if p.Required {
+			return true
+		}
+	}
+
+	return false
+}
 
 // Param represents a path or query parameter.
 type Param struct {

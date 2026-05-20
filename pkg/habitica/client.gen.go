@@ -92,23 +92,21 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 }
 
 // GET /api/v3/tasks/user
-func (c *Client) ListTasks(ctx context.Context, params *ListTasksParams) (*TaskList, error) {
+func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TaskList, error) {
 	return ListTasks[TaskList](ctx, c, params)
 }
 
 // GET /api/v3/tasks/user
-func ListTasks[R any](ctx context.Context, c *Client, params *ListTasksParams) (*R, error) {
+func ListTasks[R any](ctx context.Context, c *Client, params ListTasksParams) (*R, error) {
 	u := c.baseURL.JoinPath("api", "v3", "tasks", "user")
 
-	if params != nil {
-		q := make(url.Values, 1)
+	q := make(url.Values, 1)
 
-		if params.Type != "" {
-			q["type"] = []string{params.Type}
-		}
-
-		u.RawQuery = q.Encode()
+	if params.Type != "" {
+		q["type"] = []string{params.Type}
 	}
+
+	u.RawQuery = q.Encode()
 
 	req := (&http.Request{
 		Header: http.Header{

@@ -54,6 +54,16 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 				}
 			}
 
+			for _, hp := range op.HeaderParams {
+				val := ia.Request.Headers.Get(hp.JSONName)
+				if val != "" {
+					call.HeaderArgs = append(call.HeaderArgs, ir.InteractionParam{
+						FieldName: hp.FieldName,
+						Literal:   goLiteralForType(hp.Type, val),
+					})
+				}
+			}
+
 			doc.InteractionCalls = append(doc.InteractionCalls, call)
 			break
 		}

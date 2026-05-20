@@ -19,6 +19,7 @@ import (
 
 	"github.com/MarkRosemaker/openapi-enrich/cassette"
 	"github.com/go-api-libs/api"
+	"github.com/google/uuid"
 )
 
 func newTestServer(t *testing.T, status int) *httptest.Server {
@@ -49,7 +50,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTasks(t.Context(), nil); err == nil {
+			if _, err := c.ListTasks(t.Context(), ListTasksParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, io.EOF) {
 				t.Fatalf("want: %v, got: %v", io.EOF, err)
@@ -69,7 +70,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTasks(t.Context(), nil); err == nil {
+			if _, err := c.ListTasks(t.Context(), ListTasksParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if apiErr, ok := errors.AsType[*api.Error](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -97,7 +98,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTasks(t.Context(), nil); err == nil {
+			if _, err := c.ListTasks(t.Context(), ListTasksParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, api.ErrUnknownContentType) {
 				t.Fatalf("want: %v, got: %v", api.ErrUnknownContentType, err)
@@ -122,7 +123,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTasks(t.Context(), nil); err == nil {
+			if _, err := c.ListTasks(t.Context(), ListTasksParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -185,18 +186,22 @@ func replay(t *testing.T) http.RoundTripper {
 
 func TestClient_Interactions(t *testing.T) {
 	ctx := t.Context()
+	t.Setenv("HABITICA_API_KEY", "00000000-0000-0000-0000-000000000000")
 
 	c, err := NewClient(WithHTTPClient(&http.Client{Transport: replay(t)}))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if _, err := c.ListTasks(ctx, nil); err != nil {
+	if _, err := c.ListTasks(ctx, ListTasksParams{
+		XAPIUser: uuid.MustParse("8027d396-e2bb-4389-b002-782025424e75"),
+	}); err != nil {
 		t.Fatal(err)
 	}
 
-	if _, err := c.ListTasks(ctx, &ListTasksParams{
-		Type: "dailys",
+	if _, err := c.ListTasks(ctx, ListTasksParams{
+		Type:     "dailys",
+		XAPIUser: uuid.MustParse("8027d396-e2bb-4389-b002-782025424e75"),
 	}); err != nil {
 		t.Fatal(err)
 	}

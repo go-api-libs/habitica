@@ -202,8 +202,10 @@ func TestClient_Interactions(t *testing.T) {
 	}
 	{{range .InteractionCalls}}
 	{{- if .Op.SuccessReturn}}
-	if _, err := c.{{.Op.Name}}(ctx{{range .PathArgs}}, {{.}}{{end}}{{if .QueryArgs}}, &{{.Op.ParamStructName}}{
+	if _, err := c.{{.Op.Name}}(ctx{{range .PathArgs}}, {{.}}{{end}}{{if .QueryArgs}}, {{ if not .Op.ParamsInStruct.Required }}&{{ end }}{{.Op.ParamStructName}}{
 		{{range .QueryArgs}}{{.FieldName}}: {{.Literal}},
+		{{ end -}}
+		{{range .HeaderArgs}}{{.FieldName}}: {{.Literal}},
 		{{end}}}{{else if .Op.QueryParams}}, nil{{end}}{{if .Op.RequestBody}}, {{if .Op.RequestBody.Required}}{{.Op.RequestBody.TypeName}}{}{{else}}nil{{end}}{{end}}); err != nil {
 		t.Fatal(err)
 	}
