@@ -28,15 +28,18 @@ func main() {
 	flag.StringVar(&cfg.UserAgent, "agent", "", "User-Agent string for the generated client")
 	flag.BoolVar(&cfg.Client, "client", false, "generate client.gen.go and client.gen_test.go")
 	flag.BoolVar(&cfg.Server, "server", false, "generate server.gen.go")
+	flag.BoolVar(&cfg.JS, "js", false, "generate api.js")
 	flag.Parse()
 
-	if !cfg.Client && !cfg.Server {
-		fmt.Fprintln(os.Stderr, "error: either -client or -server are required")
+	if !cfg.Client && !cfg.Server && !cfg.JS {
+		fmt.Fprintln(os.Stderr, "error: either -client, -server, or -js are required")
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	cfg.Types = true
+	// Generate types if needed
+	cfg.Types = cfg.Client || cfg.Server
+	// Add tests if client is generated
 	cfg.ClientTest = cfg.Client
 
 	if err := codegen.Generate(cfg); err != nil {

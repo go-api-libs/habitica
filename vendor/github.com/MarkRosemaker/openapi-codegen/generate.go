@@ -43,10 +43,9 @@ func Generate(cfg Config) error {
 				return err
 			}
 		}
-
 	}
 
-	if cfg.PackageName == "" {
+	if cfg.PackageName == "" && cfg.Generate.GoFiles() {
 		return errors.New("PackageName is required")
 	}
 
@@ -79,16 +78,12 @@ func Generate(cfg Config) error {
 		}
 	}
 
-	files, err := render.Files(irDoc)
+	files, err := render.Files(irDoc, cfg.Generate)
 	if err != nil {
 		return fmt.Errorf("render: %w", err)
 	}
 
 	for _, f := range files {
-		if !cfg.shouldGenerate(f.Name) {
-			continue
-		}
-
 		if err := afero.WriteFile(cfg.OutputFs, f.Name, f.Content, 0o644); err != nil {
 			return fmt.Errorf("write %s: %w", f.Name, err)
 		}

@@ -10,6 +10,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/MarkRosemaker/openapi-codegen/config"
 	"github.com/MarkRosemaker/openapi-codegen/ir"
 	"golang.org/x/tools/imports"
 	gofumpt "mvdan.cc/gofumpt/format"
@@ -36,13 +37,13 @@ type File struct {
 }
 
 // Files renders all embedded templates against the IR document.
-func Files(doc *ir.Document) ([]File, error) {
-	return FilesFromFS(templateSub, doc)
+func Files(doc *ir.Document, g config.Generate) ([]File, error) {
+	return FilesFromFS(templateSub, doc, g)
 }
 
 // FilesFromFS renders all *.tmpl files found in fsys against the IR document.
 // The output file name is the template name minus the ".tmpl" suffix.
-func FilesFromFS(fsys fs.FS, doc *ir.Document) ([]File, error) {
+func FilesFromFS(fsys fs.FS, doc *ir.Document, g config.Generate) ([]File, error) {
 	entries, err := fs.ReadDir(fsys, ".")
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func FilesFromFS(fsys fs.FS, doc *ir.Document) ([]File, error) {
 	for _, e := range entries {
 		name := e.Name()
 		outName, isTpl := strings.CutSuffix(name, ".tmpl")
-		if e.IsDir() || !isTpl {
+		if e.IsDir() || !isTpl || !g.ShouldGenerate(outName) {
 			continue
 		}
 

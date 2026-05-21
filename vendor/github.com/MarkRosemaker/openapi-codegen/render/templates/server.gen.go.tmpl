@@ -15,6 +15,7 @@ import (
 
 	"cloud.google.com/go/civil"
 	"github.com/go-api-libs/types"
+	"github.com/go-api-libs/api/server"
 	"github.com/google/uuid"
 )
 
@@ -90,9 +91,9 @@ func RegisterService(svc Service, mux *http.ServeMux, pathPrefix string) {
 {{- end}}
 {{- if .SuccessReturn}}
 		
-		res, err := svc.{{.Name}}(ctx{{range .PathParams}}, {{.GoName}}{{end}}{{if .QueryParams}}, &params{{end}}{{if .RequestBody}}, {{if not .RequestBody.Required}}&{{end}}body{{end}})
+		res, err := svc.{{.Name}}(ctx{{range .PathParams}}, {{.GoName}}{{end}}{{if .QueryParams}}, {{ if not .ParamsInStruct.Required }}&{{ end }}params{{end}}{{if .RequestBody}}, {{if not .RequestBody.Required}}&{{end}}body{{end}})
 		if err != nil {
-			httpErr, ok := errors.AsType[*Error](err)
+			sErr, ok := errors.AsType[*server.Error](err)
 			if !ok {
 				l.ErrorContext(ctx, "Internal Server Error", slog.String("error", err.Error()))
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -102,7 +103,7 @@ func RegisterService(svc Service, mux *http.ServeMux, pathPrefix string) {
 			l.DebugContext(ctx, "graceful error", slog.String("error", err.Error()))
 
 			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(httpErr.Code)
+			w.WriteHeader(sErr.Code)
 
 			if err := json.MarshalWrite(w, err); err != nil {
 				l.ErrorContext(ctx, "marshal error", slog.String("error", err.Error()))
