@@ -28,8 +28,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ettle/strcase v0.2.0 h1:fGNiVF21fHXpX1niBgk0aROov1LagYsOwV/xqKDKR/Q=
 github.com/ettle/strcase v0.2.0/go.mod h1:DajmHElDSaX76ITe3/VHVyMin4LWSJN5Z909Wp+ED1A=
-github.com/go-api-libs/api v0.0.0-20260522154644-9b3dd3dab72b h1:Y+elOcA/PCB0y6W6f7QUzRpvMofrXumkdLsLaXUnNFk=
-github.com/go-api-libs/api v0.0.0-20260522154644-9b3dd3dab72b/go.mod h1:zxEwsD19APvwWpkkntPl0vFWzayct/iPIaYFwIu0tRs=
+github.com/go-api-libs/api v0.0.0-20260522164500-7a3dc60f8b36 h1:4XbY91uHBaU2UyM/g3Wi3GlSHyI0hl8p1pPomgvSHxI=
+github.com/go-api-libs/api v0.0.0-20260522164500-7a3dc60f8b36/go.mod h1:zxEwsD19APvwWpkkntPl0vFWzayct/iPIaYFwIu0tRs=
 github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d h1:OihMUySw53Oy0DTnE1CAfQ6YkX5/NBaS8Vc2Ww4T56Y=
 github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d/go.mod h1:tJx9kzXjCU+mT7BzZvqg149HnZiHmr8JvbFWsvm5vp0=
 github.com/go-quicktest/qt v1.102.0 h1:HSQxCeh5YZH3EL3W39ixjtyaEhcWSXQHtHnMBzSs474=
