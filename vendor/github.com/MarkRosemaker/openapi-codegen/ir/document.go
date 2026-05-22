@@ -69,6 +69,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 	})
 
 	return &Document{
+		Production:        true,
 		PackageName:       packageName,
 		BaseURL:           baseURL,
 		UserAgent:         userAgent,

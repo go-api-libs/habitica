@@ -45,7 +45,7 @@ func Generate(cfg Config) error {
 		}
 	}
 
-	if cfg.PackageName == "" && cfg.Generate.GoFiles() {
+	if cfg.PackageName == "" && cfg.GoFiles() {
 		return errors.New("PackageName is required")
 	}
 

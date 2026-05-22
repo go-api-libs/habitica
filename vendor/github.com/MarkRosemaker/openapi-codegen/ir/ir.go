@@ -8,6 +8,7 @@ import (
 
 // Document is the top-level IR type passed to templates.
 type Document struct {
+	Production        bool `json:"Production,omitzero"`
 	PackageName       string
 	BaseURL           URLParts
 	UserAgent         string

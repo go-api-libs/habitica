@@ -27,7 +27,7 @@ const TIMEOUT = 4000;
 
 // ====================== ENVIRONMENT ======================
 // Change this to 'production' when connecting to a real backend
-window.ENV = "development"; // ← Set to 'production' for real API calls
+window.ENV = "{{ if .Production }}production{{ else }}development{{ end }}";
 
 // Cache for mocks (loaded once)
 let mocks = null;
