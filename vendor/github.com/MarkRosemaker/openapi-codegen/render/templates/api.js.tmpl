@@ -155,7 +155,7 @@ function apiFetch(path, options = {}) {
 window.API = {
 {{- range .Operations}}
     // {{.Method}} {{.PathTemplate}}{{with .Summary}}
-    // {{.}}{{end}}
+    {{ toGoComment . }}{{end}}
     {{.Name | camelCase}}: ({{- range $i, $p := .PathParams}}{{if $i}}, {{end}}{{$p.GoName}}{{end}}{{if .QueryParams}}{{if .PathParams}}, {{end}}params = {}{{end}}{{if .RequestBody}}{{if or .PathParams .QueryParams}}, {{end}}body{{end -}}) =>{{if .QueryParams}} {
         const q = new URLSearchParams();
         {{- range .QueryParams}}

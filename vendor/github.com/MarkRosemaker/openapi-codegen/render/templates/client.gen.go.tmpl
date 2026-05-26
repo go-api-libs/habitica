@@ -159,8 +159,7 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 	//
 {{- else }}
 	{{- if .Summary -}}
-	// {{.Name}}: {{.Summary}}
-	//
+	{{ toGoComment .Summary }}
 	{{- end }}
 {{- end }}
 //	{{ .Method }} {{ .PathTemplate }}
@@ -178,8 +177,8 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 	// You can define a custom result to unmarshal the response into.
 	//
 {{- else }}
-	{{- if .Summary -}}
-	// {{.Name}}: {{.Summary}}
+	{{- with .Summary -}}
+	{{ toGoComment . }}
 	// You can define a custom result to unmarshal the response into.
 	//
 	{{- end }}
