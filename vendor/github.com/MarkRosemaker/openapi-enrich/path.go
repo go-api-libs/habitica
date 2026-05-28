@@ -53,11 +53,39 @@ func parsePath(p string) parsedPath {
 
 // fits reports whether the given URL path segments are compatible with this parsed path.
 // segments are the actual request URL segments (no braces).
+//
+// A whole-segment parameter ({name}) in the last position is treated as greedy:
+// it absorbs all remaining segments, allowing parameter values that contain
+// slashes (e.g. {path} matching "github.com/google/go-cmp/cmp").
 func (pp parsedPath) fits(segments []string) bool {
-	if len(pp) != len(segments) {
-		return false
+	if len(pp) == 0 {
+		return len(segments) == 0
 	}
-	for i, el := range pp {
+
+	// A trailing whole-segment param is greedy — it can match multiple segments.
+	last := pp[len(pp)-1]
+	lastIsGreedy := last.isParam && last.prefix == "" && last.suffix == ""
+
+	if lastIsGreedy {
+		// The non-greedy prefix must fit, and there must be at least one segment
+		// left for the greedy param to consume.
+		if len(segments) < len(pp) {
+			return false
+		}
+	} else {
+		if len(pp) != len(segments) {
+			return false
+		}
+	}
+
+	// Validate every element up to (but not including) the greedy last param.
+	limit := len(pp)
+	if lastIsGreedy {
+		limit = len(pp) - 1
+	}
+
+	for i := 0; i < limit; i++ {
+		el := pp[i]
 		if el.isParam {
 			if el.prefix != "" || el.suffix != "" {
 				// Embedded param: segment must start with prefix and end with suffix.
@@ -70,7 +98,7 @@ func (pp parsedPath) fits(segments []string) bool {
 					return false
 				}
 			}
-			continue
+			continue // whole-segment param: any single segment fits
 		}
 		if el.name != segments[i] {
 			return false
