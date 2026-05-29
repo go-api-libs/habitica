@@ -110,9 +110,10 @@ func reconcileInlineSchemas(a, b *openapi.Schema) *openapi.Schema {
 	if a.Type == openapi.TypeInteger && b.Type == openapi.TypeNumber {
 		result.Type = openapi.TypeNumber
 		result.Format = b.Format // adopt number's format (e.g. "double")
-	} else if a.Type == openapi.TypeNumber && b.Type == openapi.TypeInteger {
-		// a is already the more general type — keep a's format
 	}
+	// else if a.Type == openapi.TypeNumber && b.Type == openapi.TypeInteger {
+	// 	// a is already the more general type — keep a's format
+	// }
 
 	return &result
 }
