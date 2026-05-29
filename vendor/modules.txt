@@ -10,34 +10,34 @@ github.com/MarkRosemaker/json2yaml
 # github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24
 ## explicit; go 1.24.0
 github.com/MarkRosemaker/jsonutil
-# github.com/MarkRosemaker/openapi v0.0.0-20260528220438-89b592bcdd69
+# github.com/MarkRosemaker/openapi v0.0.0-20260529150510-fb1f59438d24
 ## explicit; go 1.25.0
 github.com/MarkRosemaker/openapi
-# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260529003811-02befe47e2f7
+# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260529152321-3a5153738b70
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/cmd/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/config
 github.com/MarkRosemaker/openapi-codegen/ir
 github.com/MarkRosemaker/openapi-codegen/render
-# github.com/MarkRosemaker/openapi-compress v0.0.0-20260515155544-a63def4b6867
+# github.com/MarkRosemaker/openapi-compress v0.0.0-20260529150632-8174f021e260
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-compress
 github.com/MarkRosemaker/openapi-compress/cmd/openapi-compress
-# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260529005533-026434c03ba5
+# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260529151238-5a572095901a
 ## explicit; go 1.26.0
 github.com/MarkRosemaker/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/cassette
 github.com/MarkRosemaker/openapi-enrich/cmd/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/recorder
-# github.com/MarkRosemaker/openapi-flatten v0.0.0-20260528231021-2f5486dc9e51
+# github.com/MarkRosemaker/openapi-flatten v0.0.0-20260529151711-493819c4f3a5
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-flatten
 github.com/MarkRosemaker/openapi-flatten/cmd/openapi-flatten
-# github.com/MarkRosemaker/openapi-merge v0.0.0-20260407204112-9f1d04e2667e
+# github.com/MarkRosemaker/openapi-merge v0.0.0-20260529141645-2925ae5e81e6
 ## explicit; go 1.25
 github.com/MarkRosemaker/openapi-merge
-# github.com/MarkRosemaker/ordmap v0.0.0-20260528220139-f0a2a1a7a801
+# github.com/MarkRosemaker/ordmap v0.0.0-20260529150254-904c01ea7005
 ## explicit; go 1.25.0
 github.com/MarkRosemaker/ordmap
 # github.com/MarkRosemaker/yaml v0.0.0-20260508005758-fe21a538b084
@@ -63,7 +63,7 @@ github.com/google/uuid
 github.com/spf13/afero
 github.com/spf13/afero/internal/common
 github.com/spf13/afero/mem
-# golang.org/x/exp v0.0.0-20260528193900-50dc527dd6c7
+# golang.org/x/exp v0.0.0-20260529124908-c761662dc8c9
 ## explicit; go 1.25.0
 golang.org/x/exp/maps
 # golang.org/x/mod v0.36.0

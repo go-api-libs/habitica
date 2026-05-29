@@ -206,6 +206,12 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 				}
 			}
 		} else {
+			// Ensure a.Properties is initialized so schemaRefs can append to it
+			// when a has no properties yet but b does.
+			if a.Properties == nil && len(b.Properties) > 0 {
+				a.Properties = openapi.SchemaRefs{}
+			}
+
 			// get the maps that contains all properties
 			allProps := maps.Clone(a.Properties)
 			for _, allOf := range a.AllOf {
