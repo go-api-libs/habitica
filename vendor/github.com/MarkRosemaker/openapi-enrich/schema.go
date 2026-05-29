@@ -7,7 +7,6 @@ import (
 	"net"
 	"net/url"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/MarkRosemaker/openapi"
@@ -32,7 +31,7 @@ func decodeSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 		return &openapi.Schema{
 			Type:    openapi.TypeString,
 			Format:  stringFormat(v.String()),
-			Example: jsontext.Value(`"` + strings.ReplaceAll(v.String(), `\`, `\\`) + `"`),
+			Example: jsontext.Value(fmt.Appendf(nil, "%q", v.String())),
 		}, nil
 
 	case '0': // number

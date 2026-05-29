@@ -9,8 +9,10 @@ import (
 	"github.com/MarkRosemaker/openapi-enrich/cassette"
 )
 
-// matchInteractions populates doc.InteractionCalls by matching each 2xx
-// interaction to a known operation and extracting Go literal argument values.
+// matchInteractions populates doc.InteractionCalls by matching each interaction
+// to a known operation and extracting Go literal argument values.
+// Every interaction must match exactly one operation; an error is returned otherwise,
+// guaranteeing len(doc.InteractionCalls) == len(interactions) on success.
 func matchInteractions(doc *ir.Document, interactions cassette.Interactions) error {
 	for _, ia := range interactions {
 		u, err := url.Parse(ia.Request.URL)
@@ -26,6 +28,7 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 			relPath = "/" + relPath
 		}
 
+		var matched bool
 		for i := range doc.Operations {
 			op := &doc.Operations[i]
 			if op.Method != ia.Request.Method {
@@ -65,7 +68,12 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 			}
 
 			doc.InteractionCalls = append(doc.InteractionCalls, call)
+			matched = true
 			break
+		}
+
+		if !matched {
+			return fmt.Errorf("interaction %s %s: no matching operation found", ia.Request.Method, ia.Request.URL)
 		}
 	}
 
@@ -75,22 +83,36 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 // matchPathTemplate matches a URL path against an operation path template,
 // returning the extracted parameter values keyed by parameter name.
 // Template segments may be full-segment ({name}) or mid-segment (CIK{name}.json).
+// A trailing pure {param} segment acts as a wildcard that consumes all remaining
+// path segments joined by "/", enabling multi-segment captures like {path} in
+// /package/{path} matching /package/github.com/user/repo.
 func matchPathTemplate(template, path string) (map[string]string, bool) {
 	tParts := strings.Split(template, "/")
 	pParts := strings.Split(path, "/")
 
-	if len(tParts) != len(pParts) {
+	if len(tParts) > len(pParts) {
 		return nil, false
 	}
 
 	params := make(map[string]string)
 	for i, tp := range tParts {
+		// Last template segment that is a pure {param} and there are extra path
+		// segments: consume all remaining segments as one slash-joined value.
+		if i == len(tParts)-1 &&
+			strings.HasPrefix(tp, "{") &&
+			strings.HasSuffix(tp, "}") &&
+			strings.Count(tp, "{") == 1 &&
+			len(pParts) > i+1 {
+			params[tp[1:len(tp)-1]] = strings.Join(pParts[i:], "/")
+			return params, true
+		}
+
 		if !extractSegmentParam(tp, pParts[i], params) {
 			return nil, false
 		}
 	}
 
-	return params, true
+	return params, len(tParts) == len(pParts)
 }
 
 // extractSegmentParam matches one template segment against one path segment,

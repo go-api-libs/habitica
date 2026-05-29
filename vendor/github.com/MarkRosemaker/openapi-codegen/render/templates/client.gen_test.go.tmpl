@@ -182,6 +182,10 @@ func replay(t *testing.T) http.RoundTripper {
 			return nil, fmt.Errorf("interaction #%d: got body %s, want %s", idx, string(r.Body), string(ia.Request.Method))
 		}
 
+		if ia.Request.Headers == nil {
+			ia.Request.Headers = http.Header{}
+		}
+		
 		if ia.Request.Headers.Get("User-Agent") == "" {
 			ia.Request.Headers.Set("User-Agent", defaultUserAgent)
 		}
