@@ -21,9 +21,9 @@ require (
 	github.com/MarkRosemaker/json2yaml v0.0.0-20260507220148-d6cc0d01bff0 // indirect
 	github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24 // indirect
 	github.com/MarkRosemaker/openapi v0.0.0-20260603220346-005bf2fa2703 // indirect
-	github.com/MarkRosemaker/openapi-codegen v0.0.0-20260603222025-9546f46b6eb6 // indirect
-	github.com/MarkRosemaker/openapi-compress v0.0.0-20260603221744-4afaa089daac // indirect
-	github.com/MarkRosemaker/openapi-flatten v0.0.0-20260603221353-cd525c312804 // indirect
+	github.com/MarkRosemaker/openapi-codegen v0.0.0-20260608162007-52aec73c4003 // indirect
+	github.com/MarkRosemaker/openapi-compress v0.0.0-20260608161642-ca21bdb4ed23 // indirect
+	github.com/MarkRosemaker/openapi-flatten v0.0.0-20260608161223-d2a6a0621410 // indirect
 	github.com/MarkRosemaker/openapi-merge v0.0.0-20260529224525-f3ce2dde17cb // indirect
 	github.com/MarkRosemaker/ordmap v0.0.0-20260603220118-0722b4bcfe0c // indirect
 	github.com/MarkRosemaker/yaml v0.0.0-20260508005758-fe21a538b084 // indirect
@@ -32,9 +32,9 @@ require (
 	github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d // indirect
 	github.com/spf13/afero v1.15.0 // indirect
 	golang.org/x/exp v0.0.0-20260603202125-055de637280b // indirect
-	golang.org/x/mod v0.36.0 // indirect
-	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/text v0.37.0 // indirect
+	golang.org/x/mod v0.37.0 // indirect
+	golang.org/x/sync v0.21.0 // indirect
+	golang.org/x/text v0.38.0 // indirect
 	golang.org/x/tools v0.45.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mvdan.cc/gofumpt v0.10.0 // indirect
