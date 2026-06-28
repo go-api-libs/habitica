@@ -10,6 +10,7 @@ import (
 	compress "github.com/MarkRosemaker/openapi-compress"
 	flatten "github.com/MarkRosemaker/openapi-flatten"
 	"github.com/MarkRosemaker/ordmap"
+	"github.com/ettle/strcase"
 )
 
 // FromDocument converts a fully-loaded and flattened openapi.Document to an IR Document.
@@ -68,7 +69,16 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		return strings.Compare(a.JSONName, b.JSONName)
 	})
 
+	title := ""
+	if doc.Info != nil {
+		title = strings.TrimSpace(doc.Info.Title)
+	}
+	if title == "" || title == "API" {
+		title = fmt.Sprintf("%s API", strcase.ToCase(packageName, strcase.TitleCase, ' '))
+	}
+
 	return &Document{
+		Title:             title,
 		Production:        true,
 		PackageName:       packageName,
 		BaseURL:           baseURL,
