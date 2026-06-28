@@ -6,7 +6,6 @@ import (
 	"flag"
 	"fmt"
 	"io/fs"
-	"net/http"
 	"os"
 
 	"github.com/MarkRosemaker/openapi"
@@ -46,7 +45,7 @@ func run(ctx context.Context) error {
 		return err
 	}
 
-	tr := recorder.NewTransport(http.DefaultTransport, prevIas)
+	tr := recorder.NewTransport(nil, prevIas)
 
 	scaffoldNext := len(prevIas) == 0
 

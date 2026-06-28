@@ -3,6 +3,7 @@ package recorder
 import (
 	"bytes"
 	"crypto/sha256"
+	"crypto/tls"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -107,7 +108,22 @@ func (t *Transport) underlying() http.RoundTripper {
 		return t.Transport
 	}
 
-	return http.DefaultTransport
+	return &defaultOrInsecureTransport{}
+}
+
+type defaultOrInsecureTransport struct{}
+
+var insecureTransport = &http.Transport{
+	// self-signed cert; safe because it's localhost only
+	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+}
+
+func (c *defaultOrInsecureTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	if req.URL.Hostname() == "localhost" {
+		return insecureTransport.RoundTrip(req)
+	}
+
+	return http.DefaultTransport.RoundTrip(req)
 }
 
 // requestKey returns a string that uniquely identifies a request by its
