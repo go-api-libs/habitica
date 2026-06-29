@@ -181,6 +181,7 @@ func replay(t *testing.T) http.RoundTripper {
 
 		idx++
 		return &http.Response{
+			Status:     fmt.Sprintf("%d %s", ia.Response.StatusCode, http.StatusText(ia.Response.StatusCode)),
 			StatusCode: ia.Response.StatusCode,
 			Header:     ia.Response.Headers.Clone(),
 			Body:       io.NopCloser(bytes.NewReader(ia.Response.Body)),
@@ -200,13 +201,13 @@ func TestClient_Interactions(t *testing.T) {
 	if _, err := c.ListTasks(ctx, ListTasksParams{
 		XAPIUser: uuid.MustParse("8027d396-e2bb-4389-b002-782025424e75"),
 	}); err != nil {
-		t.Fatal(err)
+		t.Fatalf("ListTasks: %v", err)
 	}
 
 	if _, err := c.ListTasks(ctx, ListTasksParams{
 		Type:     "dailys",
 		XAPIUser: uuid.MustParse("8027d396-e2bb-4389-b002-782025424e75"),
 	}); err != nil {
-		t.Fatal(err)
+		t.Fatalf("ListTasks: %v", err)
 	}
 }
