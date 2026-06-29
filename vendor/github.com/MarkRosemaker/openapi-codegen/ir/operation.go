@@ -163,7 +163,7 @@ func fromParam(p *openapi.Parameter, apiTitle string) (Param, error) {
 
 	if param.VarName == "" {
 		if p.In == openapi.ParameterLocationPath {
-			param.VarName = p.Name
+			param.VarName = strcase.ToGoCamel(p.Name)
 		} else {
 			param.VarName = "params." + param.FieldName
 		}

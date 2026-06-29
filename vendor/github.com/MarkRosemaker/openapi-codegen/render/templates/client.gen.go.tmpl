@@ -189,9 +189,9 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 // Deprecated.
 {{- end}}
 func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Client{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .QueryParams}}, params {{ if not .ParamsInStruct.Required }}*{{ end }}{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) ({{if .SuccessReturn}}*R, {{end}}error) {
-{{- if .JoinPathArgs}}
+{{- if .JoinPathArgs -}}
 	u := c.baseURL.JoinPath({{range $i, $a := .JoinPathArgs}}{{if $i}}, {{end}}{{$a}}{{end}})
-{{- end}}
+{{- end -}}
 {{ if .QueryParams}}
 	{{ if not .ParamsInStruct.Required -}}
 	if params != nil {

@@ -196,6 +196,7 @@ func replay(t *testing.T) http.RoundTripper {
 
 		idx++
 		return &http.Response{
+			Status:     fmt.Sprintf("%d %s", ia.Response.StatusCode, http.StatusText(ia.Response.StatusCode)),
 			StatusCode: ia.Response.StatusCode,
 			Header:     ia.Response.Headers.Clone(),
 			Body:       io.NopCloser(bytes.NewReader(ia.Response.Body)),
@@ -223,13 +224,13 @@ func TestClient_Interactions(t *testing.T) {
 		{{ end -}}
 		{{range .HeaderArgs}}{{.FieldName}}: {{.Literal}},
 		{{end}}}{{else if .Op.QueryParams}}, nil{{end}}{{if .Op.RequestBody}}, {{if .Op.RequestBody.Required}}{{.Op.RequestBody.TypeName}}{}{{else}}nil{{end}}{{end}}); err != nil {
-		t.Fatal(err)
+		t.Fatalf("{{.Op.Name}}: %v", err)
 	}
 	{{else}}
 	if err := c.{{.Op.Name}}(ctx{{range .PathArgs}}, {{.}}{{end}}{{if .QueryArgs}}, &{{.Op.ParamStructName}}{
 		{{range .QueryArgs}}{{.FieldName}}: {{.Literal}},
 		{{end}}}{{else if .Op.QueryParams}}, nil{{end}}{{if .Op.RequestBody}}, {{if .Op.RequestBody.Required}}{{.Op.RequestBody.TypeName}}{}{{else}}nil{{end}}{{end}}); err != nil {
-		t.Fatal(err)
+		t.Fatalf("{{.Op.Name}}: %v", err)
 	}
 	{{end}}
 	{{- end}}

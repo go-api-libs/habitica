@@ -157,10 +157,10 @@ func (ps Params) Required() bool {
 // Param represents a path or query parameter.
 type Param struct {
 	GlobalType   GlobalType `json:"GlobalType,omitzero"`
-	VarName      string
-	EnvName      string `json:"EnvName,omitzero"`
-	GoName       string // camelCase, used as local variable name
-	FieldName    string // PascalCase, used as exported struct field name
+	VarName      string     // camelCase, used as local variable name
+	EnvName      string     `json:"EnvName,omitzero"`
+	GoName       string     // camelCase, used as local variable name
+	FieldName    string     // PascalCase, used as exported struct field name
 	JSONName     string
 	Type         string
 	Required     bool   `json:"Required,omitzero"`
