@@ -88,11 +88,15 @@ func RegisterService(svc Service, mux *http.ServeMux, pathPrefix string) {
 			http.Error(w, msg, http.StatusBadRequest)
 			return
 		}
-{{- end}}
-{{- if .SuccessReturn}}
-		
-		res, err := svc.{{.Name}}(ctx{{range .PathParams}}, {{.GoName}}{{end}}{{if .QueryParams}}, {{ if not .ParamsInStruct.Required }}&{{ end }}params{{end}}{{if .RequestBody}}, {{if not .RequestBody.Required}}&{{end}}body{{end}})
+{{- end }}
+
+{{ if .SuccessReturn }}res, {{ else }}if {{ end -}}
+		err := svc.{{.Name}}(ctx{{range .PathParams}}, {{.GoName}}{{end}}{{if .QueryParams}}, {{ if not .ParamsInStruct.Required }}&{{ end }}params{{end}}{{if .RequestBody}}, {{if not .RequestBody.Required}}&{{end}}body{{end}})
+{{- if .SuccessReturn }}
 		if err != nil {
+{{- else -}}
+		; err != nil {
+{{- end -}}
 			sErr, ok := errors.AsType[*server.Error](err)
 			if !ok {
 				l.ErrorContext(ctx, "Internal Server Error", slog.String("error", err.Error()))
@@ -112,22 +116,18 @@ func RegisterService(svc Service, mux *http.ServeMux, pathPrefix string) {
 			return
 		}
 
+{{ if .SuccessReturn -}}
 		w.Header().Set("Content-Type", "application/json")
+{{- end }}
 		w.WriteHeader({{$successCode}})
 
+{{ if .SuccessReturn }}
 		if err := json.MarshalWrite(w, res, jsonOpts); err != nil {
 			l.ErrorContext(ctx, "marshal error", slog.String("error", err.Error()))
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
-{{- else}}
-		if err := svc.{{.Name}}(ctx{{range .PathParams}}, {{.GoName}}{{end}}{{if .QueryParams}}, &params{{end}}{{if .RequestBody}}, {{if not .RequestBody.Required}}&{{end}}body{{end}}); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		
-		w.WriteHeader({{$successCode}})
-{{- end}}
+{{- end }}
 
 		l.DebugContext(ctx, "success")
 	})

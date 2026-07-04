@@ -8,8 +8,8 @@ github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24 h1:3fU3gbs8
 github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24/go.mod h1:YMxjqWLxzxIzplnktbXq9020ZJNjf1/43A5NVJzY9mQ=
 github.com/MarkRosemaker/openapi v0.0.0-20260611220347-8831c3657808 h1:ZDGxQ+A5GU5vxUwMy+JGvfwHo9tbpwJcbkGwYs2BViE=
 github.com/MarkRosemaker/openapi v0.0.0-20260611220347-8831c3657808/go.mod h1:ik6FmPfM9B+ih6I2Y0atu/fRQB+tihVuWXt2rRhqHsE=
-github.com/MarkRosemaker/openapi-codegen v0.0.0-20260629213500-4aafcaeb5286 h1:6zrlJPKFgod82hihb3Jrsy9uZI9HydN5hAnwY2UBxoQ=
-github.com/MarkRosemaker/openapi-codegen v0.0.0-20260629213500-4aafcaeb5286/go.mod h1:THk9AKShkTwD+5G2h+h3SwVfp40z8iIcKan8hoiWZYo=
+github.com/MarkRosemaker/openapi-codegen v0.0.0-20260704165011-489c3c0542e7 h1:eeqKmHtYyrOmDKp9gmxtCOvqkum4DU7kgA7/CLHxd3s=
+github.com/MarkRosemaker/openapi-codegen v0.0.0-20260704165011-489c3c0542e7/go.mod h1:THk9AKShkTwD+5G2h+h3SwVfp40z8iIcKan8hoiWZYo=
 github.com/MarkRosemaker/openapi-compress v0.0.0-20260628221603-fdfdd3bd802a h1:COVqsmQQ0EskiPY6jfL38LncZ3U0O0rCxNfcJAzBybs=
 github.com/MarkRosemaker/openapi-compress v0.0.0-20260628221603-fdfdd3bd802a/go.mod h1:WVzHtoCYG1x55ulfBCJbThoExNrD3AfJcYgQ0k7MixQ=
 github.com/MarkRosemaker/openapi-enrich v0.0.0-20260628212853-dcefc87cdf87 h1:liVtgrHtakeH715gJroAriOoqk0rOxXoyb+VRg993ns=
@@ -28,8 +28,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ettle/strcase v0.2.0 h1:fGNiVF21fHXpX1niBgk0aROov1LagYsOwV/xqKDKR/Q=
 github.com/ettle/strcase v0.2.0/go.mod h1:DajmHElDSaX76ITe3/VHVyMin4LWSJN5Z909Wp+ED1A=
-github.com/go-api-libs/api v0.0.0-20260522164500-7a3dc60f8b36 h1:4XbY91uHBaU2UyM/g3Wi3GlSHyI0hl8p1pPomgvSHxI=
-github.com/go-api-libs/api v0.0.0-20260522164500-7a3dc60f8b36/go.mod h1:zxEwsD19APvwWpkkntPl0vFWzayct/iPIaYFwIu0tRs=
+github.com/go-api-libs/api v0.0.0-20260704170238-c670f3636193 h1:LyvL1+KrCi1ze02xcndSRmREprz2zizIfqaNMX5CopQ=
+github.com/go-api-libs/api v0.0.0-20260704170238-c670f3636193/go.mod h1:zxEwsD19APvwWpkkntPl0vFWzayct/iPIaYFwIu0tRs=
 github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d h1:OihMUySw53Oy0DTnE1CAfQ6YkX5/NBaS8Vc2Ww4T56Y=
 github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d/go.mod h1:tJx9kzXjCU+mT7BzZvqg149HnZiHmr8JvbFWsvm5vp0=
 github.com/go-quicktest/qt v1.102.0 h1:HSQxCeh5YZH3EL3W39ixjtyaEhcWSXQHtHnMBzSs474=
