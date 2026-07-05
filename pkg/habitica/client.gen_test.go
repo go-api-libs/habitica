@@ -39,6 +39,100 @@ func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) {
 }
 
 func TestClient_Error(t *testing.T) {
+	t.Run("GetUser", func(t *testing.T) {
+		t.Setenv("HABITICA_API_KEY", "00000000-0000-0000-0000-000000000000")
+
+		t.Run("transport error", func(t *testing.T) {
+			c, err := NewClient(WithHTTPClient(&http.Client{Transport: roundTripFunc(
+				func(*http.Request) (*http.Response, error) { return nil, io.EOF },
+			)}))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.GetUser(t.Context(), GetUserParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if !errors.Is(err, io.EOF) {
+				t.Fatalf("want: %v, got: %v", io.EOF, err)
+			}
+		})
+
+		t.Run("unknown status code", func(t *testing.T) {
+			srv := newTestServer(t, http.StatusTeapot)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.GetUser(t.Context(), GetUserParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if apiErr, ok := errors.AsType[*api.Error](err); !ok {
+				t.Fatalf("got: %T, want: *api.Error", err)
+			} else if apiErr.Err != api.ErrUnknownStatusCode {
+				t.Fatalf("got: %v, want: %v", apiErr.Err, api.ErrUnknownStatusCode)
+			} else if apiErr.Response.StatusCode != http.StatusTeapot {
+				t.Fatalf("got: %v, want: %v", apiErr.Response.StatusCode, http.StatusTeapot)
+			}
+		})
+
+		t.Run("unknown content type", func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "foo")
+				w.WriteHeader(http.StatusOK)
+			}))
+			t.Cleanup(srv.Close)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.GetUser(t.Context(), GetUserParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if !errors.Is(err, api.ErrUnknownContentType) {
+				t.Fatalf("want: %v, got: %v", api.ErrUnknownContentType, err)
+			}
+		})
+
+		t.Run("decoding error", func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				_, _ = w.Write([]byte("invalid json"))
+			}))
+			t.Cleanup(srv.Close)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.GetUser(t.Context(), GetUserParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
+				t.Fatalf("got: %T, want: *api.Error", err)
+			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
+				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
+			}
+		})
+	})
+
 	t.Run("ListTasks", func(t *testing.T) {
 		t.Setenv("HABITICA_API_KEY", "00000000-0000-0000-0000-000000000000")
 
@@ -132,6 +226,100 @@ func TestClient_Error(t *testing.T) {
 			}
 		})
 	})
+
+	t.Run("GetTaskByID", func(t *testing.T) {
+		t.Setenv("HABITICA_API_KEY", "00000000-0000-0000-0000-000000000000")
+
+		t.Run("transport error", func(t *testing.T) {
+			c, err := NewClient(WithHTTPClient(&http.Client{Transport: roundTripFunc(
+				func(*http.Request) (*http.Response, error) { return nil, io.EOF },
+			)}))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.GetTaskByID(t.Context(), "", GetTaskByIDParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if !errors.Is(err, io.EOF) {
+				t.Fatalf("want: %v, got: %v", io.EOF, err)
+			}
+		})
+
+		t.Run("unknown status code", func(t *testing.T) {
+			srv := newTestServer(t, http.StatusTeapot)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.GetTaskByID(t.Context(), "", GetTaskByIDParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if apiErr, ok := errors.AsType[*api.Error](err); !ok {
+				t.Fatalf("got: %T, want: *api.Error", err)
+			} else if apiErr.Err != api.ErrUnknownStatusCode {
+				t.Fatalf("got: %v, want: %v", apiErr.Err, api.ErrUnknownStatusCode)
+			} else if apiErr.Response.StatusCode != http.StatusTeapot {
+				t.Fatalf("got: %v, want: %v", apiErr.Response.StatusCode, http.StatusTeapot)
+			}
+		})
+
+		t.Run("unknown content type", func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "foo")
+				w.WriteHeader(http.StatusOK)
+			}))
+			t.Cleanup(srv.Close)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.GetTaskByID(t.Context(), "", GetTaskByIDParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if !errors.Is(err, api.ErrUnknownContentType) {
+				t.Fatalf("want: %v, got: %v", api.ErrUnknownContentType, err)
+			}
+		})
+
+		t.Run("decoding error", func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				_, _ = w.Write([]byte("invalid json"))
+			}))
+			t.Cleanup(srv.Close)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.GetTaskByID(t.Context(), "", GetTaskByIDParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
+				t.Fatalf("got: %T, want: *api.Error", err)
+			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
+				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
+			}
+		})
+	})
 }
 
 func replay(t *testing.T) http.RoundTripper {
@@ -199,8 +387,20 @@ func TestClient_Interactions(t *testing.T) {
 	}
 
 	if _, err := c.ListTasks(ctx, ListTasksParams{
-		XAPIUser: uuid.MustParse("8027d396-e2bb-4389-b002-782025424e75"),
+		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
 	}); err != nil {
 		t.Fatalf("ListTasks: %v", err)
+	}
+
+	if _, err := c.GetTaskByID(ctx, "2b774d70-ec8b-41c1-8967-eb6b13d962ba", GetTaskByIDParams{
+		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+	}); err != nil {
+		t.Fatalf("GetTaskByID: %v", err)
+	}
+
+	if _, err := c.GetUser(ctx, GetUserParams{
+		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+	}); err != nil {
+		t.Fatalf("GetUser: %v", err)
 	}
 }

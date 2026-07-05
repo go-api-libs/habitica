@@ -21,7 +21,7 @@ const defaultUserAgent = "Habitica API Library (github.com/go-api-libs/habitica)
 var defaultBaseURL = &url.URL{
 	Scheme: "https",
 	Host:   "habitica.com",
-	Path:   "/",
+	Path:   "/api/v3",
 }
 
 // Client is an HTTP client for the habitica API.
@@ -71,7 +71,7 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 	c := &Client{
 		cli:       http.DefaultClient,
 		baseURL:   defaultBaseURL,
-		client:    "8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica",
+		client:    "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica",
 		userAgent: defaultUserAgent,
 	}
 
@@ -92,14 +92,67 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 	return c, nil
 }
 
-// GET /api/v3/tasks/user
-func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TaskList, error) {
-	return ListTasks[TaskList](ctx, c, params)
+// The user profile contains data related to the authenticated user including (but not limited to): Achievements; Authentications (including types and timestamps); Challenges memberships (Challenge IDs); Flags (including armoire, tutorial, tour etc...); Guilds memberships (Guild IDs); History (including timestamps and values, only for Experience and summed To Do values); Inbox; Invitations (to parties/guilds); Items (character's full inventory); New Messages (flags for party/guilds that have new messages; also reported in Notifications); Notifications; Party (includes current quest information); Preferences (user selected prefs); Profile (name, photo url, blurb); Purchased (includes subscription data and some gem-purchased items); PushDevices (identifiers for mobile devices authorized); Stats (standard RPG stats, class, buffs, xp, etc..); Tags; TasksOrder (list of all IDs for Dailys, Habits, Rewards and To Do's).
+//
+//	GET /user
+func (c *Client) GetUser(ctx context.Context) (*User, error) {
+	return GetUser[User](ctx, c)
 }
 
-// GET /api/v3/tasks/user
+// The user profile contains data related to the authenticated user including (but not limited to): Achievements; Authentications (including types and timestamps); Challenges memberships (Challenge IDs); Flags (including armoire, tutorial, tour etc...); Guilds memberships (Guild IDs); History (including timestamps and values, only for Experience and summed To Do values); Inbox; Invitations (to parties/guilds); Items (character's full inventory); New Messages (flags for party/guilds that have new messages; also reported in Notifications); Notifications; Party (includes current quest information); Preferences (user selected prefs); Profile (name, photo url, blurb); Purchased (includes subscription data and some gem-purchased items); PushDevices (identifiers for mobile devices authorized); Stats (standard RPG stats, class, buffs, xp, etc..); Tags; TasksOrder (list of all IDs for Dailys, Habits, Rewards and To Do's).
+// You can define a custom result to unmarshal the response into.
+//
+//	GET /user
+func GetUser[R any](ctx context.Context, c *Client) (*R, error) {
+	u := c.baseURL.JoinPath("user")
+	req := (&http.Request{
+		Header: http.Header{
+			"X-Api-Key":  []string{c.apiKey},
+			"X-Client":   []string{c.client},
+			"X-Api-User": []string{params.XAPIUser.String()},
+			"User-Agent": []string{c.userAgent},
+		},
+		Host:       u.Host,
+		Method:     http.MethodGet,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		URL:        u,
+	}).WithContext(ctx)
+
+	rsp, err := c.cli.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer rsp.Body.Close()
+
+	switch rsp.StatusCode {
+	case http.StatusOK:
+		// OK
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out R
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				return nil, api.WrapDecodingError(rsp, err)
+			}
+
+			return &out, nil
+		default:
+			return nil, api.NewErrUnknownContentType(rsp)
+		}
+	default:
+		return nil, api.NewErrUnknownStatusCode(rsp)
+	}
+}
+
+// GET /tasks/user
+func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TasksResponse, error) {
+	return ListTasks[TasksResponse](ctx, c, params)
+}
+
+// GET /tasks/user
 func ListTasks[R any](ctx context.Context, c *Client, params ListTasksParams) (*R, error) {
-	u := c.baseURL.JoinPath("api", "v3", "tasks", "user")
+	u := c.baseURL.JoinPath("tasks", "user")
 
 	q := make(url.Values, 1)
 
@@ -109,6 +162,59 @@ func ListTasks[R any](ctx context.Context, c *Client, params ListTasksParams) (*
 
 	u.RawQuery = q.Encode()
 
+	req := (&http.Request{
+		Header: http.Header{
+			"X-Api-Key":  []string{c.apiKey},
+			"X-Client":   []string{c.client},
+			"X-Api-User": []string{params.XAPIUser.String()},
+			"User-Agent": []string{c.userAgent},
+		},
+		Host:       u.Host,
+		Method:     http.MethodGet,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		URL:        u,
+	}).WithContext(ctx)
+
+	rsp, err := c.cli.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer rsp.Body.Close()
+
+	switch rsp.StatusCode {
+	case http.StatusOK:
+		// OK
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out R
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				return nil, api.WrapDecodingError(rsp, err)
+			}
+
+			return &out, nil
+		default:
+			return nil, api.NewErrUnknownContentType(rsp)
+		}
+	default:
+		return nil, api.NewErrUnknownStatusCode(rsp)
+	}
+}
+
+// Get a task
+//
+//	GET /tasks/{taskId}
+func (c *Client) GetTaskByID(ctx context.Context, taskID string) (*TaskResponse, error) {
+	return GetTaskByID[TaskResponse](ctx, c, taskID)
+}
+
+// Get a task
+// You can define a custom result to unmarshal the response into.
+//
+//	GET /tasks/{taskId}
+func GetTaskByID[R any](ctx context.Context, c *Client, taskID string) (*R, error) {
+	u := c.baseURL.JoinPath("tasks", taskID)
 	req := (&http.Request{
 		Header: http.Header{
 			"X-Api-Key":  []string{c.apiKey},

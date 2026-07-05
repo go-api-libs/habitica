@@ -6,11 +6,34 @@
   },
   "servers": [
     {
-      "url": "https://habitica.com"
+      "url": "https://habitica.com/api/v3/"
     }
   ],
   "paths": {
-    "/api/v3/tasks/user": {
+    "/user": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/X-Client"
+        }
+      ],
+      "get": {
+        "summary": "Get the authenticated user's profile",
+        "description": "The user profile contains data related to the authenticated user including (but not limited to): Achievements; Authentications (including types and timestamps); Challenges memberships (Challenge IDs); Flags (including armoire, tutorial, tour etc...); Guilds memberships (Guild IDs); History (including timestamps and values, only for Experience and summed To Do values); Inbox; Invitations (to parties/guilds); Items (character's full inventory); New Messages (flags for party/guilds that have new messages; also reported in Notifications); Notifications; Party (includes current quest information); Preferences (user selected prefs); Profile (name, photo url, blurb); Purchased (includes subscription data and some gem-purchased items); PushDevices (identifiers for mobile devices authorized); Stats (standard RPG stats, class, buffs, xp, etc..); Tags; TasksOrder (list of all IDs for Dailys, Habits, Rewards and To Do's).",
+        "operationId": "GetUser",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/User"
+          }
+        }
+      }
+    },
+    "/tasks/user": {
       "parameters": [
         {
           "$ref": "#/components/parameters/X-Client"
@@ -29,7 +52,32 @@
         "operationId": "ListTasks",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/TaskList"
+            "$ref": "#/components/responses/TasksResponse"
+          }
+        }
+      }
+    },
+    "/tasks/{taskId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/taskId"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/X-Client"
+        }
+      ],
+      "get": {
+        "summary": "Get a task",
+        "operationId": "GetTaskByID",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TaskResponse"
           }
         }
       }
@@ -37,6 +85,201 @@
   },
   "components": {
     "schemas": {
+      "Achievements": {
+        "type": "object",
+        "properties": {
+          "ultimateGearSets": {
+            "$ref": "#/components/schemas/UltimateGearSets"
+          },
+          "perfect": {
+            "type": "integer",
+            "example": 93
+          },
+          "quests": {
+            "$ref": "#/components/schemas/AchievementsQuests"
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "partyUp": {
+            "type": "boolean",
+            "example": true
+          },
+          "partyOn": {
+            "type": "boolean",
+            "example": true
+          },
+          "habitBirthdays": {
+            "type": "integer",
+            "example": 9
+          },
+          "streak": {
+            "type": "integer",
+            "example": 197
+          },
+          "joinedGuild": {
+            "type": "boolean",
+            "example": true
+          },
+          "joinedChallenge": {
+            "type": "boolean",
+            "example": true
+          },
+          "habiticaDays": {
+            "type": "integer",
+            "example": 9
+          },
+          "invitedFriend": {
+            "type": "boolean",
+            "example": true
+          },
+          "backToBasics": {
+            "type": "boolean",
+            "example": true
+          },
+          "dustDevil": {
+            "type": "boolean",
+            "example": true
+          },
+          "monsterMagus": {
+            "type": "boolean",
+            "example": true
+          },
+          "completedTask": {
+            "type": "boolean",
+            "example": true
+          },
+          "createdTask": {
+            "type": "boolean",
+            "example": true
+          },
+          "fedPet": {
+            "type": "boolean",
+            "example": true
+          },
+          "hatchedPet": {
+            "type": "boolean",
+            "example": true
+          },
+          "purchasedEquipment": {
+            "type": "boolean",
+            "example": true
+          },
+          "seeingRed": {
+            "type": "boolean",
+            "example": true
+          },
+          "shadyCustomer": {
+            "type": "boolean",
+            "example": true
+          },
+          "royallyLoyal": {
+            "type": "boolean",
+            "example": true
+          },
+          "allYourBase": {
+            "type": "boolean",
+            "example": true
+          },
+          "pearlyPro": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "ultimateGearSets",
+          "perfect",
+          "quests",
+          "challenges",
+          "partyUp",
+          "partyOn",
+          "habitBirthdays",
+          "streak",
+          "joinedGuild",
+          "joinedChallenge",
+          "habiticaDays",
+          "invitedFriend",
+          "backToBasics",
+          "dustDevil",
+          "monsterMagus",
+          "completedTask",
+          "createdTask",
+          "fedPet",
+          "hatchedPet",
+          "purchasedEquipment",
+          "seeingRed",
+          "shadyCustomer",
+          "royallyLoyal",
+          "allYourBase",
+          "pearlyPro"
+        ]
+      },
+      "AchievementsQuests": {
+        "type": "object",
+        "properties": {
+          "dustbunnies": {
+            "type": "integer",
+            "example": 1
+          },
+          "basilist": {
+            "type": "integer",
+            "example": 1
+          },
+          "moon1": {
+            "type": "integer",
+            "example": 1
+          },
+          "moon2": {
+            "type": "integer",
+            "example": 1
+          },
+          "dysheartener": {
+            "type": "integer",
+            "example": 1
+          },
+          "moon3": {
+            "type": "integer",
+            "example": 1
+          },
+          "vice1": {
+            "type": "integer",
+            "example": 1
+          },
+          "vice2": {
+            "type": "integer",
+            "example": 1
+          },
+          "vice3": {
+            "type": "integer",
+            "example": 1
+          },
+          "atom1": {
+            "type": "integer",
+            "example": 1
+          },
+          "atom2": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "dustbunnies",
+          "basilist",
+          "moon1",
+          "moon2",
+          "dysheartener",
+          "moon3",
+          "vice1",
+          "vice2",
+          "vice3",
+          "atom1",
+          "atom2"
+        ]
+      },
       "Approval": {
         "type": "object",
         "properties": {
@@ -57,6 +300,126 @@
           "required",
           "approved",
           "requested"
+        ]
+      },
+      "Auth": {
+        "type": "object",
+        "properties": {
+          "local": {
+            "$ref": "#/components/schemas/AuthLocal"
+          },
+          "timestamps": {
+            "$ref": "#/components/schemas/AuthTimestamps"
+          },
+          "google": {
+            "$ref": "#/components/schemas/AuthGoogle"
+          },
+          "apple": {
+            "type": "object"
+          },
+          "facebook": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "local",
+          "timestamps",
+          "google",
+          "apple",
+          "facebook"
+        ]
+      },
+      "AuthGoogle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "117454340579493668837"
+          },
+          "emails": {
+            "$ref": "#/components/schemas/AuthGoogleEmails"
+          }
+        },
+        "required": [
+          "id",
+          "emails"
+        ]
+      },
+      "AuthGoogleEmails": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AuthGoogleEmailsItem"
+        }
+      },
+      "AuthGoogleEmailsItem": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "email",
+            "example": "marcodroesler@gmail.com"
+          },
+          "verified": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "value",
+          "verified"
+        ]
+      },
+      "AuthLocal": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "markrosemaker"
+          },
+          "lowerCaseUsername": {
+            "type": "string",
+            "example": "markrosemaker"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "marcodroesler@gmail.com"
+          },
+          "has_password": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "username",
+          "lowerCaseUsername",
+          "email",
+          "has_password"
+        ]
+      },
+      "AuthTimestamps": {
+        "type": "object",
+        "properties": {
+          "loggedin": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-05T11:40:25.172Z"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-01-26T18:12:42.188Z"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-05T22:07:05.119Z"
+          }
+        },
+        "required": [
+          "loggedin",
+          "created",
+          "updated"
         ]
       },
       "Group": {
@@ -85,6 +448,267 @@
           "assignedUsers",
           "sharedCompletion"
         ]
+      },
+      "Inbox": {
+        "type": "object",
+        "properties": {
+          "optOut": {
+            "type": "boolean",
+            "example": false
+          },
+          "messages": {
+            "$ref": "#/components/schemas/Messages"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "newMessages": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "optOut",
+          "messages",
+          "blocks",
+          "newMessages"
+        ]
+      },
+      "ListUserDataHistoryExp": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ListUserDataHistoryExpItem"
+        }
+      },
+      "ListUserDataHistoryExpItem": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "integer",
+            "example": 1485487350827
+          },
+          "value": {
+            "type": "number",
+            "format": "double",
+            "example": 4831.31241363118
+          }
+        },
+        "required": [
+          "date",
+          "value"
+        ]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "068fe676-8854-43ff-a0cd-673d7b766f01"
+          },
+          "sent": {
+            "type": "boolean",
+            "example": false
+          },
+          "flagCount": {
+            "type": "integer",
+            "example": 0
+          },
+          "user": {
+            "type": "string",
+            "example": "Marco Rösler"
+          },
+          "backer": {
+            "type": "object"
+          },
+          "contributor": {
+            "type": "object"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b0413351-405f-416f-8787-947ec1c85199"
+          },
+          "flags": {
+            "type": "object"
+          },
+          "likes": {
+            "type": "object"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-01-30T16:57:58.245Z"
+          },
+          "text": {
+            "type": "string",
+            "example": "Hi"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "068fe676-8854-43ff-a0cd-673d7b766f01"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b0413351-405f-416f-8787-947ec1c85199"
+          }
+        },
+        "required": [
+          "_id",
+          "sent",
+          "flagCount",
+          "user",
+          "backer",
+          "contributor",
+          "uuid",
+          "flags",
+          "likes",
+          "timestamp",
+          "text",
+          "id",
+          "ownerId"
+        ]
+      },
+      "Message2": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "83be6b88-4fd2-494c-8f9b-0bb22d2ff6cf"
+          },
+          "sent": {
+            "type": "boolean",
+            "example": true
+          },
+          "flagCount": {
+            "type": "integer",
+            "example": 0
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "83be6b88-4fd2-494c-8f9b-0bb22d2ff6cf"
+          },
+          "text": {
+            "type": "string",
+            "example": "It's a monster. I guess it's a play on the words basilisk and todo-list."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-02-20T22:54:36.242Z"
+          },
+          "likes": {
+            "type": "object"
+          },
+          "flags": {
+            "type": "object"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "example": "0d95ece5-ec87-423c-84c5-6720f918f67e"
+          },
+          "contributor": {
+            "type": "object"
+          },
+          "backer": {
+            "type": "object"
+          },
+          "user": {
+            "type": "string",
+            "example": "Frans Duijts"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b0413351-405f-416f-8787-947ec1c85199"
+          }
+        },
+        "required": [
+          "_id",
+          "sent",
+          "flagCount",
+          "id",
+          "text",
+          "timestamp",
+          "likes",
+          "flags",
+          "uuid",
+          "contributor",
+          "backer",
+          "user",
+          "ownerId"
+        ]
+      },
+      "Messages": {
+        "type": "object",
+        "properties": {
+          "86363b9c-f1c4-4007-87f9-607d399af305": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "83be6b88-4fd2-494c-8f9b-0bb22d2ff6cf": {
+            "$ref": "#/components/schemas/Message2"
+          },
+          "da886215-c4f4-4649-8be8-da7535a5e3dc": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "a891481d-84e6-4bb5-9728-3948867ad46e": {
+            "$ref": "#/components/schemas/Message2"
+          },
+          "068fe676-8854-43ff-a0cd-673d7b766f01": {
+            "$ref": "#/components/schemas/Message"
+          }
+        },
+        "required": [
+          "86363b9c-f1c4-4007-87f9-607d399af305",
+          "83be6b88-4fd2-494c-8f9b-0bb22d2ff6cf",
+          "da886215-c4f4-4649-8be8-da7535a5e3dc",
+          "a891481d-84e6-4bb5-9728-3948867ad46e",
+          "068fe676-8854-43ff-a0cd-673d7b766f01"
+        ]
+      },
+      "PushDevice": {
+        "type": "object",
+        "properties": {
+          "regId": {
+            "type": "string",
+            "example": "ez5UbHEvoYc:APA91bFX1axNEhmBMdkLL948Om_zxO2uEcPJ9UcuIC9yAxmXvnjII3q9aE0Vupmnw8Bz8VhsCs93ewV6TuWVBjcBMXgRY1pjKRdgPy_zds_ovi1eiXuFm7sqxXq1ilG4jGtC5TjKD214"
+          },
+          "type": {
+            "type": "string",
+            "example": "android"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-05T12:10:06.709Z"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-01-30T08:20:39.251Z"
+          }
+        },
+        "required": [
+          "regId",
+          "type",
+          "updatedAt",
+          "createdAt"
+        ]
+      },
+      "PushDevices": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PushDevice"
+        }
       },
       "Reminder": {
         "type": "object",
@@ -166,7 +790,7 @@
           "userId": {
             "type": "string",
             "format": "uuid",
-            "example": "8027d396-e2bb-4389-b002-782025424e75"
+            "example": "b0413351-405f-416f-8787-947ec1c85199"
           },
           "challenge": {
             "type": "object"
@@ -349,6 +973,180 @@
           "id"
         ]
       },
+      "Task2": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "2b774d70-ec8b-41c1-8967-eb6b13d962ba"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b0413351-405f-416f-8787-947ec1c85199"
+          },
+          "text": {
+            "type": "string",
+            "example": "API Trial"
+          },
+          "alias": {
+            "type": "string",
+            "example": "apiTrial"
+          },
+          "type": {
+            "type": "string",
+            "example": "habit"
+          },
+          "notes": {
+            "type": "string",
+            "example": ""
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "value": {
+            "type": "number",
+            "format": "double",
+            "example": 11.996661122825959
+          },
+          "priority": {
+            "type": "number",
+            "format": "double",
+            "example": 1.5
+          },
+          "attribute": {
+            "type": "string",
+            "example": "str"
+          },
+          "challenge": {
+            "$ref": "#/components/schemas/Task2Challenge"
+          },
+          "group": {
+            "$ref": "#/components/schemas/Task2Group"
+          },
+          "reminders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-01-12T19:03:33.495Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-01-13T20:52:02.927Z"
+          },
+          "history": {
+            "$ref": "#/components/schemas/Task2History"
+          },
+          "down": {
+            "type": "boolean",
+            "example": false
+          },
+          "up": {
+            "type": "boolean",
+            "example": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "2b774d70-ec8b-41c1-8967-eb6b13d962ba"
+          }
+        },
+        "required": [
+          "_id",
+          "userId",
+          "text",
+          "alias",
+          "type",
+          "notes",
+          "tags",
+          "value",
+          "priority",
+          "attribute",
+          "challenge",
+          "group",
+          "reminders",
+          "createdAt",
+          "updatedAt",
+          "history",
+          "down",
+          "up",
+          "id"
+        ]
+      },
+      "Task2Challenge": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "5f12bfba-da30-4733-ad01-9c42f9817975"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f23c12f2-5830-4f15-9c36-e17fd729a812"
+          }
+        },
+        "required": [
+          "taskId",
+          "id"
+        ]
+      },
+      "Task2Group": {
+        "type": "object",
+        "properties": {
+          "assignedUsers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "approval": {
+            "$ref": "#/components/schemas/Approval"
+          }
+        },
+        "required": [
+          "assignedUsers",
+          "approval"
+        ]
+      },
+      "Task2History": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Task2HistoryItem"
+        }
+      },
+      "Task2HistoryItem": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "format": "double",
+            "example": 1.9747
+          },
+          "date": {
+            "type": "integer",
+            "example": 1484248053486
+          }
+        },
+        "required": [
+          "value",
+          "date"
+        ]
+      },
       "TaskActivity": {
         "type": "object",
         "properties": {
@@ -392,7 +1190,80 @@
           "$ref": "#/components/schemas/TaskActivity"
         }
       },
-      "TaskList": {
+      "TaskResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/Task2"
+          },
+          "notifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "notifications"
+        ]
+      },
+      "Tasks": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Task"
+        }
+      },
+      "TasksOrder": {
+        "type": "object",
+        "properties": {
+          "rewards": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "c67ba660-5aaa-4cb5-88e1-00b4beeae775"
+            }
+          },
+          "todos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "9b2cf3d7-dd77-4444-93c6-6af45448acff"
+            }
+          },
+          "dailys": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "91cf329e-0d0a-4c15-92a0-2e6748a470c9"
+            }
+          },
+          "habits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "15fef52f-ce1b-4c54-b3f0-58b5047f4a47"
+            }
+          }
+        },
+        "required": [
+          "rewards",
+          "todos",
+          "dailys",
+          "habits"
+        ]
+      },
+      "TasksResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -426,20 +1297,3925 @@
           "appVersion"
         ]
       },
-      "Tasks": {
+      "UltimateGearSets": {
+        "type": "object",
+        "properties": {
+          "warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "rogue": {
+            "type": "boolean",
+            "example": false
+          },
+          "wizard": {
+            "type": "boolean",
+            "example": false
+          },
+          "healer": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "warrior",
+          "rogue",
+          "wizard",
+          "healer"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserData"
+          },
+          "notifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "userV": {
+            "type": "integer",
+            "example": 15885
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "5.48.6"
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "notifications",
+          "userV",
+          "appVersion"
+        ]
+      },
+      "UserData": {
+        "type": "object",
+        "properties": {
+          "auth": {
+            "$ref": "#/components/schemas/Auth"
+          },
+          "achievements": {
+            "$ref": "#/components/schemas/Achievements"
+          },
+          "backer": {
+            "type": "object"
+          },
+          "contributor": {
+            "type": "object"
+          },
+          "permissions": {
+            "type": "object"
+          },
+          "purchased": {
+            "$ref": "#/components/schemas/UserDataPurchased"
+          },
+          "flags": {
+            "$ref": "#/components/schemas/UserDataFlags"
+          },
+          "history": {
+            "$ref": "#/components/schemas/UserDataHistory"
+          },
+          "items": {
+            "$ref": "#/components/schemas/UserDataItems"
+          },
+          "invitations": {
+            "$ref": "#/components/schemas/UserDataInvitations"
+          },
+          "party": {
+            "$ref": "#/components/schemas/UserDataParty"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/UserDataPreferences"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/UserDataProfile"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/UserDataStats"
+          },
+          "inbox": {
+            "$ref": "#/components/schemas/Inbox"
+          },
+          "tasksOrder": {
+            "$ref": "#/components/schemas/TasksOrder"
+          },
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b0413351-405f-416f-8787-947ec1c85199"
+          },
+          "_ABtest": {
+            "type": "string",
+            "example": ""
+          },
+          "loginIncentives": {
+            "type": "integer",
+            "example": 1538
+          },
+          "webhooks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "pushDevices": {
+            "$ref": "#/components/schemas/PushDevices"
+          },
+          "extra": {
+            "type": "object"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/UserDataTags"
+          },
+          "notifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "guilds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "cf0a9cb8-606e-4bf0-bcad-f9b1715b8819"
+            }
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3cb189ef-3a5d-4177-8bc6-fad7f4c055bf"
+            }
+          },
+          "newMessages": {
+            "type": "object"
+          },
+          "lastCron": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-05T11:40:25.172Z"
+          },
+          "balance": {
+            "type": "integer",
+            "example": 21
+          },
+          "_v": {
+            "type": "integer",
+            "example": 15885
+          },
+          "migration": {
+            "type": "string",
+            "example": "20264april-fools-2026"
+          },
+          "pinnedItems": {
+            "$ref": "#/components/schemas/UserDataPinnedItems"
+          },
+          "unpinnedItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "invitesSent": {
+            "type": "integer",
+            "example": 4
+          },
+          "pinnedItemsOrder": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "_subSignature": {
+            "type": "string",
+            "example": "NOT_RUNNING"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b0413351-405f-416f-8787-947ec1c85199"
+          },
+          "needsCron": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "auth",
+          "achievements",
+          "backer",
+          "contributor",
+          "permissions",
+          "purchased",
+          "flags",
+          "history",
+          "items",
+          "invitations",
+          "party",
+          "preferences",
+          "profile",
+          "stats",
+          "inbox",
+          "tasksOrder",
+          "_id",
+          "_ABtest",
+          "loginIncentives",
+          "webhooks",
+          "pushDevices",
+          "extra",
+          "tags",
+          "notifications",
+          "guilds",
+          "challenges",
+          "newMessages",
+          "lastCron",
+          "balance",
+          "_v",
+          "migration",
+          "pinnedItems",
+          "unpinnedItems",
+          "invitesSent",
+          "pinnedItemsOrder",
+          "_subSignature",
+          "id",
+          "needsCron"
+        ]
+      },
+      "UserDataFlags": {
+        "type": "object",
+        "properties": {
+          "tour": {
+            "$ref": "#/components/schemas/UserDataFlagsTour"
+          },
+          "tutorial": {
+            "$ref": "#/components/schemas/UserDataFlagsTutorial"
+          },
+          "customizationsNotification": {
+            "type": "boolean",
+            "example": true
+          },
+          "showTour": {
+            "type": "boolean",
+            "example": true
+          },
+          "dropsEnabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "itemsEnabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "lastNewStuffRead": {
+            "type": "string",
+            "format": "uuid",
+            "example": "de377c3a-208e-4b23-98d1-58f7c4f305d5"
+          },
+          "rewrite": {
+            "type": "boolean",
+            "example": true
+          },
+          "classSelected": {
+            "type": "boolean",
+            "example": true
+          },
+          "rebirthEnabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "recaptureEmailsPhase": {
+            "type": "integer",
+            "example": 0
+          },
+          "weeklyRecapEmailsPhase": {
+            "type": "integer",
+            "example": 0
+          },
+          "communityGuidelinesAccepted": {
+            "type": "boolean",
+            "example": true
+          },
+          "cronCount": {
+            "type": "integer",
+            "example": 1486
+          },
+          "welcomed": {
+            "type": "boolean",
+            "example": true
+          },
+          "armoireEnabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "armoireOpened": {
+            "type": "boolean",
+            "example": true
+          },
+          "armoireEmpty": {
+            "type": "boolean",
+            "example": false
+          },
+          "cardReceived": {
+            "type": "boolean",
+            "example": false
+          },
+          "warnedLowHealth": {
+            "type": "boolean",
+            "example": true
+          },
+          "verifiedUsername": {
+            "type": "boolean",
+            "example": true
+          },
+          "levelDrops": {
+            "$ref": "#/components/schemas/UserDataFlagsLevelDrops"
+          },
+          "lastWeeklyRecap": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-01-26T18:12:42.189Z"
+          },
+          "initializedUserHistory": {
+            "type": "boolean",
+            "example": true
+          },
+          "thirdPartyTools": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-05T21:37:40.576Z"
+          },
+          "newStuff": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "tour",
+          "tutorial",
+          "customizationsNotification",
+          "showTour",
+          "dropsEnabled",
+          "itemsEnabled",
+          "lastNewStuffRead",
+          "rewrite",
+          "classSelected",
+          "rebirthEnabled",
+          "recaptureEmailsPhase",
+          "weeklyRecapEmailsPhase",
+          "communityGuidelinesAccepted",
+          "cronCount",
+          "welcomed",
+          "armoireEnabled",
+          "armoireOpened",
+          "armoireEmpty",
+          "cardReceived",
+          "warnedLowHealth",
+          "verifiedUsername",
+          "levelDrops",
+          "lastWeeklyRecap",
+          "initializedUserHistory",
+          "thirdPartyTools",
+          "newStuff"
+        ]
+      },
+      "UserDataFlagsLevelDrops": {
+        "type": "object",
+        "properties": {
+          "atom1": {
+            "type": "boolean",
+            "example": true
+          },
+          "vice1": {
+            "type": "boolean",
+            "example": true
+          },
+          "goldenknight1": {
+            "type": "boolean",
+            "example": true
+          },
+          "moonstone1": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "atom1",
+          "vice1",
+          "goldenknight1",
+          "moonstone1"
+        ]
+      },
+      "UserDataFlagsTour": {
+        "type": "object",
+        "properties": {
+          "intro": {
+            "type": "integer",
+            "example": -2
+          },
+          "classes": {
+            "type": "integer",
+            "example": 0
+          },
+          "stats": {
+            "type": "integer",
+            "example": -2
+          },
+          "tavern": {
+            "type": "integer",
+            "example": -2
+          },
+          "party": {
+            "type": "integer",
+            "example": -2
+          },
+          "guilds": {
+            "type": "integer",
+            "example": -2
+          },
+          "challenges": {
+            "type": "integer",
+            "example": -2
+          },
+          "market": {
+            "type": "integer",
+            "example": -2
+          },
+          "pets": {
+            "type": "integer",
+            "example": -2
+          },
+          "mounts": {
+            "type": "integer",
+            "example": -2
+          },
+          "hall": {
+            "type": "integer",
+            "example": -2
+          },
+          "equipment": {
+            "type": "integer",
+            "example": -2
+          },
+          "groupPlans": {
+            "type": "integer",
+            "example": -1
+          }
+        },
+        "required": [
+          "intro",
+          "classes",
+          "stats",
+          "tavern",
+          "party",
+          "guilds",
+          "challenges",
+          "market",
+          "pets",
+          "mounts",
+          "hall",
+          "equipment",
+          "groupPlans"
+        ]
+      },
+      "UserDataFlagsTutorial": {
+        "type": "object",
+        "properties": {
+          "common": {
+            "$ref": "#/components/schemas/UserDataFlagsTutorialCommon"
+          },
+          "ios": {
+            "$ref": "#/components/schemas/UserDataFlagsTutorialIos"
+          }
+        },
+        "required": [
+          "common",
+          "ios"
+        ]
+      },
+      "UserDataFlagsTutorialCommon": {
+        "type": "object",
+        "properties": {
+          "habits": {
+            "type": "boolean",
+            "example": true
+          },
+          "dailies": {
+            "type": "boolean",
+            "example": true
+          },
+          "todos": {
+            "type": "boolean",
+            "example": true
+          },
+          "rewards": {
+            "type": "boolean",
+            "example": true
+          },
+          "party": {
+            "type": "boolean",
+            "example": true
+          },
+          "pets": {
+            "type": "boolean",
+            "example": true
+          },
+          "gems": {
+            "type": "boolean",
+            "example": true
+          },
+          "skills": {
+            "type": "boolean",
+            "example": true
+          },
+          "classes": {
+            "type": "boolean",
+            "example": true
+          },
+          "tavern": {
+            "type": "boolean",
+            "example": true
+          },
+          "equipment": {
+            "type": "boolean",
+            "example": true
+          },
+          "items": {
+            "type": "boolean",
+            "example": true
+          },
+          "mounts": {
+            "type": "boolean",
+            "example": true
+          },
+          "inbox": {
+            "type": "boolean",
+            "example": true
+          },
+          "stats": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "habits",
+          "dailies",
+          "todos",
+          "rewards",
+          "party",
+          "pets",
+          "gems",
+          "skills",
+          "classes",
+          "tavern",
+          "equipment",
+          "items",
+          "mounts",
+          "inbox",
+          "stats"
+        ]
+      },
+      "UserDataFlagsTutorialIos": {
+        "type": "object",
+        "properties": {
+          "addTask": {
+            "type": "boolean",
+            "example": false
+          },
+          "editTask": {
+            "type": "boolean",
+            "example": false
+          },
+          "deleteTask": {
+            "type": "boolean",
+            "example": false
+          },
+          "filterTask": {
+            "type": "boolean",
+            "example": false
+          },
+          "groupPets": {
+            "type": "boolean",
+            "example": false
+          },
+          "inviteParty": {
+            "type": "boolean",
+            "example": false
+          },
+          "reorderTask": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "addTask",
+          "editTask",
+          "deleteTask",
+          "filterTask",
+          "groupPets",
+          "inviteParty",
+          "reorderTask"
+        ]
+      },
+      "UserDataHistory": {
+        "type": "object",
+        "properties": {
+          "todos": {
+            "$ref": "#/components/schemas/ListUserDataHistoryExp"
+          },
+          "exp": {
+            "$ref": "#/components/schemas/ListUserDataHistoryExp"
+          }
+        },
+        "required": [
+          "todos",
+          "exp"
+        ]
+      },
+      "UserDataInvitations": {
+        "type": "object",
+        "properties": {
+          "party": {
+            "type": "object"
+          },
+          "guilds": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "parties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          }
+        },
+        "required": [
+          "party",
+          "guilds",
+          "parties"
+        ]
+      },
+      "UserDataItems": {
+        "type": "object",
+        "properties": {
+          "gear": {
+            "$ref": "#/components/schemas/UserDataItemsGear"
+          },
+          "special": {
+            "$ref": "#/components/schemas/UserDataItemsSpecial"
+          },
+          "lastDrop": {
+            "$ref": "#/components/schemas/UserDataItemsLastDrop"
+          },
+          "quests": {
+            "$ref": "#/components/schemas/UserDataItemsQuests"
+          },
+          "mounts": {
+            "$ref": "#/components/schemas/UserDataItemsMounts"
+          },
+          "food": {
+            "$ref": "#/components/schemas/UserDataItemsFood"
+          },
+          "hatchingPotions": {
+            "$ref": "#/components/schemas/UserDataItemsHatchingPotions"
+          },
+          "eggs": {
+            "$ref": "#/components/schemas/UserDataItemsEggs"
+          },
+          "pets": {
+            "$ref": "#/components/schemas/UserDataItemsPets"
+          },
+          "currentPet": {
+            "type": "string",
+            "example": ""
+          },
+          "currentMount": {
+            "type": "string",
+            "example": "Dragon-Red"
+          }
+        },
+        "required": [
+          "gear",
+          "special",
+          "lastDrop",
+          "quests",
+          "mounts",
+          "food",
+          "hatchingPotions",
+          "eggs",
+          "pets",
+          "currentPet",
+          "currentMount"
+        ]
+      },
+      "UserDataItemsEggs": {
+        "type": "object",
+        "properties": {
+          "Wolf": {
+            "type": "integer",
+            "example": 103
+          },
+          "Cactus": {
+            "type": "integer",
+            "example": 131
+          },
+          "PandaCub": {
+            "type": "integer",
+            "example": 115
+          },
+          "Fox": {
+            "type": "integer",
+            "example": 100
+          },
+          "BearCub": {
+            "type": "integer",
+            "example": 106
+          },
+          "Dragon": {
+            "type": "integer",
+            "example": 116
+          },
+          "LionCub": {
+            "type": "integer",
+            "example": 113
+          },
+          "FlyingPig": {
+            "type": "integer",
+            "example": 107
+          },
+          "TigerCub": {
+            "type": "integer",
+            "example": 122
+          }
+        },
+        "required": [
+          "Wolf",
+          "Cactus",
+          "PandaCub",
+          "Fox",
+          "BearCub",
+          "Dragon",
+          "LionCub",
+          "FlyingPig",
+          "TigerCub"
+        ]
+      },
+      "UserDataItemsFood": {
+        "type": "object",
+        "properties": {
+          "Potatoe": {
+            "type": "integer",
+            "example": 91
+          },
+          "Chocolate": {
+            "type": "integer",
+            "example": 110
+          },
+          "CottonCandyPink": {
+            "type": "integer",
+            "example": 105
+          },
+          "Meat": {
+            "type": "integer",
+            "example": 86
+          },
+          "CottonCandyBlue": {
+            "type": "integer",
+            "example": 95
+          },
+          "RottenMeat": {
+            "type": "integer",
+            "example": 109
+          },
+          "Cake_Skeleton": {
+            "type": "integer",
+            "example": 15
+          },
+          "Cake_Base": {
+            "type": "integer",
+            "example": 17
+          },
+          "Cake_CottonCandyBlue": {
+            "type": "integer",
+            "example": 14
+          },
+          "Cake_CottonCandyPink": {
+            "type": "integer",
+            "example": 15
+          },
+          "Cake_Shade": {
+            "type": "integer",
+            "example": 14
+          },
+          "Cake_White": {
+            "type": "integer",
+            "example": 15
+          },
+          "Cake_Golden": {
+            "type": "integer",
+            "example": 14
+          },
+          "Cake_Zombie": {
+            "type": "integer",
+            "example": 17
+          },
+          "Cake_Desert": {
+            "type": "integer",
+            "example": 14
+          },
+          "Cake_Red": {
+            "type": "integer",
+            "example": 16
+          },
+          "Honey": {
+            "type": "integer",
+            "example": 124
+          },
+          "Strawberry": {
+            "type": "integer",
+            "example": 110
+          },
+          "Milk": {
+            "type": "integer",
+            "example": 79
+          },
+          "Fish": {
+            "type": "integer",
+            "example": 91
+          },
+          "Saddle": {
+            "type": "integer",
+            "example": 8
+          },
+          "Candy_Skeleton": {
+            "type": "integer",
+            "example": 10
+          },
+          "Candy_Base": {
+            "type": "integer",
+            "example": 9
+          },
+          "Candy_CottonCandyBlue": {
+            "type": "integer",
+            "example": 10
+          },
+          "Candy_CottonCandyPink": {
+            "type": "integer",
+            "example": 9
+          },
+          "Candy_Shade": {
+            "type": "integer",
+            "example": 9
+          },
+          "Candy_White": {
+            "type": "integer",
+            "example": 10
+          },
+          "Candy_Golden": {
+            "type": "integer",
+            "example": 10
+          },
+          "Candy_Zombie": {
+            "type": "integer",
+            "example": 11
+          },
+          "Candy_Desert": {
+            "type": "integer",
+            "example": 10
+          },
+          "Candy_Red": {
+            "type": "integer",
+            "example": 12
+          },
+          "Pie_Skeleton": {
+            "type": "integer",
+            "example": 13
+          },
+          "Pie_Base": {
+            "type": "integer",
+            "example": 13
+          },
+          "Pie_CottonCandyBlue": {
+            "type": "integer",
+            "example": 14
+          },
+          "Pie_CottonCandyPink": {
+            "type": "integer",
+            "example": 13
+          },
+          "Pie_Shade": {
+            "type": "integer",
+            "example": 15
+          },
+          "Pie_White": {
+            "type": "integer",
+            "example": 14
+          },
+          "Pie_Golden": {
+            "type": "integer",
+            "example": 18
+          },
+          "Pie_Zombie": {
+            "type": "integer",
+            "example": 12
+          },
+          "Pie_Desert": {
+            "type": "integer",
+            "example": 11
+          },
+          "Pie_Red": {
+            "type": "integer",
+            "example": 17
+          }
+        },
+        "required": [
+          "Potatoe",
+          "Chocolate",
+          "CottonCandyPink",
+          "Meat",
+          "CottonCandyBlue",
+          "RottenMeat",
+          "Cake_Skeleton",
+          "Cake_Base",
+          "Cake_CottonCandyBlue",
+          "Cake_CottonCandyPink",
+          "Cake_Shade",
+          "Cake_White",
+          "Cake_Golden",
+          "Cake_Zombie",
+          "Cake_Desert",
+          "Cake_Red",
+          "Honey",
+          "Strawberry",
+          "Milk",
+          "Fish",
+          "Saddle",
+          "Candy_Skeleton",
+          "Candy_Base",
+          "Candy_CottonCandyBlue",
+          "Candy_CottonCandyPink",
+          "Candy_Shade",
+          "Candy_White",
+          "Candy_Golden",
+          "Candy_Zombie",
+          "Candy_Desert",
+          "Candy_Red",
+          "Pie_Skeleton",
+          "Pie_Base",
+          "Pie_CottonCandyBlue",
+          "Pie_CottonCandyPink",
+          "Pie_Shade",
+          "Pie_White",
+          "Pie_Golden",
+          "Pie_Zombie",
+          "Pie_Desert",
+          "Pie_Red"
+        ]
+      },
+      "UserDataItemsGear": {
+        "type": "object",
+        "properties": {
+          "equipped": {
+            "$ref": "#/components/schemas/UserDataItemsGearEquipped"
+          },
+          "costume": {
+            "$ref": "#/components/schemas/UserDataItemsGearCostume"
+          },
+          "owned": {
+            "$ref": "#/components/schemas/UserDataItemsGearOwned"
+          }
+        },
+        "required": [
+          "equipped",
+          "costume",
+          "owned"
+        ]
+      },
+      "UserDataItemsGearCostume": {
+        "type": "object",
+        "properties": {
+          "shield": {
+            "type": "string",
+            "example": "shield_base_0"
+          },
+          "head": {
+            "type": "string",
+            "example": "head_base_0"
+          },
+          "armor": {
+            "type": "string",
+            "example": "armor_base_0"
+          }
+        },
+        "required": [
+          "shield",
+          "head",
+          "armor"
+        ]
+      },
+      "UserDataItemsGearEquipped": {
+        "type": "object",
+        "properties": {
+          "weapon": {
+            "type": "string",
+            "example": "weapon_special_2"
+          },
+          "armor": {
+            "type": "string",
+            "example": "armor_special_nomadsCuirass"
+          },
+          "head": {
+            "type": "string",
+            "example": "head_warrior_5"
+          },
+          "shield": {
+            "type": "string",
+            "example": "shield_special_wakizashi"
+          },
+          "back": {
+            "type": "string",
+            "example": "back_special_namingDay2020"
+          },
+          "eyewear": {
+            "type": "string",
+            "example": "eyewear_base_0"
+          },
+          "body": {
+            "type": "string",
+            "example": "body_special_namingDay2018"
+          }
+        },
+        "required": [
+          "weapon",
+          "armor",
+          "head",
+          "shield",
+          "back",
+          "eyewear",
+          "body"
+        ]
+      },
+      "UserDataItemsGearOwned": {
+        "type": "object",
+        "properties": {
+          "eyewear_special_yellowTopFrame": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_whiteTopFrame": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_redTopFrame": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_pinkTopFrame": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_greenTopFrame": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_blueTopFrame": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_blackTopFrame": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_bardRobes": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_bardHat": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_warrior_1": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_warrior_0": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_warrior_1": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_warrior_1": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_warrior_2": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_warrior_2": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_bardInstrument": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_warrior_1": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_warrior_2": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_warrior_2": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_warrior_3": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_lunarWarriorHelm": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_spring2017Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_warrior_3": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_pageArmor": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_pageHelm": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_warrior_3": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_pageBanner": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_diamondStave": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_lunarWarriorArmor": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_armoire_basicLongbow": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_warrior_4": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_warrior_3": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_lootBag": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_skeletonKey": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_sneakthiefRobes": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_clandestineCowl": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_winter2018Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_snowSovereignRobes": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_snowSovereignCrown": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday2015": {
+            "type": "boolean",
+            "example": true
+          },
+          "back_special_snowdriftVeil": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_wintryMirror": {
+            "type": "boolean",
+            "example": true
+          },
+          "headAccessory_special_blackHeadband": {
+            "type": "boolean",
+            "example": true
+          },
+          "headAccessory_special_blueHeadband": {
+            "type": "boolean",
+            "example": true
+          },
+          "headAccessory_special_greenHeadband": {
+            "type": "boolean",
+            "example": true
+          },
+          "headAccessory_special_pinkHeadband": {
+            "type": "boolean",
+            "example": true
+          },
+          "headAccessory_special_redHeadband": {
+            "type": "boolean",
+            "example": true
+          },
+          "headAccessory_special_whiteHeadband": {
+            "type": "boolean",
+            "example": true
+          },
+          "headAccessory_special_yellowHeadband": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_warrior_4": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_warrior_5": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_warrior_4": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_warrior_5": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_warrior_4": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_lunarScythe": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye2014": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_nomadsCuirass": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_nomadsScimitar": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_armoire_bigWig": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday2016": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_spikedHelm": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_piDay": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_piDay": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_blackHalfMoon": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_blueHalfMoon": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_greenHalfMoon": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_pinkHalfMoon": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_redHalfMoon": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_whiteHalfMoon": {
+            "type": "boolean",
+            "example": true
+          },
+          "eyewear_special_yellowHalfMoon": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_namingDay2017": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye2015": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday2017": {
+            "type": "boolean",
+            "example": true
+          },
+          "body_special_namingDay2018": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye2016": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday2018": {
+            "type": "boolean",
+            "example": true
+          },
+          "back_special_namingDay2020": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_dandyHat": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_fencingFoil": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_dandySuit": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_warrior_5": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_warrior_5": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_warrior_6": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_fall2021Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_turkeyArmorBase": {
+            "type": "boolean",
+            "example": true
+          },
+          "back_special_turkeyTailBase": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_turkeyHelmBase": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye2017": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_armoire_jesterBaton": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_tachi": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_samuraiArmor": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_winter2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_winter2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_winter2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday2019": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_kabuto": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_wakizashi": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_2": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_armoire_potionBase": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_armoire_potionSkeleton": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_spring2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_spring2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_fall2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_fall2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_fall2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_fall2022Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_turkeyArmorGilded": {
+            "type": "boolean",
+            "example": true
+          },
+          "back_special_turkeyTailGilded": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_turkeyHelmGilded": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye2018": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_summer2023Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_summer2023Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_summer2023Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_summer2023Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye2019": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday2020": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye2020": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday2021": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_spring2025Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "weapon_special_spring2025Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_spring2025Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_special_spring2025Warrior": {
+            "type": "boolean",
+            "example": true
+          },
+          "shield_armoire_baseballGlove": {
+            "type": "boolean",
+            "example": true
+          },
+          "head_special_nye2021": {
+            "type": "boolean",
+            "example": true
+          },
+          "armor_special_birthday2022": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "eyewear_special_yellowTopFrame",
+          "eyewear_special_whiteTopFrame",
+          "eyewear_special_redTopFrame",
+          "eyewear_special_pinkTopFrame",
+          "eyewear_special_greenTopFrame",
+          "eyewear_special_blueTopFrame",
+          "eyewear_special_blackTopFrame",
+          "armor_special_bardRobes",
+          "head_special_bardHat",
+          "head_warrior_1",
+          "weapon_warrior_0",
+          "shield_warrior_1",
+          "weapon_warrior_1",
+          "armor_special_birthday",
+          "weapon_warrior_2",
+          "head_warrior_2",
+          "weapon_special_bardInstrument",
+          "armor_warrior_1",
+          "shield_warrior_2",
+          "armor_warrior_2",
+          "head_warrior_3",
+          "head_special_lunarWarriorHelm",
+          "shield_special_spring2017Warrior",
+          "weapon_warrior_3",
+          "armor_special_pageArmor",
+          "head_special_pageHelm",
+          "armor_warrior_3",
+          "weapon_special_pageBanner",
+          "shield_special_diamondStave",
+          "armor_special_lunarWarriorArmor",
+          "weapon_armoire_basicLongbow",
+          "armor_warrior_4",
+          "shield_warrior_3",
+          "shield_special_lootBag",
+          "weapon_special_skeletonKey",
+          "head_special_nye",
+          "armor_special_sneakthiefRobes",
+          "head_special_clandestineCowl",
+          "shield_special_winter2018Warrior",
+          "armor_special_snowSovereignRobes",
+          "head_special_snowSovereignCrown",
+          "armor_special_birthday2015",
+          "back_special_snowdriftVeil",
+          "shield_special_wintryMirror",
+          "headAccessory_special_blackHeadband",
+          "headAccessory_special_blueHeadband",
+          "headAccessory_special_greenHeadband",
+          "headAccessory_special_pinkHeadband",
+          "headAccessory_special_redHeadband",
+          "headAccessory_special_whiteHeadband",
+          "headAccessory_special_yellowHeadband",
+          "weapon_warrior_4",
+          "weapon_warrior_5",
+          "head_warrior_4",
+          "armor_warrior_5",
+          "shield_warrior_4",
+          "weapon_special_lunarScythe",
+          "head_special_nye2014",
+          "armor_special_nomadsCuirass",
+          "weapon_special_nomadsScimitar",
+          "head_armoire_bigWig",
+          "armor_special_birthday2016",
+          "head_special_spikedHelm",
+          "head_special_piDay",
+          "shield_special_piDay",
+          "eyewear_special_blackHalfMoon",
+          "eyewear_special_blueHalfMoon",
+          "eyewear_special_greenHalfMoon",
+          "eyewear_special_pinkHalfMoon",
+          "eyewear_special_redHalfMoon",
+          "eyewear_special_whiteHalfMoon",
+          "eyewear_special_yellowHalfMoon",
+          "head_special_namingDay2017",
+          "head_special_nye2015",
+          "armor_special_birthday2017",
+          "body_special_namingDay2018",
+          "head_special_nye2016",
+          "armor_special_birthday2018",
+          "back_special_namingDay2020",
+          "head_special_dandyHat",
+          "weapon_special_fencingFoil",
+          "armor_special_dandySuit",
+          "shield_warrior_5",
+          "head_warrior_5",
+          "weapon_warrior_6",
+          "weapon_special_fall2021Warrior",
+          "armor_special_turkeyArmorBase",
+          "back_special_turkeyTailBase",
+          "head_special_turkeyHelmBase",
+          "head_special_nye2017",
+          "weapon_armoire_jesterBaton",
+          "weapon_special_tachi",
+          "armor_special_samuraiArmor",
+          "weapon_special_winter2022Warrior",
+          "head_special_winter2022Warrior",
+          "shield_special_winter2022Warrior",
+          "armor_special_birthday2019",
+          "head_special_kabuto",
+          "shield_special_wakizashi",
+          "weapon_special_2",
+          "weapon_armoire_potionBase",
+          "weapon_armoire_potionSkeleton",
+          "weapon_special_spring2022Warrior",
+          "head_special_spring2022Warrior",
+          "head_special_fall2022Warrior",
+          "weapon_special_fall2022Warrior",
+          "armor_special_fall2022Warrior",
+          "shield_special_fall2022Warrior",
+          "armor_special_turkeyArmorGilded",
+          "back_special_turkeyTailGilded",
+          "head_special_turkeyHelmGilded",
+          "head_special_nye2018",
+          "armor_special_summer2023Warrior",
+          "head_special_summer2023Warrior",
+          "weapon_special_summer2023Warrior",
+          "shield_special_summer2023Warrior",
+          "head_special_nye2019",
+          "armor_special_birthday2020",
+          "head_special_nye2020",
+          "armor_special_birthday2021",
+          "armor_special_spring2025Warrior",
+          "weapon_special_spring2025Warrior",
+          "head_special_spring2025Warrior",
+          "shield_special_spring2025Warrior",
+          "shield_armoire_baseballGlove",
+          "head_special_nye2021",
+          "armor_special_birthday2022"
+        ]
+      },
+      "UserDataItemsHatchingPotions": {
+        "type": "object",
+        "properties": {
+          "RoyalPurple": {
+            "type": "integer",
+            "example": 8
+          },
+          "Desert": {
+            "type": "integer",
+            "example": 130
+          },
+          "CottonCandyPink": {
+            "type": "integer",
+            "example": 79
+          },
+          "CottonCandyBlue": {
+            "type": "integer",
+            "example": 64
+          },
+          "Red": {
+            "type": "integer",
+            "example": 99
+          },
+          "Zombie": {
+            "type": "integer",
+            "example": 85
+          },
+          "Base": {
+            "type": "integer",
+            "example": 146
+          },
+          "White": {
+            "type": "integer",
+            "example": 142
+          },
+          "Shade": {
+            "type": "integer",
+            "example": 100
+          },
+          "Skeleton": {
+            "type": "integer",
+            "example": 92
+          },
+          "Golden": {
+            "type": "integer",
+            "example": 55
+          }
+        },
+        "required": [
+          "RoyalPurple",
+          "Desert",
+          "CottonCandyPink",
+          "CottonCandyBlue",
+          "Red",
+          "Zombie",
+          "Base",
+          "White",
+          "Shade",
+          "Skeleton",
+          "Golden"
+        ]
+      },
+      "UserDataItemsLastDrop": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "example": 3
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-05T21:20:38.720Z"
+          }
+        },
+        "required": [
+          "count",
+          "date"
+        ]
+      },
+      "UserDataItemsMounts": {
+        "type": "object",
+        "properties": {
+          "Wolf-RoyalPurple": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-Desert": {
+            "type": "boolean",
+            "example": true
+          },
+          "Orca-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "Gryphon-RoyalPurple": {
+            "type": "boolean",
+            "example": true
+          },
+          "Hippogriff-Hopeful": {
+            "type": "boolean",
+            "example": true
+          },
+          "JackOLantern-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "Turkey-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-Red": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-Red": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "FlyingPig-Desert": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-Shade": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-Skeleton": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-Zombie": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-Zombie": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-Skeleton": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-CottonCandyPink": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-CottonCandyPink": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-CottonCandyBlue": {
+            "type": "boolean",
+            "example": true
+          },
+          "Cactus-CottonCandyBlue": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-Golden": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-Golden": {
+            "type": "boolean",
+            "example": true
+          },
+          "Fox-CottonCandyBlue": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-Shade": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-Golden": {
+            "type": "boolean",
+            "example": true
+          },
+          "Cactus-Desert": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-Red": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "JackOLantern-Ghost": {
+            "type": "boolean",
+            "example": true
+          },
+          "Turkey-Gilded": {
+            "type": "boolean",
+            "example": true
+          },
+          "JackOLantern-Glow": {
+            "type": "boolean",
+            "example": true
+          },
+          "JackOLantern-RoyalPurple": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-Desert": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-Shade": {
+            "type": "boolean",
+            "example": true
+          },
+          "Wolf-Zombie": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-Desert": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-CottonCandyPink": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-CottonCandyBlue": {
+            "type": "boolean",
+            "example": true
+          },
+          "TigerCub-Golden": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-Red": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-Skeleton": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-CottonCandyPink": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-CottonCandyBlue": {
+            "type": "boolean",
+            "example": true
+          },
+          "PandaCub-Golden": {
+            "type": "boolean",
+            "example": true
+          },
+          "LionCub-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "LionCub-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "LionCub-Shade": {
+            "type": "boolean",
+            "example": true
+          },
+          "LionCub-Skeleton": {
+            "type": "boolean",
+            "example": true
+          },
+          "LionCub-Zombie": {
+            "type": "boolean",
+            "example": true
+          },
+          "LionCub-CottonCandyPink": {
+            "type": "boolean",
+            "example": true
+          },
+          "LionCub-CottonCandyBlue": {
+            "type": "boolean",
+            "example": true
+          },
+          "Fox-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "Cactus-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "FlyingPig-Base": {
+            "type": "boolean",
+            "example": true
+          },
+          "FlyingPig-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "Fox-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-Desert": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-Shade": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-Skeleton": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-Zombie": {
+            "type": "boolean",
+            "example": true
+          },
+          "Dragon-CottonCandyBlue": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-Desert": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-Red": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-Shade": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-Skeleton": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-Zombie": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-CottonCandyPink": {
+            "type": "boolean",
+            "example": true
+          },
+          "BearCub-CottonCandyBlue": {
+            "type": "boolean",
+            "example": true
+          },
+          "Cactus-White": {
+            "type": "boolean",
+            "example": true
+          },
+          "Cactus-Red": {
+            "type": "boolean",
+            "example": true
+          },
+          "Cactus-Shade": {
+            "type": "boolean",
+            "example": true
+          },
+          "Cactus-Skeleton": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "Wolf-RoyalPurple",
+          "PandaCub-Desert",
+          "Orca-Base",
+          "Gryphon-RoyalPurple",
+          "Hippogriff-Hopeful",
+          "JackOLantern-Base",
+          "Turkey-Base",
+          "Dragon-Red",
+          "Wolf-Red",
+          "PandaCub-Base",
+          "PandaCub-White",
+          "FlyingPig-Desert",
+          "TigerCub-Shade",
+          "Wolf-Skeleton",
+          "TigerCub-Zombie",
+          "PandaCub-Zombie",
+          "TigerCub-Skeleton",
+          "Wolf-CottonCandyPink",
+          "Dragon-CottonCandyPink",
+          "Wolf-CottonCandyBlue",
+          "Cactus-CottonCandyBlue",
+          "Dragon-Golden",
+          "Wolf-Golden",
+          "Fox-CottonCandyBlue",
+          "PandaCub-Shade",
+          "Wolf-White",
+          "BearCub-Golden",
+          "Cactus-Desert",
+          "TigerCub-Red",
+          "Wolf-Base",
+          "JackOLantern-Ghost",
+          "Turkey-Gilded",
+          "JackOLantern-Glow",
+          "JackOLantern-RoyalPurple",
+          "Wolf-Desert",
+          "Wolf-Shade",
+          "Wolf-Zombie",
+          "TigerCub-Base",
+          "TigerCub-White",
+          "TigerCub-Desert",
+          "TigerCub-CottonCandyPink",
+          "TigerCub-CottonCandyBlue",
+          "TigerCub-Golden",
+          "PandaCub-Red",
+          "PandaCub-Skeleton",
+          "PandaCub-CottonCandyPink",
+          "PandaCub-CottonCandyBlue",
+          "PandaCub-Golden",
+          "LionCub-Base",
+          "LionCub-White",
+          "LionCub-Shade",
+          "LionCub-Skeleton",
+          "LionCub-Zombie",
+          "LionCub-CottonCandyPink",
+          "LionCub-CottonCandyBlue",
+          "Fox-Base",
+          "BearCub-Base",
+          "Cactus-Base",
+          "Dragon-Base",
+          "FlyingPig-Base",
+          "FlyingPig-White",
+          "Fox-White",
+          "Dragon-White",
+          "Dragon-Desert",
+          "Dragon-Shade",
+          "Dragon-Skeleton",
+          "Dragon-Zombie",
+          "Dragon-CottonCandyBlue",
+          "BearCub-White",
+          "BearCub-Desert",
+          "BearCub-Red",
+          "BearCub-Shade",
+          "BearCub-Skeleton",
+          "BearCub-Zombie",
+          "BearCub-CottonCandyPink",
+          "BearCub-CottonCandyBlue",
+          "Cactus-White",
+          "Cactus-Red",
+          "Cactus-Shade",
+          "Cactus-Skeleton"
+        ]
+      },
+      "UserDataItemsPets": {
+        "type": "object",
+        "properties": {
+          "Wolf-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "PandaCub-Desert": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-Desert": {
+            "type": "integer",
+            "example": 5
+          },
+          "Fox-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "Wolf-CottonCandyBlue": {
+            "type": "integer",
+            "example": -1
+          },
+          "Dragon-CottonCandyPink": {
+            "type": "integer",
+            "example": 5
+          },
+          "Dragon-Red": {
+            "type": "integer",
+            "example": 5
+          },
+          "FlyingPig-CottonCandyPink": {
+            "type": "integer",
+            "example": 5
+          },
+          "Dragon-Zombie": {
+            "type": "integer",
+            "example": 5
+          },
+          "LionCub-Desert": {
+            "type": "integer",
+            "example": 45
+          },
+          "BearCub-Desert": {
+            "type": "integer",
+            "example": 5
+          },
+          "Fox-Red": {
+            "type": "integer",
+            "example": 5
+          },
+          "FlyingPig-Red": {
+            "type": "integer",
+            "example": 5
+          },
+          "PandaCub-Base": {
+            "type": "integer",
+            "example": 5
+          },
+          "LionCub-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "Dragon-Golden": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-Base": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-CottonCandyBlue": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-CottonCandyPink": {
+            "type": "integer",
+            "example": 25
+          },
+          "Dragon-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "FlyingPig-Desert": {
+            "type": "integer",
+            "example": 5
+          },
+          "FlyingPig-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "Fox-CottonCandyBlue": {
+            "type": "integer",
+            "example": 5
+          },
+          "LionCub-CottonCandyBlue": {
+            "type": "integer",
+            "example": -1
+          },
+          "LionCub-Red": {
+            "type": "integer",
+            "example": 45
+          },
+          "PandaCub-Red": {
+            "type": "integer",
+            "example": -1
+          },
+          "Wolf-Red": {
+            "type": "integer",
+            "example": 5
+          },
+          "Wolf-Skeleton": {
+            "type": "integer",
+            "example": -1
+          },
+          "Wolf-White": {
+            "type": "integer",
+            "example": -1
+          },
+          "TigerCub-White": {
+            "type": "integer",
+            "example": -1
+          },
+          "PandaCub-White": {
+            "type": "integer",
+            "example": 5
+          },
+          "TigerCub-Zombie": {
+            "type": "integer",
+            "example": 5
+          },
+          "PandaCub-Zombie": {
+            "type": "integer",
+            "example": 5
+          },
+          "TigerCub-Shade": {
+            "type": "integer",
+            "example": 5
+          },
+          "PandaCub-Shade": {
+            "type": "integer",
+            "example": 5
+          },
+          "TigerCub-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "TigerCub-Skeleton": {
+            "type": "integer",
+            "example": 5
+          },
+          "TigerCub-Red": {
+            "type": "integer",
+            "example": 5
+          },
+          "Wolf-Veteran": {
+            "type": "integer",
+            "example": 5
+          },
+          "JackOLantern-Base": {
+            "type": "integer",
+            "example": 5
+          },
+          "Turkey-Base": {
+            "type": "integer",
+            "example": 5
+          },
+          "Hippogriff-Hopeful": {
+            "type": "integer",
+            "example": 5
+          },
+          "Orca-Base": {
+            "type": "integer",
+            "example": 5
+          },
+          "Gryphon-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "Tiger-Veteran": {
+            "type": "integer",
+            "example": 5
+          },
+          "PandaCub-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "Wolf-Base": {
+            "type": "integer",
+            "example": 5
+          },
+          "Wolf-Desert": {
+            "type": "integer",
+            "example": -1
+          },
+          "Wolf-Shade": {
+            "type": "integer",
+            "example": -1
+          },
+          "Wolf-Zombie": {
+            "type": "integer",
+            "example": -1
+          },
+          "Wolf-CottonCandyPink": {
+            "type": "integer",
+            "example": -1
+          },
+          "Wolf-Golden": {
+            "type": "integer",
+            "example": -1
+          },
+          "TigerCub-Base": {
+            "type": "integer",
+            "example": -1
+          },
+          "BearCub-White": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-Golden": {
+            "type": "integer",
+            "example": 5
+          },
+          "PandaCub-Skeleton": {
+            "type": "integer",
+            "example": -1
+          },
+          "TigerCub-Desert": {
+            "type": "integer",
+            "example": -1
+          },
+          "TigerCub-CottonCandyPink": {
+            "type": "integer",
+            "example": -1
+          },
+          "TigerCub-CottonCandyBlue": {
+            "type": "integer",
+            "example": -1
+          },
+          "TigerCub-Golden": {
+            "type": "integer",
+            "example": -1
+          },
+          "LionCub-Base": {
+            "type": "integer",
+            "example": -1
+          },
+          "Fox-Desert": {
+            "type": "integer",
+            "example": 5
+          },
+          "FlyingPig-Skeleton": {
+            "type": "integer",
+            "example": 5
+          },
+          "Dragon-Skeleton": {
+            "type": "integer",
+            "example": 5
+          },
+          "FlyingPig-White": {
+            "type": "integer",
+            "example": -1
+          },
+          "Dragon-Desert": {
+            "type": "integer",
+            "example": 5
+          },
+          "Fox-Shade": {
+            "type": "integer",
+            "example": 5
+          },
+          "LionCub-Zombie": {
+            "type": "integer",
+            "example": -1
+          },
+          "FlyingPig-Zombie": {
+            "type": "integer",
+            "example": 15
+          },
+          "Cactus-White": {
+            "type": "integer",
+            "example": 5
+          },
+          "Fox-Base": {
+            "type": "integer",
+            "example": -1
+          },
+          "Fox-Zombie": {
+            "type": "integer",
+            "example": 5
+          },
+          "Dragon-CottonCandyBlue": {
+            "type": "integer",
+            "example": 5
+          },
+          "Fox-CottonCandyPink": {
+            "type": "integer",
+            "example": 5
+          },
+          "FlyingPig-CottonCandyBlue": {
+            "type": "integer",
+            "example": 5
+          },
+          "LionCub-CottonCandyPink": {
+            "type": "integer",
+            "example": -1
+          },
+          "Fox-Skeleton": {
+            "type": "integer",
+            "example": 5
+          },
+          "LionCub-Skeleton": {
+            "type": "integer",
+            "example": -1
+          },
+          "LionCub-Shade": {
+            "type": "integer",
+            "example": -1
+          },
+          "Fox-White": {
+            "type": "integer",
+            "example": -1
+          },
+          "LionCub-White": {
+            "type": "integer",
+            "example": -1
+          },
+          "PandaCub-CottonCandyPink": {
+            "type": "integer",
+            "example": -1
+          },
+          "FlyingPig-Shade": {
+            "type": "integer",
+            "example": 5
+          },
+          "FlyingPig-Base": {
+            "type": "integer",
+            "example": -1
+          },
+          "Dragon-Base": {
+            "type": "integer",
+            "example": 5
+          },
+          "Dragon-White": {
+            "type": "integer",
+            "example": 5
+          },
+          "Dragon-Shade": {
+            "type": "integer",
+            "example": 5
+          },
+          "PandaCub-CottonCandyBlue": {
+            "type": "integer",
+            "example": -1
+          },
+          "Cactus-Base": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-Zombie": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-Shade": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-Skeleton": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-Zombie": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-CottonCandyPink": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-Red": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-Skeleton": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-Shade": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-Red": {
+            "type": "integer",
+            "example": 5
+          },
+          "BearCub-CottonCandyBlue": {
+            "type": "integer",
+            "example": 5
+          },
+          "PandaCub-Golden": {
+            "type": "integer",
+            "example": -1
+          },
+          "JackOLantern-Ghost": {
+            "type": "integer",
+            "example": 5
+          },
+          "Turkey-Gilded": {
+            "type": "integer",
+            "example": 5
+          },
+          "JackOLantern-Glow": {
+            "type": "integer",
+            "example": 5
+          },
+          "JackOLantern-RoyalPurple": {
+            "type": "integer",
+            "example": 5
+          },
+          "Lion-Veteran": {
+            "type": "integer",
+            "example": 5
+          },
+          "Bear-Veteran": {
+            "type": "integer",
+            "example": 5
+          },
+          "Cactus-Golden": {
+            "type": "integer",
+            "example": 5
+          }
+        },
+        "required": [
+          "Wolf-RoyalPurple",
+          "PandaCub-Desert",
+          "Cactus-Desert",
+          "Fox-RoyalPurple",
+          "Wolf-CottonCandyBlue",
+          "Dragon-CottonCandyPink",
+          "Dragon-Red",
+          "FlyingPig-CottonCandyPink",
+          "Dragon-Zombie",
+          "LionCub-Desert",
+          "BearCub-Desert",
+          "Fox-Red",
+          "FlyingPig-Red",
+          "PandaCub-Base",
+          "LionCub-RoyalPurple",
+          "Dragon-Golden",
+          "BearCub-Base",
+          "Cactus-CottonCandyBlue",
+          "Cactus-CottonCandyPink",
+          "Dragon-RoyalPurple",
+          "FlyingPig-Desert",
+          "FlyingPig-RoyalPurple",
+          "Fox-CottonCandyBlue",
+          "LionCub-CottonCandyBlue",
+          "LionCub-Red",
+          "PandaCub-Red",
+          "Wolf-Red",
+          "Wolf-Skeleton",
+          "Wolf-White",
+          "TigerCub-White",
+          "PandaCub-White",
+          "TigerCub-Zombie",
+          "PandaCub-Zombie",
+          "TigerCub-Shade",
+          "PandaCub-Shade",
+          "TigerCub-RoyalPurple",
+          "TigerCub-Skeleton",
+          "TigerCub-Red",
+          "Wolf-Veteran",
+          "JackOLantern-Base",
+          "Turkey-Base",
+          "Hippogriff-Hopeful",
+          "Orca-Base",
+          "Gryphon-RoyalPurple",
+          "Tiger-Veteran",
+          "PandaCub-RoyalPurple",
+          "Cactus-RoyalPurple",
+          "BearCub-RoyalPurple",
+          "Wolf-Base",
+          "Wolf-Desert",
+          "Wolf-Shade",
+          "Wolf-Zombie",
+          "Wolf-CottonCandyPink",
+          "Wolf-Golden",
+          "TigerCub-Base",
+          "BearCub-White",
+          "BearCub-Golden",
+          "PandaCub-Skeleton",
+          "TigerCub-Desert",
+          "TigerCub-CottonCandyPink",
+          "TigerCub-CottonCandyBlue",
+          "TigerCub-Golden",
+          "LionCub-Base",
+          "Fox-Desert",
+          "FlyingPig-Skeleton",
+          "Dragon-Skeleton",
+          "FlyingPig-White",
+          "Dragon-Desert",
+          "Fox-Shade",
+          "LionCub-Zombie",
+          "FlyingPig-Zombie",
+          "Cactus-White",
+          "Fox-Base",
+          "Fox-Zombie",
+          "Dragon-CottonCandyBlue",
+          "Fox-CottonCandyPink",
+          "FlyingPig-CottonCandyBlue",
+          "LionCub-CottonCandyPink",
+          "Fox-Skeleton",
+          "LionCub-Skeleton",
+          "LionCub-Shade",
+          "Fox-White",
+          "LionCub-White",
+          "PandaCub-CottonCandyPink",
+          "FlyingPig-Shade",
+          "FlyingPig-Base",
+          "Dragon-Base",
+          "Dragon-White",
+          "Dragon-Shade",
+          "PandaCub-CottonCandyBlue",
+          "Cactus-Base",
+          "BearCub-Zombie",
+          "Cactus-Shade",
+          "Cactus-Skeleton",
+          "Cactus-Zombie",
+          "BearCub-CottonCandyPink",
+          "Cactus-Red",
+          "BearCub-Skeleton",
+          "BearCub-Shade",
+          "BearCub-Red",
+          "BearCub-CottonCandyBlue",
+          "PandaCub-Golden",
+          "JackOLantern-Ghost",
+          "Turkey-Gilded",
+          "JackOLantern-Glow",
+          "JackOLantern-RoyalPurple",
+          "Lion-Veteran",
+          "Bear-Veteran",
+          "Cactus-Golden"
+        ]
+      },
+      "UserDataItemsQuests": {
+        "type": "object",
+        "properties": {
+          "dustbunnies": {
+            "type": "integer",
+            "example": 0
+          },
+          "moon1": {
+            "type": "integer",
+            "example": 0
+          },
+          "basilist": {
+            "type": "integer",
+            "example": 3
+          },
+          "moon2": {
+            "type": "integer",
+            "example": 0
+          },
+          "moon3": {
+            "type": "integer",
+            "example": 0
+          },
+          "atom1": {
+            "type": "integer",
+            "example": 0
+          },
+          "dilatoryDistress1": {
+            "type": "integer",
+            "example": 1
+          },
+          "vice1": {
+            "type": "integer",
+            "example": 0
+          },
+          "vice2": {
+            "type": "integer",
+            "example": 0
+          },
+          "goldenknight1": {
+            "type": "integer",
+            "example": 1
+          },
+          "vice3": {
+            "type": "integer",
+            "example": 0
+          },
+          "atom2": {
+            "type": "integer",
+            "example": 0
+          },
+          "atom3": {
+            "type": "integer",
+            "example": 1
+          },
+          "moonstone1": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "dustbunnies",
+          "moon1",
+          "basilist",
+          "moon2",
+          "moon3",
+          "atom1",
+          "dilatoryDistress1",
+          "vice1",
+          "vice2",
+          "goldenknight1",
+          "vice3",
+          "atom2",
+          "atom3",
+          "moonstone1"
+        ]
+      },
+      "UserDataItemsSpecial": {
+        "type": "object",
+        "properties": {
+          "birthdayReceived": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "birthday": {
+            "type": "integer",
+            "example": 0
+          },
+          "thankyouReceived": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "thankyou": {
+            "type": "integer",
+            "example": 0
+          },
+          "greetingReceived": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "greeting": {
+            "type": "integer",
+            "example": 0
+          },
+          "nyeReceived": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "nye": {
+            "type": "integer",
+            "example": 0
+          },
+          "valentineReceived": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "valentine": {
+            "type": "integer",
+            "example": 0
+          },
+          "seafoam": {
+            "type": "integer",
+            "example": 1
+          },
+          "shinySeed": {
+            "type": "integer",
+            "example": 0
+          },
+          "spookySparkles": {
+            "type": "integer",
+            "example": 0
+          },
+          "snowball": {
+            "type": "integer",
+            "example": 0
+          },
+          "congratsReceived": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "getwellReceived": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "goodluckReceived": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "congrats": {
+            "type": "integer",
+            "example": 0
+          },
+          "getwell": {
+            "type": "integer",
+            "example": 0
+          },
+          "goodluck": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "birthdayReceived",
+          "birthday",
+          "thankyouReceived",
+          "thankyou",
+          "greetingReceived",
+          "greeting",
+          "nyeReceived",
+          "nye",
+          "valentineReceived",
+          "valentine",
+          "seafoam",
+          "shinySeed",
+          "spookySparkles",
+          "snowball",
+          "congratsReceived",
+          "getwellReceived",
+          "goodluckReceived",
+          "congrats",
+          "getwell",
+          "goodluck"
+        ]
+      },
+      "UserDataParty": {
+        "type": "object",
+        "properties": {
+          "quest": {
+            "$ref": "#/components/schemas/UserDataPartyQuest"
+          },
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "df72f208-0697-4e94-8973-7665a62f680f"
+          },
+          "order": {
+            "type": "string",
+            "example": "level"
+          },
+          "orderAscending": {
+            "type": "string",
+            "example": "ascending"
+          }
+        },
+        "required": [
+          "quest",
+          "_id",
+          "order",
+          "orderAscending"
+        ]
+      },
+      "UserDataPartyQuest": {
+        "type": "object",
+        "properties": {
+          "progress": {
+            "$ref": "#/components/schemas/UserDataPartyQuestProgress"
+          },
+          "RSVPNeeded": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "progress",
+          "RSVPNeeded"
+        ]
+      },
+      "UserDataPartyQuestProgress": {
+        "type": "object",
+        "properties": {
+          "up": {
+            "type": "number",
+            "format": "double",
+            "example": 2.722206363050413
+          },
+          "down": {
+            "type": "integer",
+            "example": 0
+          },
+          "collectedItems": {
+            "type": "integer",
+            "example": 3
+          },
+          "collect": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "up",
+          "down",
+          "collectedItems",
+          "collect"
+        ]
+      },
+      "UserDataPinnedItems": {
         "type": "array",
         "items": {
-          "$ref": "#/components/schemas/Task"
+          "$ref": "#/components/schemas/UserDataPinnedItemsItem"
         }
+      },
+      "UserDataPinnedItemsItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "armoire"
+          },
+          "path": {
+            "type": "string",
+            "example": "armoire"
+          }
+        },
+        "required": [
+          "type",
+          "path"
+        ]
+      },
+      "UserDataPreferences": {
+        "type": "object",
+        "properties": {
+          "hair": {
+            "$ref": "#/components/schemas/UserDataPreferencesHair"
+          },
+          "emailNotifications": {
+            "$ref": "#/components/schemas/UserDataPreferencesEmailNotifications"
+          },
+          "pushNotifications": {
+            "$ref": "#/components/schemas/UserDataPreferencesPushNotifications"
+          },
+          "suppressModals": {
+            "$ref": "#/components/schemas/UserDataPreferencesSuppressModals"
+          },
+          "tasks": {
+            "$ref": "#/components/schemas/UserDataPreferencesTasks"
+          },
+          "dayStart": {
+            "type": "integer",
+            "example": 2
+          },
+          "size": {
+            "type": "string",
+            "example": "broad"
+          },
+          "hideHeader": {
+            "type": "boolean",
+            "example": false
+          },
+          "skin": {
+            "type": "string",
+            "example": "f5a76e"
+          },
+          "shirt": {
+            "type": "string",
+            "example": "green"
+          },
+          "timezoneOffset": {
+            "type": "integer",
+            "example": -120
+          },
+          "sound": {
+            "type": "string",
+            "example": "gokulTheme"
+          },
+          "chair": {
+            "type": "string",
+            "example": "none"
+          },
+          "allocationMode": {
+            "type": "string",
+            "example": "classbased"
+          },
+          "autoEquip": {
+            "type": "boolean",
+            "example": false
+          },
+          "costume": {
+            "type": "boolean",
+            "example": false
+          },
+          "dateFormat": {
+            "type": "string",
+            "example": "dd/MM/yyyy"
+          },
+          "sleep": {
+            "type": "boolean",
+            "example": false
+          },
+          "stickyHeader": {
+            "type": "boolean",
+            "example": true
+          },
+          "disableClasses": {
+            "type": "boolean",
+            "example": false
+          },
+          "newTaskEdit": {
+            "type": "boolean",
+            "example": true
+          },
+          "dailyDueDefaultView": {
+            "type": "boolean",
+            "example": true
+          },
+          "advancedCollapsed": {
+            "type": "boolean",
+            "example": false
+          },
+          "toolbarCollapsed": {
+            "type": "boolean",
+            "example": false
+          },
+          "reverseChatOrder": {
+            "type": "boolean",
+            "example": false
+          },
+          "developerMode": {
+            "type": "boolean",
+            "example": false
+          },
+          "displayInviteToPartyWhenPartyIs1": {
+            "type": "boolean",
+            "example": true
+          },
+          "improvementCategories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "automaticAllocation": {
+            "type": "boolean",
+            "example": true
+          },
+          "timezoneOffsetAtLastCron": {
+            "type": "integer",
+            "example": -120
+          },
+          "language": {
+            "type": "string",
+            "example": "de"
+          },
+          "webhooks": {
+            "type": "object"
+          },
+          "analyticsConsent": {
+            "type": "boolean",
+            "example": true
+          },
+          "background": {
+            "type": "string",
+            "example": "on_a_strange_planet"
+          }
+        },
+        "required": [
+          "hair",
+          "emailNotifications",
+          "pushNotifications",
+          "suppressModals",
+          "tasks",
+          "dayStart",
+          "size",
+          "hideHeader",
+          "skin",
+          "shirt",
+          "timezoneOffset",
+          "sound",
+          "chair",
+          "allocationMode",
+          "autoEquip",
+          "costume",
+          "dateFormat",
+          "sleep",
+          "stickyHeader",
+          "disableClasses",
+          "newTaskEdit",
+          "dailyDueDefaultView",
+          "advancedCollapsed",
+          "toolbarCollapsed",
+          "reverseChatOrder",
+          "developerMode",
+          "displayInviteToPartyWhenPartyIs1",
+          "improvementCategories",
+          "automaticAllocation",
+          "timezoneOffsetAtLastCron",
+          "language",
+          "webhooks",
+          "analyticsConsent",
+          "background"
+        ]
+      },
+      "UserDataPreferencesEmailNotifications": {
+        "type": "object",
+        "properties": {
+          "unsubscribeFromAll": {
+            "type": "boolean",
+            "example": true
+          },
+          "newPM": {
+            "type": "boolean",
+            "example": false
+          },
+          "kickedGroup": {
+            "type": "boolean",
+            "example": true
+          },
+          "wonChallenge": {
+            "type": "boolean",
+            "example": true
+          },
+          "giftedGems": {
+            "type": "boolean",
+            "example": false
+          },
+          "giftedSubscription": {
+            "type": "boolean",
+            "example": false
+          },
+          "invitedParty": {
+            "type": "boolean",
+            "example": false
+          },
+          "invitedGuild": {
+            "type": "boolean",
+            "example": false
+          },
+          "questStarted": {
+            "type": "boolean",
+            "example": false
+          },
+          "invitedQuest": {
+            "type": "boolean",
+            "example": false
+          },
+          "importantAnnouncements": {
+            "type": "boolean",
+            "example": false
+          },
+          "weeklyRecaps": {
+            "type": "boolean",
+            "example": false
+          },
+          "onboarding": {
+            "type": "boolean",
+            "example": false
+          },
+          "majorUpdates": {
+            "type": "boolean",
+            "example": false
+          },
+          "subscriptionReminders": {
+            "type": "boolean",
+            "example": true
+          },
+          "contentRelease": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "unsubscribeFromAll",
+          "newPM",
+          "kickedGroup",
+          "wonChallenge",
+          "giftedGems",
+          "giftedSubscription",
+          "invitedParty",
+          "invitedGuild",
+          "questStarted",
+          "invitedQuest",
+          "importantAnnouncements",
+          "weeklyRecaps",
+          "onboarding",
+          "majorUpdates",
+          "subscriptionReminders",
+          "contentRelease"
+        ]
+      },
+      "UserDataPreferencesHair": {
+        "type": "object",
+        "properties": {
+          "color": {
+            "type": "string",
+            "example": "red"
+          },
+          "base": {
+            "type": "integer",
+            "example": 0
+          },
+          "bangs": {
+            "type": "integer",
+            "example": 1
+          },
+          "beard": {
+            "type": "integer",
+            "example": 0
+          },
+          "mustache": {
+            "type": "integer",
+            "example": 0
+          },
+          "flower": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "color",
+          "base",
+          "bangs",
+          "beard",
+          "mustache",
+          "flower"
+        ]
+      },
+      "UserDataPreferencesPushNotifications": {
+        "type": "object",
+        "properties": {
+          "unsubscribeFromAll": {
+            "type": "boolean",
+            "example": false
+          },
+          "newPM": {
+            "type": "boolean",
+            "example": true
+          },
+          "wonChallenge": {
+            "type": "boolean",
+            "example": true
+          },
+          "giftedGems": {
+            "type": "boolean",
+            "example": true
+          },
+          "giftedSubscription": {
+            "type": "boolean",
+            "example": true
+          },
+          "invitedParty": {
+            "type": "boolean",
+            "example": true
+          },
+          "invitedGuild": {
+            "type": "boolean",
+            "example": true
+          },
+          "questStarted": {
+            "type": "boolean",
+            "example": true
+          },
+          "invitedQuest": {
+            "type": "boolean",
+            "example": true
+          },
+          "majorUpdates": {
+            "type": "boolean",
+            "example": false
+          },
+          "mentionParty": {
+            "type": "boolean",
+            "example": true
+          },
+          "mentionJoinedGuild": {
+            "type": "boolean",
+            "example": true
+          },
+          "mentionUnjoinedGuild": {
+            "type": "boolean",
+            "example": true
+          },
+          "partyActivity": {
+            "type": "boolean",
+            "example": true
+          },
+          "contentRelease": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "unsubscribeFromAll",
+          "newPM",
+          "wonChallenge",
+          "giftedGems",
+          "giftedSubscription",
+          "invitedParty",
+          "invitedGuild",
+          "questStarted",
+          "invitedQuest",
+          "majorUpdates",
+          "mentionParty",
+          "mentionJoinedGuild",
+          "mentionUnjoinedGuild",
+          "partyActivity",
+          "contentRelease"
+        ]
+      },
+      "UserDataPreferencesSuppressModals": {
+        "type": "object",
+        "properties": {
+          "levelUp": {
+            "type": "boolean",
+            "example": false
+          },
+          "hatchPet": {
+            "type": "boolean",
+            "example": false
+          },
+          "raisePet": {
+            "type": "boolean",
+            "example": false
+          },
+          "streak": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "levelUp",
+          "hatchPet",
+          "raisePet",
+          "streak"
+        ]
+      },
+      "UserDataPreferencesTasks": {
+        "type": "object",
+        "properties": {
+          "activeFilter": {
+            "$ref": "#/components/schemas/UserDataPreferencesTasksActiveFilter"
+          },
+          "groupByChallenge": {
+            "type": "boolean",
+            "example": false
+          },
+          "confirmScoreNotes": {
+            "type": "boolean",
+            "example": false
+          },
+          "mirrorGroupTasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          }
+        },
+        "required": [
+          "activeFilter",
+          "groupByChallenge",
+          "confirmScoreNotes",
+          "mirrorGroupTasks"
+        ]
+      },
+      "UserDataPreferencesTasksActiveFilter": {
+        "type": "object",
+        "properties": {
+          "habit": {
+            "type": "string",
+            "example": "all"
+          },
+          "daily": {
+            "type": "string",
+            "example": "due"
+          },
+          "todo": {
+            "type": "string",
+            "example": "remaining"
+          },
+          "reward": {
+            "type": "string",
+            "example": "all"
+          }
+        },
+        "required": [
+          "habit",
+          "daily",
+          "todo",
+          "reward"
+        ]
+      },
+      "UserDataProfile": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Mark Rösler"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UserDataPurchased": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/UserDataPurchasedPlan"
+          },
+          "txnCount": {
+            "type": "integer",
+            "example": 0
+          },
+          "background": {
+            "$ref": "#/components/schemas/UserDataPurchasedBackground"
+          },
+          "shirt": {
+            "type": "object"
+          },
+          "hair": {
+            "type": "object"
+          },
+          "skin": {
+            "type": "object"
+          },
+          "ads": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "plan",
+          "txnCount",
+          "background",
+          "shirt",
+          "hair",
+          "skin",
+          "ads"
+        ]
+      },
+      "UserDataPurchasedBackground": {
+        "type": "object",
+        "properties": {
+          "yellow": {
+            "type": "boolean",
+            "example": true
+          },
+          "red": {
+            "type": "boolean",
+            "example": true
+          },
+          "purple": {
+            "type": "boolean",
+            "example": true
+          },
+          "green": {
+            "type": "boolean",
+            "example": true
+          },
+          "blue": {
+            "type": "boolean",
+            "example": true
+          },
+          "violet": {
+            "type": "boolean",
+            "example": true
+          },
+          "on_a_strange_planet": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "yellow",
+          "red",
+          "purple",
+          "green",
+          "blue",
+          "violet",
+          "on_a_strange_planet"
+        ]
+      },
+      "UserDataPurchasedPlan": {
+        "type": "object",
+        "properties": {
+          "consecutive": {
+            "$ref": "#/components/schemas/UserDataPurchasedPlanConsecutive"
+          },
+          "mysteryItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "gemsBought": {
+            "type": "integer",
+            "example": 0
+          },
+          "extraMonths": {
+            "type": "integer",
+            "example": 0
+          },
+          "quantity": {
+            "type": "integer",
+            "example": 1
+          },
+          "dateUpdated": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-09-25T07:33:49.386Z"
+          },
+          "perkMonthCount": {
+            "type": "integer",
+            "example": -1
+          },
+          "cumulativeCount": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "consecutive",
+          "mysteryItems",
+          "gemsBought",
+          "extraMonths",
+          "quantity",
+          "dateUpdated",
+          "perkMonthCount",
+          "cumulativeCount"
+        ]
+      },
+      "UserDataPurchasedPlanConsecutive": {
+        "type": "object",
+        "properties": {
+          "trinkets": {
+            "type": "integer",
+            "example": 0
+          },
+          "gemCapExtra": {
+            "type": "integer",
+            "example": 0
+          },
+          "offset": {
+            "type": "integer",
+            "example": 0
+          },
+          "count": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "trinkets",
+          "gemCapExtra",
+          "offset",
+          "count"
+        ]
+      },
+      "UserDataStats": {
+        "type": "object",
+        "properties": {
+          "buffs": {
+            "$ref": "#/components/schemas/UserDataStatsBuffs"
+          },
+          "training": {
+            "$ref": "#/components/schemas/UserDataStatsTraining"
+          },
+          "per": {
+            "type": "integer",
+            "example": 11
+          },
+          "int": {
+            "type": "integer",
+            "example": 11
+          },
+          "con": {
+            "type": "integer",
+            "example": 22
+          },
+          "str": {
+            "type": "integer",
+            "example": 32
+          },
+          "points": {
+            "type": "integer",
+            "example": 0
+          },
+          "class": {
+            "type": "string",
+            "example": "warrior"
+          },
+          "lvl": {
+            "type": "integer",
+            "example": 76
+          },
+          "gp": {
+            "type": "number",
+            "format": "double",
+            "example": 8040.613527611553
+          },
+          "exp": {
+            "type": "integer",
+            "example": 208
+          },
+          "mp": {
+            "type": "number",
+            "format": "double",
+            "example": 16.91314431111516
+          },
+          "hp": {
+            "type": "number",
+            "format": "double",
+            "example": 42.79999999999994
+          },
+          "toNextLevel": {
+            "type": "integer",
+            "example": 2340
+          },
+          "maxHealth": {
+            "type": "integer",
+            "example": 50
+          },
+          "maxMP": {
+            "type": "integer",
+            "example": 128
+          }
+        },
+        "required": [
+          "buffs",
+          "training",
+          "per",
+          "int",
+          "con",
+          "str",
+          "points",
+          "class",
+          "lvl",
+          "gp",
+          "exp",
+          "mp",
+          "hp",
+          "toNextLevel",
+          "maxHealth",
+          "maxMP"
+        ]
+      },
+      "UserDataStatsBuffs": {
+        "type": "object",
+        "properties": {
+          "str": {
+            "type": "integer",
+            "example": 0
+          },
+          "int": {
+            "type": "integer",
+            "example": 0
+          },
+          "per": {
+            "type": "integer",
+            "example": 0
+          },
+          "con": {
+            "type": "integer",
+            "example": 0
+          },
+          "stealth": {
+            "type": "integer",
+            "example": 0
+          },
+          "streaks": {
+            "type": "boolean",
+            "example": false
+          },
+          "seafoam": {
+            "type": "boolean",
+            "example": false
+          },
+          "shinySeed": {
+            "type": "boolean",
+            "example": false
+          },
+          "snowball": {
+            "type": "boolean",
+            "example": false
+          },
+          "spookySparkles": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "str",
+          "int",
+          "per",
+          "con",
+          "stealth",
+          "streaks",
+          "seafoam",
+          "shinySeed",
+          "snowball",
+          "spookySparkles"
+        ]
+      },
+      "UserDataStatsTraining": {
+        "type": "object",
+        "properties": {
+          "con": {
+            "type": "integer",
+            "example": 0
+          },
+          "str": {
+            "type": "number",
+            "format": "double",
+            "example": 29.414499390190787
+          },
+          "per": {
+            "type": "integer",
+            "example": 0
+          },
+          "int": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "con",
+          "str",
+          "per",
+          "int"
+        ]
+      },
+      "UserDataTags": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/UserDataTagsItem"
+        }
+      },
+      "UserDataTagsItem": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Training"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b11b6395-5189-4f76-bff4-b04a8801153c"
+          },
+          "challenge": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ]
       }
     },
     "responses": {
-      "TaskList": {
+      "TaskResponse": {
         "description": "OK",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/TaskList"
+              "$ref": "#/components/schemas/TaskResponse"
+            }
+          }
+        }
+      },
+      "TasksResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TasksResponse"
+            }
+          }
+        }
+      },
+      "User": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
             }
           }
         }
@@ -463,7 +5239,7 @@
         "schema": {
           "type": "string",
           "format": "uuid",
-          "example": "8027d396-e2bb-4389-b002-782025424e75"
+          "example": "b0413351-405f-416f-8787-947ec1c85199"
         }
       },
       "X-Client": {
@@ -472,7 +5248,16 @@
         "required": true,
         "schema": {
           "type": "string",
-          "example": "8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica"
+          "example": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+        }
+      },
+      "taskId": {
+        "name": "taskId",
+        "in": "path",
+        "description": "The task _id or alias",
+        "required": true,
+        "schema": {
+          "type": "string"
         }
       },
       "type": {
