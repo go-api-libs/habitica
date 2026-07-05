@@ -21,6 +21,7 @@ const defaultUserAgent = "Habitica API Library (github.com/go-api-libs/habitica)
 var defaultBaseURL = &url.URL{
 	Scheme: "https",
 	Host:   "habitica.com",
+	Path:   "/",
 }
 
 // Client is an HTTP client for the habitica API.

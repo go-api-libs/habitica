@@ -27,9 +27,7 @@ const defaultUserAgent = "{{.UserAgent}}"
 var defaultBaseURL = &url.URL{
 		Scheme: "{{ .Scheme }}",
 		Host:   "{{ .Host }}",
-		{{ with .Path -}}
-		Path:   "{{ . }}",
-		{{ end -}}
+		Path:   "{{ or .Path "/" }}",
 	}
 {{- end }}
 
