@@ -95,15 +95,15 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 // The user profile contains data related to the authenticated user including (but not limited to): Achievements; Authentications (including types and timestamps); Challenges memberships (Challenge IDs); Flags (including armoire, tutorial, tour etc...); Guilds memberships (Guild IDs); History (including timestamps and values, only for Experience and summed To Do values); Inbox; Invitations (to parties/guilds); Items (character's full inventory); New Messages (flags for party/guilds that have new messages; also reported in Notifications); Notifications; Party (includes current quest information); Preferences (user selected prefs); Profile (name, photo url, blurb); Purchased (includes subscription data and some gem-purchased items); PushDevices (identifiers for mobile devices authorized); Stats (standard RPG stats, class, buffs, xp, etc..); Tags; TasksOrder (list of all IDs for Dailys, Habits, Rewards and To Do's).
 //
 //	GET /user
-func (c *Client) GetUser(ctx context.Context) (*User, error) {
-	return GetUser[User](ctx, c)
+func (c *Client) GetUser(ctx context.Context, params GetUserParams) (*User, error) {
+	return GetUser[User](ctx, c, params)
 }
 
 // The user profile contains data related to the authenticated user including (but not limited to): Achievements; Authentications (including types and timestamps); Challenges memberships (Challenge IDs); Flags (including armoire, tutorial, tour etc...); Guilds memberships (Guild IDs); History (including timestamps and values, only for Experience and summed To Do values); Inbox; Invitations (to parties/guilds); Items (character's full inventory); New Messages (flags for party/guilds that have new messages; also reported in Notifications); Notifications; Party (includes current quest information); Preferences (user selected prefs); Profile (name, photo url, blurb); Purchased (includes subscription data and some gem-purchased items); PushDevices (identifiers for mobile devices authorized); Stats (standard RPG stats, class, buffs, xp, etc..); Tags; TasksOrder (list of all IDs for Dailys, Habits, Rewards and To Do's).
 // You can define a custom result to unmarshal the response into.
 //
 //	GET /user
-func GetUser[R any](ctx context.Context, c *Client) (*R, error) {
+func GetUser[R any](ctx context.Context, c *Client, params GetUserParams) (*R, error) {
 	u := c.baseURL.JoinPath("user")
 	req := (&http.Request{
 		Header: http.Header{
@@ -205,15 +205,15 @@ func ListTasks[R any](ctx context.Context, c *Client, params ListTasksParams) (*
 // Get a task
 //
 //	GET /tasks/{taskId}
-func (c *Client) GetTaskByID(ctx context.Context, taskID string) (*TaskResponse, error) {
-	return GetTaskByID[TaskResponse](ctx, c, taskID)
+func (c *Client) GetTaskByID(ctx context.Context, taskID string, params GetTaskByIDParams) (*TaskResponse, error) {
+	return GetTaskByID[TaskResponse](ctx, c, taskID, params)
 }
 
 // Get a task
 // You can define a custom result to unmarshal the response into.
 //
 //	GET /tasks/{taskId}
-func GetTaskByID[R any](ctx context.Context, c *Client, taskID string) (*R, error) {
+func GetTaskByID[R any](ctx context.Context, c *Client, taskID string, params GetTaskByIDParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", taskID)
 	req := (&http.Request{
 		Header: http.Header{
