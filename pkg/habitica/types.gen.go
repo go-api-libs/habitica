@@ -36,6 +36,16 @@ type Group struct {
 	CompletedBy      *struct{}  `json:"completedBy,omitempty"`
 }
 
+// Reminder defines a model
+type Reminder struct {
+	Time      time.Time  `json:"time,omitempty"`
+	StartDate time.Time  `json:"startDate,omitempty"`
+	ID        *uuid.UUID `json:"id,omitempty"`
+}
+
+// Reminders defines a model
+type Reminders []Reminder
+
 // RepeatWeekly defines a model
 type RepeatWeekly struct {
 	M  bool `json:"m,omitzero"`
@@ -50,6 +60,7 @@ type RepeatWeekly struct {
 // Task defines a model
 type Task struct {
 	UnderscoreID      uuid.UUID     `json:"_id,omitzero"`
+	UserID            uuid.UUID     `json:"userId,omitzero"`
 	Challenge         struct{}      `json:"challenge"`
 	Group             Group         `json:"group"`
 	Up                bool          `json:"up,omitzero"`
@@ -66,10 +77,9 @@ type Task struct {
 	Attribute         string        `json:"attribute,omitzero"`
 	ByHabitica        bool          `json:"byHabitica,omitzero"`
 	Text              string        `json:"text,omitzero"`
-	Reminders         []struct{}    `json:"reminders,omitempty"`
+	Reminders         Reminders     `json:"reminders,omitempty"`
 	CreatedAt         time.Time     `json:"createdAt,omitzero"`
 	UpdatedAt         time.Time     `json:"updatedAt,omitzero"`
-	UserID            uuid.UUID     `json:"userId,omitzero"`
 	ID                uuid.UUID     `json:"id,omitzero"`
 	Repeat            *RepeatWeekly `json:"repeat,omitempty"`
 	EveryX            *int          `json:"everyX,omitempty"`
@@ -84,6 +94,7 @@ type Task struct {
 	Checklist         []struct{}    `json:"checklist,omitempty"`
 	IsDue             bool          `json:"isDue,omitempty"`
 	Date              time.Time     `json:"date,omitempty"`
+	Alias             string        `json:"alias,omitzero"`
 }
 
 // TaskActivity defines a model

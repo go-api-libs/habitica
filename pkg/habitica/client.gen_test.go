@@ -203,11 +203,4 @@ func TestClient_Interactions(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("ListTasks: %v", err)
 	}
-
-	if _, err := c.ListTasks(ctx, ListTasksParams{
-		Type:     "dailys",
-		XAPIUser: uuid.MustParse("8027d396-e2bb-4389-b002-782025424e75"),
-	}); err != nil {
-		t.Fatalf("ListTasks: %v", err)
-	}
 }

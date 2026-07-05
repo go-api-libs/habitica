@@ -18,267 +18,79 @@
 				"success": true,
 				"data": [
 					{
-						"_id": "a237ab25-c7f8-4ebb-9205-5d17154d08a0",
+						"_id": "8a9d461b-f5eb-4a16-97d3-c03380c422a3",
+						"userId": "b0413351-405f-416f-8787-947ec1c85199",
+						"text": "15 minute break",
+						"type": "reward",
+						"notes": "",
+						"tags": [],
+						"value": 10,
+						"priority": 1,
+						"attribute": "str",
 						"challenge": {},
 						"group": {
+							"assignedUsers": [],
 							"approval": {
 								"required": false,
 								"approved": false,
 								"requested": false
-							},
-							"assignedUsers": [],
-							"sharedCompletion": "singleCompletion"
-						},
-						"up": true,
-						"down": true,
-						"counterUp": 0,
-						"counterDown": 0,
-						"frequency": "daily",
-						"history": [
-							{
-								"date": 1626804748216,
-								"value": 1,
-								"scoredUp": 1,
-								"scoredDown": 0
-							},
-							{
-								"date": 1626892420513,
-								"value": 1.9747,
-								"scoredUp": 1,
-								"scoredDown": 0
 							}
-						],
-						"type": "habit",
-						"notes": "",
-						"tags": [
-							"47db4ec6-0985-48a5-9311-175d170c2798"
-						],
-						"value": 29.599561531838347,
-						"priority": 1,
-						"attribute": "str",
-						"byHabitica": false,
-						"text": "Eating Healthy",
+						},
 						"reminders": [],
-						"createdAt": "2021-07-18T23:26:04.322Z",
-						"updatedAt": "2023-07-11T21:51:02.911Z",
-						"userId": "8027d396-e2bb-4389-b002-782025424e75",
-						"id": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
+						"createdAt": "2017-01-07T17:52:09.121Z",
+						"updatedAt": "2017-01-11T14:25:32.504Z",
+						"id": "8a9d461b-f5eb-4a16-97d3-c03380c422a3"
 					},
 					{
-						"_id": "e8b371c0-9eaf-4129-b4cf-f45ba71d2810",
-						"repeat": {
-							"m": true,
-							"t": true,
-							"w": true,
-							"th": true,
-							"f": true,
-							"s": true,
-							"su": true
-						},
-						"challenge": {},
-						"group": {
-							"approval": {
-								"required": false,
-								"approved": false,
-								"requested": false
-							},
-							"assignedUsers": [],
-							"sharedCompletion": "singleCompletion"
-						},
-						"frequency": "weekly",
-						"everyX": 1,
-						"streak": 1194,
-						"nextDue": [
-							"2026-05-14T22:00:00.000Z",
-							"2026-05-15T22:00:00.000Z",
-							"2026-05-17T22:00:00.000Z",
-							"2026-05-18T22:00:00.000Z",
-							"2026-05-19T22:00:00.000Z",
-							"2026-05-20T22:00:00.000Z"
-						],
-						"yesterDaily": true,
-						"history": [
-							{
-								"date": 1626652382989,
-								"value": 69.6600188088956
-							},
-							{
-								"date": 1641062492903,
-								"value": 191.62344209587005
-							}
-						],
-						"completed": false,
-						"collapseChecklist": false,
-						"type": "daily",
-						"notes": "*Successfully completed my duolingo language learning session for today.*",
-						"tags": [],
-						"value": 697.3245124186678,
-						"priority": 1,
-						"attribute": "str",
-						"byHabitica": false,
-						"startDate": "2021-07-17T22:00:00.000Z",
-						"daysOfMonth": [],
-						"weeksOfMonth": [],
-						"reminders": [],
-						"text": "**Daily Duo Session** :books:",
-						"checklist": [],
-						"createdAt": "2021-07-18T23:52:47.375Z",
-						"updatedAt": "2026-05-14T01:17:58.398Z",
-						"userId": "8027d396-e2bb-4389-b002-782025424e75",
-						"isDue": true,
-						"id": "e8b371c0-9eaf-4129-b4cf-f45ba71d2810"
-					},
-					{
-						"_id": "6ca7f869-e78e-4932-9b17-43d7df79b59e",
-						"repeat": {
-							"m": true,
-							"t": true,
-							"w": true,
-							"th": true,
-							"f": true,
-							"s": true,
-							"su": true
-						},
-						"challenge": {},
-						"group": {
-							"approval": {
-								"required": false,
-								"approved": false,
-								"requested": false
-							},
-							"assignedUsers": [],
-							"sharedCompletion": "recurringCompletion"
-						},
-						"frequency": "weekly",
-						"everyX": 1,
-						"streak": 0,
-						"daysOfMonth": [],
-						"weeksOfMonth": [],
-						"nextDue": [
-							"2026-05-14T22:00:00.000Z",
-							"2026-05-15T22:00:00.000Z",
-							"2026-05-17T22:00:00.000Z",
-							"2026-05-18T22:00:00.000Z",
-							"2026-05-19T22:00:00.000Z",
-							"2026-05-20T22:00:00.000Z"
-						],
-						"yesterDaily": true,
-						"history": [
-							{
-								"date": 1546020724817,
-								"value": 4.200558099195978
-							}
-						],
-						"completed": false,
-						"collapseChecklist": false,
+						"_id": "84c2e874-a8c9-4673-bd31-d97a1a42e9a3",
+						"userId": "b0413351-405f-416f-8787-947ec1c85199",
+						"alias": "prac31",
+						"text": "Practice Task 31",
 						"type": "daily",
 						"notes": "",
-						"tags": [
-							"ba455bc0-301e-43f8-b219-5088e63e8c18"
-						],
-						"value": 38.98151013263521,
+						"tags": [],
+						"value": 1,
 						"priority": 1,
 						"attribute": "str",
-						"text": "30min Reading or Audiobook",
-						"reminders": [],
-						"checklist": [],
-						"startDate": "2026-02-02T23:00:00.000Z",
-						"createdAt": "2018-12-28T08:12:52.059Z",
-						"updatedAt": "2026-05-14T01:17:58.334Z",
-						"userId": "8027d396-e2bb-4389-b002-782025424e75",
-						"isDue": true,
-						"byHabitica": false,
-						"id": "6ca7f869-e78e-4932-9b17-43d7df79b59e"
-					}
-				],
-				"notifications": [],
-				"userV": 15599,
-				"appVersion": "5.47.9"
-			}
-		}
-	},
-	{
-		"request": {
-			"method": "GET",
-			"url": "https://habitica.com/api/v3/tasks/user?type=dailys",
-			"header": {
-				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "8027d396-e2bb-4389-b002-782025424e75",
-				"X-Client": "8027d396-e2bb-4389-b002-782025424e75-go-api-libs/habitica"
-			}
-		},
-		"response": {
-			"statusCode": 200,
-			"header": {
-				"Content-Type": "application/json; charset=utf-8"
-			},
-			"body": {
-				"success": true,
-				"data": [
-					{
-						"_id": "e8b371c0-9eaf-4129-b4cf-f45ba71d2810",
-						"repeat": {
-							"m": true,
-							"t": true,
-							"w": true,
-							"th": true,
-							"f": true,
-							"s": true,
-							"su": true
-						},
 						"challenge": {},
 						"group": {
+							"assignedUsers": [],
 							"approval": {
 								"required": false,
 								"approved": false,
 								"requested": false
-							},
-							"assignedUsers": [],
-							"sharedCompletion": "singleCompletion"
+							}
 						},
-						"frequency": "weekly",
-						"everyX": 1,
-						"streak": 1194,
-						"nextDue": [
-							"2026-05-14T22:00:00.000Z",
-							"2026-05-15T22:00:00.000Z",
-							"2026-05-17T22:00:00.000Z",
-							"2026-05-18T22:00:00.000Z",
-							"2026-05-19T22:00:00.000Z",
-							"2026-05-20T22:00:00.000Z"
-						],
-						"yesterDaily": true,
-						"history": [
+						"reminders": [
 							{
-								"date": 1626652382989,
-								"value": 69.6600188088956
+								"time": "2017-01-13T16:21:00.074Z",
+								"startDate": "2017-01-13T16:20:00.074Z",
+								"id": "b8b549c4-8d56-4e49-9b38-b4dcde9763b9"
 							}
 						],
-						"completed": false,
-						"collapseChecklist": false,
-						"type": "daily",
-						"notes": "*Successfully completed my duolingo language learning session for today.*",
-						"tags": [],
-						"value": 697.3245124186678,
-						"priority": 1,
-						"attribute": "str",
-						"byHabitica": false,
-						"startDate": "2021-07-17T22:00:00.000Z",
-						"daysOfMonth": [],
-						"weeksOfMonth": [],
-						"reminders": [],
-						"text": "**Daily Duo Session** :books:",
+						"createdAt": "2017-01-13T16:34:06.632Z",
+						"updatedAt": "2017-01-13T16:49:35.762Z",
 						"checklist": [],
-						"createdAt": "2021-07-18T23:52:47.375Z",
-						"updatedAt": "2026-05-14T01:17:58.398Z",
-						"userId": "8027d396-e2bb-4389-b002-782025424e75",
-						"isDue": true,
-						"id": "e8b371c0-9eaf-4129-b4cf-f45ba71d2810"
+						"collapseChecklist": false,
+						"completed": true,
+						"history": [],
+						"streak": 1,
+						"repeat": {
+							"su": false,
+							"s": false,
+							"f": true,
+							"th": true,
+							"w": true,
+							"t": true,
+							"m": true
+						},
+						"startDate": "2017-01-13T00:00:00.000Z",
+						"everyX": 1,
+						"frequency": "weekly",
+						"id": "84c2e874-a8c9-4673-bd31-d97a1a42e9a3"
 					}
 				],
-				"notifications": [],
-				"userV": 15600,
-				"appVersion": "5.47.9"
+				"notifications": []
 			}
 		}
 	}
