@@ -5,11 +5,11 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func SchemaRefs(a, b openapi.SchemaRefs) error {
-	return schemaRefs(a, a, b)
+func SchemaRefs(a *openapi.SchemaRefs, b openapi.SchemaRefs) error {
+	return schemaRefs(*a, a, b)
 }
 
-func schemaRefs(aAll, aToSet, b openapi.SchemaRefs) error {
+func schemaRefs(aAll openapi.SchemaRefs, aToSet *openapi.SchemaRefs, b openapi.SchemaRefs) error {
 	for keyB, sB := range b.ByIndex() {
 		sA, ok := aAll[keyB]
 		if !ok {

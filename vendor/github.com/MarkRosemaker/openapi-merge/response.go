@@ -12,7 +12,7 @@ func Response(a, b *openapi.Response) error {
 	// 	return &errpath.ErrField{Field: "headers", Err: err}
 	// }
 
-	if err := Content(a.Content, b.Content); err != nil {
+	if err := Content(&a.Content, b.Content); err != nil {
 		return &errpath.ErrField{Field: "content", Err: err}
 	}
 

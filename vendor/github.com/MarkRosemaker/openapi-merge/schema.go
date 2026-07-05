@@ -136,7 +136,6 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 			fmt.Printf("b: %s\n", string(bString))
 			return &errpath.ErrField{Field: "type", Err: fmt.Errorf("%q != %q", tp, b.Type)}
 		}
-
 	}
 
 	// if one doesn't conform to the format,
@@ -167,7 +166,6 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 			a.Format = ""
 			b.Format = ""
 		}
-
 	}
 
 	// check that the formats are the same
@@ -230,7 +228,7 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 				addNewProps = openapi.SchemaRefs{}
 			}
 
-			if err := schemaRefs(allProps, addNewProps, b.Properties); err != nil {
+			if err := schemaRefs(allProps, &addNewProps, b.Properties); err != nil {
 				return &errpath.ErrField{Field: field, Err: err}
 			}
 

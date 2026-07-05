@@ -13,18 +13,18 @@ github.com/MarkRosemaker/jsonutil
 # github.com/MarkRosemaker/openapi v0.0.0-20260611220347-8831c3657808
 ## explicit; go 1.25.0
 github.com/MarkRosemaker/openapi
-# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260704165011-489c3c0542e7
+# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260705041456-b1c0df062ddb
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/cmd/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/config
 github.com/MarkRosemaker/openapi-codegen/ir
 github.com/MarkRosemaker/openapi-codegen/render
-# github.com/MarkRosemaker/openapi-compress v0.0.0-20260628221603-fdfdd3bd802a
+# github.com/MarkRosemaker/openapi-compress v0.0.0-20260705041243-c12c4dd2b7da
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-compress
 github.com/MarkRosemaker/openapi-compress/cmd/openapi-compress
-# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260628212853-dcefc87cdf87
+# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260705040714-34e5975b00ac
 ## explicit; go 1.26.0
 github.com/MarkRosemaker/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/cassette
@@ -34,8 +34,8 @@ github.com/MarkRosemaker/openapi-enrich/recorder
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-flatten
 github.com/MarkRosemaker/openapi-flatten/cmd/openapi-flatten
-# github.com/MarkRosemaker/openapi-merge v0.0.0-20260529224525-f3ce2dde17cb
-## explicit; go 1.25
+# github.com/MarkRosemaker/openapi-merge v0.0.0-20260705040224-a225c6704192
+## explicit; go 1.25.0
 github.com/MarkRosemaker/openapi-merge
 # github.com/MarkRosemaker/ordmap v0.0.0-20260611220112-724580dd2bee
 ## explicit; go 1.25.0
@@ -49,7 +49,7 @@ github.com/MarkRosemaker/yaml2json
 # github.com/ettle/strcase v0.2.0
 ## explicit; go 1.12
 github.com/ettle/strcase
-# github.com/go-api-libs/api v0.0.0-20260704170238-c670f3636193
+# github.com/go-api-libs/api v0.0.0-20260705004954-dad48fbb4ab2
 ## explicit; go 1.26
 github.com/go-api-libs/api
 # github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d

@@ -37,7 +37,7 @@ async function loadMocks() {
     if (mocks) return mocks;
     if (mocksPromise) return mocksPromise;
 
-    mocksPromise = fetch("/mocks.json")
+    mocksPromise = fetch("mocks.json")
         .then((res) => {
             if (!res.ok) throw new Error(`Failed to load mocks.json: ${res.status}`);
             return res.json();
@@ -71,7 +71,7 @@ function matchesRequest(mockRequest, method, path) {
 
     try {
         const mockPath = new URL(mockUrl).pathname;
-        return mockPath === path;
+        return mockPath === path || mockPath.endsWith(path);
     } catch {
         return mockUrl.endsWith(path) || mockUrl === path;
     }

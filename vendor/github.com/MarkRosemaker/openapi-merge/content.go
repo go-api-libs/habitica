@@ -5,9 +5,9 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func Content(a, b openapi.Content) error {
+func Content(a *openapi.Content, b openapi.Content) error {
 	for mr, mtB := range b.ByIndex() {
-		mtA, ok := a[mr]
+		mtA, ok := (*a)[mr]
 		if !ok {
 			a.Set(mr, mtB)
 			continue
