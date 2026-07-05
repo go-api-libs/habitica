@@ -8,8 +8,8 @@ github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24 h1:3fU3gbs8
 github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24/go.mod h1:YMxjqWLxzxIzplnktbXq9020ZJNjf1/43A5NVJzY9mQ=
 github.com/MarkRosemaker/openapi v0.0.0-20260611220347-8831c3657808 h1:ZDGxQ+A5GU5vxUwMy+JGvfwHo9tbpwJcbkGwYs2BViE=
 github.com/MarkRosemaker/openapi v0.0.0-20260611220347-8831c3657808/go.mod h1:ik6FmPfM9B+ih6I2Y0atu/fRQB+tihVuWXt2rRhqHsE=
-github.com/MarkRosemaker/openapi-codegen v0.0.0-20260705213958-097445ecb967 h1:QC4sbrDbNAlSjIgxCdWEWil6BpvnfIDWQU8LNGFQvYc=
-github.com/MarkRosemaker/openapi-codegen v0.0.0-20260705213958-097445ecb967/go.mod h1:hcQjcQgk4yux8d7Fxb3kcAtVa412vnRHLR4LPjnEl9c=
+github.com/MarkRosemaker/openapi-codegen v0.0.0-20260705224412-2ad4c5cbd1ff h1:qNKmq9io0J4CeqObUUH/QCOYwmhN7YF94A6A771Ko0s=
+github.com/MarkRosemaker/openapi-codegen v0.0.0-20260705224412-2ad4c5cbd1ff/go.mod h1:hcQjcQgk4yux8d7Fxb3kcAtVa412vnRHLR4LPjnEl9c=
 github.com/MarkRosemaker/openapi-compress v0.0.0-20260705041243-c12c4dd2b7da h1:KRoBvUvluoaIbiudE8dW3ZeMDuk1Hzn91GlGncWqnyE=
 github.com/MarkRosemaker/openapi-compress v0.0.0-20260705041243-c12c4dd2b7da/go.mod h1:32KWYmMrRfy/yqI5+rX3hw1jQj85mHJqoRj9WH1UGMM=
 github.com/MarkRosemaker/openapi-enrich v0.0.0-20260705040714-34e5975b00ac h1:gr4S4HaWOBBMjshLoiVoNC+u/BUpLz/jSiQpRTkvOIA=
