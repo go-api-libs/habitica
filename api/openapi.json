@@ -422,6 +422,25 @@
           "updated"
         ]
       },
+      "Challenge": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "5f12bfba-da30-4733-ad01-9c42f9817975"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "f23c12f2-5830-4f15-9c36-e17fd729a812"
+          }
+        },
+        "required": [
+          "taskId",
+          "id"
+        ]
+      },
       "Group": {
         "type": "object",
         "properties": {
@@ -792,34 +811,13 @@
             "format": "uuid",
             "example": "b0413351-405f-416f-8787-947ec1c85199"
           },
-          "challenge": {
-            "type": "object"
-          },
-          "group": {
-            "$ref": "#/components/schemas/Group"
-          },
-          "up": {
-            "type": "boolean",
-            "example": true
-          },
-          "down": {
-            "type": "boolean",
-            "example": true
-          },
-          "counterUp": {
-            "type": "integer",
-            "example": 0
-          },
-          "counterDown": {
-            "type": "integer",
-            "example": 0
-          },
-          "frequency": {
+          "text": {
             "type": "string",
-            "example": "daily"
+            "example": "Eating Healthy"
           },
-          "history": {
-            "$ref": "#/components/schemas/TaskHistory"
+          "alias": {
+            "type": "string",
+            "example": "prac31"
           },
           "type": {
             "type": "string",
@@ -851,13 +849,11 @@
             "type": "string",
             "example": "str"
           },
-          "byHabitica": {
-            "type": "boolean",
-            "example": false
+          "challenge": {
+            "$ref": "#/components/schemas/Challenge"
           },
-          "text": {
-            "type": "string",
-            "example": "Eating Healthy"
+          "group": {
+            "$ref": "#/components/schemas/Group"
           },
           "reminders": {
             "$ref": "#/components/schemas/Reminders"
@@ -872,10 +868,37 @@
             "format": "date-time",
             "example": "2023-07-11T21:51:02.911Z"
           },
+          "history": {
+            "$ref": "#/components/schemas/TaskHistory"
+          },
+          "down": {
+            "type": "boolean",
+            "example": true
+          },
+          "up": {
+            "type": "boolean",
+            "example": true
+          },
           "id": {
             "type": "string",
             "format": "uuid",
             "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
+          },
+          "counterUp": {
+            "type": "integer",
+            "example": 0
+          },
+          "counterDown": {
+            "type": "integer",
+            "example": 0
+          },
+          "frequency": {
+            "type": "string",
+            "example": "daily"
+          },
+          "byHabitica": {
+            "type": "boolean",
+            "example": false
           },
           "repeat": {
             "$ref": "#/components/schemas/RepeatWeekly"
@@ -942,10 +965,6 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-09-26T00:13:00.000Z"
-          },
-          "alias": {
-            "type": "string",
-            "example": "prac31"
           }
         },
         "required": [
@@ -971,180 +990,6 @@
           "updatedAt",
           "userId",
           "id"
-        ]
-      },
-      "Task2": {
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "2b774d70-ec8b-41c1-8967-eb6b13d962ba"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid",
-            "example": "b0413351-405f-416f-8787-947ec1c85199"
-          },
-          "text": {
-            "type": "string",
-            "example": "API Trial"
-          },
-          "alias": {
-            "type": "string",
-            "example": "apiTrial"
-          },
-          "type": {
-            "type": "string",
-            "example": "habit"
-          },
-          "notes": {
-            "type": "string",
-            "example": ""
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
-          },
-          "value": {
-            "type": "number",
-            "format": "double",
-            "example": 11.996661122825959
-          },
-          "priority": {
-            "type": "number",
-            "format": "double",
-            "example": 1.5
-          },
-          "attribute": {
-            "type": "string",
-            "example": "str"
-          },
-          "challenge": {
-            "$ref": "#/components/schemas/Task2Challenge"
-          },
-          "group": {
-            "$ref": "#/components/schemas/Task2Group"
-          },
-          "reminders": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2017-01-12T19:03:33.495Z"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2017-01-13T20:52:02.927Z"
-          },
-          "history": {
-            "$ref": "#/components/schemas/Task2History"
-          },
-          "down": {
-            "type": "boolean",
-            "example": false
-          },
-          "up": {
-            "type": "boolean",
-            "example": true
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "2b774d70-ec8b-41c1-8967-eb6b13d962ba"
-          }
-        },
-        "required": [
-          "_id",
-          "userId",
-          "text",
-          "alias",
-          "type",
-          "notes",
-          "tags",
-          "value",
-          "priority",
-          "attribute",
-          "challenge",
-          "group",
-          "reminders",
-          "createdAt",
-          "updatedAt",
-          "history",
-          "down",
-          "up",
-          "id"
-        ]
-      },
-      "Task2Challenge": {
-        "type": "object",
-        "properties": {
-          "taskId": {
-            "type": "string",
-            "format": "uuid",
-            "example": "5f12bfba-da30-4733-ad01-9c42f9817975"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "f23c12f2-5830-4f15-9c36-e17fd729a812"
-          }
-        },
-        "required": [
-          "taskId",
-          "id"
-        ]
-      },
-      "Task2Group": {
-        "type": "object",
-        "properties": {
-          "assignedUsers": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
-          },
-          "approval": {
-            "$ref": "#/components/schemas/Approval"
-          }
-        },
-        "required": [
-          "assignedUsers",
-          "approval"
-        ]
-      },
-      "Task2History": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Task2HistoryItem"
-        }
-      },
-      "Task2HistoryItem": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "number",
-            "format": "double",
-            "example": 1.9747
-          },
-          "date": {
-            "type": "integer",
-            "example": 1484248053486
-          }
-        },
-        "required": [
-          "value",
-          "date"
         ]
       },
       "TaskActivity": {
@@ -1198,7 +1043,7 @@
             "example": true
           },
           "data": {
-            "$ref": "#/components/schemas/Task2"
+            "$ref": "#/components/schemas/Task"
           },
           "notifications": {
             "type": "array",

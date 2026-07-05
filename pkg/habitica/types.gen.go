@@ -122,6 +122,12 @@ type AuthTimestamps struct {
 	Updated  time.Time `json:"updated,omitzero"`
 }
 
+// Challenge defines a model
+type Challenge struct {
+	TaskID uuid.UUID `json:"taskId,omitzero"`
+	ID     uuid.UUID `json:"id,omitzero"`
+}
+
 // Group defines a model
 type Group struct {
 	Approval         Approval   `json:"approval"`
@@ -226,26 +232,27 @@ type RepeatWeekly struct {
 type Task struct {
 	UnderscoreID      uuid.UUID     `json:"_id,omitzero"`
 	UserID            uuid.UUID     `json:"userId,omitzero"`
-	Challenge         struct{}      `json:"challenge"`
-	Group             Group         `json:"group"`
-	Up                bool          `json:"up,omitzero"`
-	Down              bool          `json:"down,omitzero"`
-	CounterUp         int           `json:"counterUp,omitzero"`
-	CounterDown       int           `json:"counterDown,omitzero"`
-	Frequency         string        `json:"frequency,omitzero"`
-	History           TaskHistory   `json:"history,omitempty"`
+	Text              string        `json:"text,omitzero"`
+	Alias             string        `json:"alias,omitzero"`
 	Type              string        `json:"type,omitzero"`
 	Notes             string        `json:"notes,omitzero"`
 	Tags              []uuid.UUID   `json:"tags,omitempty"`
 	Value             float64       `json:"value"`
 	Priority          float64       `json:"priority"`
 	Attribute         string        `json:"attribute,omitzero"`
-	ByHabitica        bool          `json:"byHabitica,omitzero"`
-	Text              string        `json:"text,omitzero"`
+	Challenge         Challenge     `json:"challenge"`
+	Group             Group         `json:"group"`
 	Reminders         Reminders     `json:"reminders,omitempty"`
 	CreatedAt         time.Time     `json:"createdAt,omitzero"`
 	UpdatedAt         time.Time     `json:"updatedAt,omitzero"`
+	History           TaskHistory   `json:"history,omitempty"`
+	Down              bool          `json:"down,omitzero"`
+	Up                bool          `json:"up,omitzero"`
 	ID                uuid.UUID     `json:"id,omitzero"`
+	CounterUp         int           `json:"counterUp,omitzero"`
+	CounterDown       int           `json:"counterDown,omitzero"`
+	Frequency         string        `json:"frequency,omitzero"`
+	ByHabitica        bool          `json:"byHabitica,omitzero"`
 	Repeat            *RepeatWeekly `json:"repeat,omitempty"`
 	EveryX            *int          `json:"everyX,omitempty"`
 	Streak            *int          `json:"streak,omitempty"`
@@ -259,51 +266,6 @@ type Task struct {
 	Checklist         []struct{}    `json:"checklist,omitempty"`
 	IsDue             bool          `json:"isDue,omitempty"`
 	Date              time.Time     `json:"date,omitempty"`
-	Alias             string        `json:"alias,omitzero"`
-}
-
-// Task2 defines a model
-type Task2 struct {
-	UnderscoreID uuid.UUID      `json:"_id,omitzero"`
-	UserID       uuid.UUID      `json:"userId,omitzero"`
-	Text         string         `json:"text,omitzero"`
-	Alias        string         `json:"alias,omitzero"`
-	Type         string         `json:"type,omitzero"`
-	Notes        string         `json:"notes,omitzero"`
-	Tags         []struct{}     `json:"tags,omitempty"`
-	Value        float64        `json:"value"`
-	Priority     float64        `json:"priority"`
-	Attribute    string         `json:"attribute,omitzero"`
-	Challenge    Task2Challenge `json:"challenge"`
-	Group        Task2Group     `json:"group"`
-	Reminders    []struct{}     `json:"reminders,omitempty"`
-	CreatedAt    time.Time      `json:"createdAt,omitzero"`
-	UpdatedAt    time.Time      `json:"updatedAt,omitzero"`
-	History      Task2History   `json:"history,omitempty"`
-	Down         bool           `json:"down,omitzero"`
-	Up           bool           `json:"up,omitzero"`
-	ID           uuid.UUID      `json:"id,omitzero"`
-}
-
-// Task2Challenge defines a model
-type Task2Challenge struct {
-	TaskID uuid.UUID `json:"taskId,omitzero"`
-	ID     uuid.UUID `json:"id,omitzero"`
-}
-
-// Task2Group defines a model
-type Task2Group struct {
-	AssignedUsers []struct{} `json:"assignedUsers,omitempty"`
-	Approval      Approval   `json:"approval"`
-}
-
-// Task2History defines a model
-type Task2History []Task2HistoryItem
-
-// Task2HistoryItem defines a model
-type Task2HistoryItem struct {
-	Value float64 `json:"value"`
-	Date  int     `json:"date,omitzero"`
 }
 
 // TaskActivity defines a model
@@ -322,7 +284,7 @@ type TaskHistory []TaskActivity
 // TaskResponse defines a model
 type TaskResponse struct {
 	Success       bool       `json:"success,omitzero"`
-	Data          Task2      `json:"data"`
+	Data          Task       `json:"data"`
 	Notifications []struct{} `json:"notifications,omitempty"`
 }
 
