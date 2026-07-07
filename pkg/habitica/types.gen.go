@@ -8,12 +8,16 @@ import (
 	"encoding/json/v2"
 	"time"
 
+	"github.com/MarkRosemaker/jsonutil"
 	"github.com/go-api-libs/types"
 	"github.com/google/uuid"
 )
 
 var jsonOpts = json.JoinOptions(
 	json.RejectUnknownMembers(true),
+	json.WithUnmarshalers(json.JoinUnmarshalers(
+		json.UnmarshalFromFunc(jsonutil.TimeUnmarshalStringOrIntUnix),
+	)),
 )
 
 // GetUserParams holds the query parameters for GetUser.
@@ -149,8 +153,8 @@ type ListUserDataHistoryExp []ListUserDataHistoryExpItem
 
 // ListUserDataHistoryExpItem defines a model
 type ListUserDataHistoryExpItem struct {
-	Date  int     `json:"date,omitzero"`
-	Value float64 `json:"value"`
+	Date  time.Time `json:"date"`
+	Value float64   `json:"value"`
 }
 
 // Message defines a model
@@ -266,6 +270,21 @@ type Task struct {
 	Checklist         []struct{}    `json:"checklist,omitempty"`
 	IsDue             bool          `json:"isDue,omitempty"`
 	Date              time.Time     `json:"date,omitempty"`
+	Delta             *float64      `json:"delta,omitempty"`
+	UnderscoreTmp     *TaskTmp      `json:"_tmp,omitempty"`
+	Hp                *int          `json:"hp,omitempty"`
+	Mp                *float64      `json:"mp,omitempty"`
+	Exp               *float64      `json:"exp,omitempty"`
+	Gp                *float64      `json:"gp,omitempty"`
+	Lvl               *int          `json:"lvl,omitempty"`
+	Class             string        `json:"class,omitzero"`
+	Points            *int          `json:"points,omitempty"`
+	Str               *int          `json:"str,omitempty"`
+	Con               *int          `json:"con,omitempty"`
+	Int               *int          `json:"int,omitempty"`
+	Per               *int          `json:"per,omitempty"`
+	Buffs             *TaskBuffs    `json:"buffs,omitempty"`
+	Training          *TaskTraining `json:"training,omitempty"`
 }
 
 // TaskActivity defines a model
@@ -278,6 +297,20 @@ type TaskActivity struct {
 	Completed  bool    `json:"completed,omitempty"`
 }
 
+// TaskBuffs defines a model
+type TaskBuffs struct {
+	Str            int  `json:"str,omitzero"`
+	Int            int  `json:"int,omitzero"`
+	Per            int  `json:"per,omitzero"`
+	Con            int  `json:"con,omitzero"`
+	Stealth        int  `json:"stealth,omitzero"`
+	Streaks        bool `json:"streaks,omitzero"`
+	Snowball       bool `json:"snowball,omitzero"`
+	SpookySparkles bool `json:"spookySparkles,omitzero"`
+	ShinySeed      bool `json:"shinySeed,omitzero"`
+	Seafoam        bool `json:"seafoam,omitzero"`
+}
+
 // TaskHistory defines a model
 type TaskHistory []TaskActivity
 
@@ -286,6 +319,36 @@ type TaskResponse struct {
 	Success       bool       `json:"success,omitzero"`
 	Data          Task       `json:"data"`
 	Notifications []struct{} `json:"notifications,omitempty"`
+}
+
+// TaskTmp defines a model
+type TaskTmp struct {
+	Quest TaskTmpQuest `json:"quest"`
+	Drop  TaskTmpDrop  `json:"drop"`
+}
+
+// TaskTmpDrop defines a model
+type TaskTmpDrop struct {
+	Target  string `json:"target,omitzero"`
+	CanDrop bool   `json:"canDrop,omitzero"`
+	Value   int    `json:"value,omitzero"`
+	Key     string `json:"key,omitzero"`
+	Type    string `json:"type,omitzero"`
+	Dialog  string `json:"dialog,omitzero"`
+}
+
+// TaskTmpQuest defines a model
+type TaskTmpQuest struct {
+	ProgressDelta float64 `json:"progressDelta"`
+	Collection    int     `json:"collection,omitzero"`
+}
+
+// TaskTraining defines a model
+type TaskTraining struct {
+	Int int `json:"int,omitzero"`
+	Per int `json:"per,omitzero"`
+	Str int `json:"str,omitzero"`
+	Con int `json:"con,omitzero"`
 }
 
 // Tasks defines a model

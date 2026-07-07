@@ -403,4 +403,10 @@ func TestClient_Interactions(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("GetUser: %v", err)
 	}
+
+	if _, err := c.GetTaskByID(ctx, "2b774d70-ec8b-41c1-8967-eb6b13d962ba/score/up", GetTaskByIDParams{
+		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+	}); err != nil {
+		t.Fatalf("GetTaskByID: %v", err)
+	}
 }

@@ -507,8 +507,7 @@
         "type": "object",
         "properties": {
           "date": {
-            "type": "integer",
-            "example": 1485487350827
+            "$ref": "#/components/schemas/ListUserDataHistoryExpItemDate"
           },
           "value": {
             "type": "number",
@@ -519,6 +518,19 @@
         "required": [
           "date",
           "value"
+        ]
+      },
+      "ListUserDataHistoryExpItemDate": {
+        "oneOf": [
+          {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-05-06T02:26:43.371Z"
+          },
+          {
+            "type": "integer",
+            "example": 1485487350827
+          }
         ]
       },
       "Message": {
@@ -965,6 +977,67 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-09-26T00:13:00.000Z"
+          },
+          "delta": {
+            "type": "number",
+            "format": "double",
+            "example": 1.0259567046270648
+          },
+          "_tmp": {
+            "$ref": "#/components/schemas/TaskTmp"
+          },
+          "hp": {
+            "type": "integer",
+            "example": 50
+          },
+          "mp": {
+            "type": "number",
+            "format": "double",
+            "example": 66.2390716654227
+          },
+          "exp": {
+            "type": "number",
+            "format": "double",
+            "example": 143.93810026267545
+          },
+          "gp": {
+            "type": "number",
+            "format": "double",
+            "example": 135.12889840462591
+          },
+          "lvl": {
+            "type": "integer",
+            "example": 20
+          },
+          "class": {
+            "type": "string",
+            "example": "rogue"
+          },
+          "points": {
+            "type": "integer",
+            "example": 0
+          },
+          "str": {
+            "type": "integer",
+            "example": 6
+          },
+          "con": {
+            "type": "integer",
+            "example": 3
+          },
+          "int": {
+            "type": "integer",
+            "example": 3
+          },
+          "per": {
+            "type": "integer",
+            "example": 8
+          },
+          "buffs": {
+            "$ref": "#/components/schemas/TaskBuffs"
+          },
+          "training": {
+            "$ref": "#/components/schemas/TaskTraining"
           }
         },
         "required": [
@@ -1029,6 +1102,63 @@
         ],
         "example": null
       },
+      "TaskBuffs": {
+        "type": "object",
+        "properties": {
+          "str": {
+            "type": "integer",
+            "example": 10
+          },
+          "int": {
+            "type": "integer",
+            "example": 10
+          },
+          "per": {
+            "type": "integer",
+            "example": 10
+          },
+          "con": {
+            "type": "integer",
+            "example": 10
+          },
+          "stealth": {
+            "type": "integer",
+            "example": 0
+          },
+          "streaks": {
+            "type": "boolean",
+            "example": false
+          },
+          "snowball": {
+            "type": "boolean",
+            "example": false
+          },
+          "spookySparkles": {
+            "type": "boolean",
+            "example": false
+          },
+          "shinySeed": {
+            "type": "boolean",
+            "example": false
+          },
+          "seafoam": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "str",
+          "int",
+          "per",
+          "con",
+          "stealth",
+          "streaks",
+          "snowball",
+          "spookySparkles",
+          "shinySeed",
+          "seafoam"
+        ]
+      },
       "TaskHistory": {
         "type": "array",
         "items": {
@@ -1057,6 +1187,103 @@
           "success",
           "data",
           "notifications"
+        ]
+      },
+      "TaskTmp": {
+        "type": "object",
+        "properties": {
+          "quest": {
+            "$ref": "#/components/schemas/TaskTmpQuest"
+          },
+          "drop": {
+            "$ref": "#/components/schemas/TaskTmpDrop"
+          }
+        },
+        "required": [
+          "quest",
+          "drop"
+        ]
+      },
+      "TaskTmpDrop": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string",
+            "example": "Zombie"
+          },
+          "canDrop": {
+            "type": "boolean",
+            "example": true
+          },
+          "value": {
+            "type": "integer",
+            "example": 1
+          },
+          "key": {
+            "type": "string",
+            "example": "RottenMeat"
+          },
+          "type": {
+            "type": "string",
+            "example": "Food"
+          },
+          "dialog": {
+            "type": "string",
+            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
+          }
+        },
+        "required": [
+          "target",
+          "canDrop",
+          "value",
+          "key",
+          "type",
+          "dialog"
+        ]
+      },
+      "TaskTmpQuest": {
+        "type": "object",
+        "properties": {
+          "progressDelta": {
+            "type": "number",
+            "format": "double",
+            "example": 1.2362778290756147
+          },
+          "collection": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "progressDelta",
+          "collection"
+        ]
+      },
+      "TaskTraining": {
+        "type": "object",
+        "properties": {
+          "int": {
+            "type": "integer",
+            "example": 0
+          },
+          "per": {
+            "type": "integer",
+            "example": 0
+          },
+          "str": {
+            "type": "integer",
+            "example": 0
+          },
+          "con": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "int",
+          "per",
+          "str",
+          "con"
         ]
       },
       "Tasks": {
