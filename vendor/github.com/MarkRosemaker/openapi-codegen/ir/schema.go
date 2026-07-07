@@ -15,6 +15,11 @@ import (
 // this function extracts the component name from the identifier or maps the inline type.
 func SchemaRefGoType(ref *openapi.SchemaRef) (*GoType, error) {
 	if ref.Ref != nil {
+		// A date-time-or-int oneOf collapses to time.Time even when reached via
+		// $ref, so no synthetic component type name leaks into the generated code.
+		if ref.Value != nil && isDateTimeOrIntegerOneOf(ref.Value) {
+			return &GoType{Name: "time.Time"}, nil
+		}
 		// "#/components/schemas/Name" → "Name"
 		parts := strings.Split(ref.Ref.Identifier, "/")
 		return &GoType{Name: parts[len(parts)-1]}, nil
@@ -38,9 +43,41 @@ func SchemaGoType(s *openapi.Schema) (*GoType, error) {
 		return arrayGoType(s)
 	case openapi.TypeObject:
 		return objectGoType(s)
+	case "":
+		if isDateTimeOrIntegerOneOf(s) {
+			return &GoType{Name: "time.Time"}, nil
+		}
+		return nil, fmt.Errorf("unsupported schema type: %q", s.Type)
 	default:
 		return nil, fmt.Errorf("unsupported schema type: %q", s.Type)
 	}
+}
+
+// isDateTimeOrIntegerOneOf reports whether s is a oneOf composition of exactly
+// two schemas: one string with format date-time, and one integer. The order of
+// the two entries does not matter. When true, callers should surface a
+// time.Time typed field with a custom (un)marshaller in the generated code.
+func isDateTimeOrIntegerOneOf(s *openapi.Schema) bool {
+	if len(s.OneOf) != 2 {
+		return false
+	}
+
+	var hasDateTime, hasInteger bool
+	for _, entry := range s.OneOf {
+		if entry == nil || entry.Value == nil {
+			return false
+		}
+		v := entry.Value
+		switch v.Type {
+		case openapi.TypeString:
+			if v.Format == openapi.FormatDateTime {
+				hasDateTime = true
+			}
+		case openapi.TypeInteger:
+			hasInteger = true
+		}
+	}
+	return hasDateTime && hasInteger
 }
 
 func integerGoType(f openapi.Format) (*GoType, error) {
@@ -261,12 +298,13 @@ func getField(jsonName string, propRef *openapi.SchemaRef, requiredSet map[strin
 
 	ref := cmp.Or(propRef.Ref, &openapi.Reference{})
 	return Field{
-		Name:        fieldGoName(jsonName),
-		JSONName:    jsonName,
-		Type:        goType.String(),
-		JSONTag:     buildJSONTag(jsonName, v.Type, v.Format, required),
-		Description: cmp.Or(ref.Description, v.Description),
-		Required:    required,
+		Name:            fieldGoName(jsonName),
+		JSONName:        jsonName,
+		Type:            goType.String(),
+		JSONTag:         buildJSONTag(jsonName, v.Type, v.Format, required),
+		Description:     cmp.Or(ref.Description, v.Description),
+		Required:        required,
+		IsDateTimeOrInt: isDateTimeOrIntegerOneOf(v),
 	}, nil
 }
 

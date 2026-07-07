@@ -10,7 +10,7 @@ tool (
 )
 
 require (
-	github.com/MarkRosemaker/openapi-enrich v0.0.0-20260705040714-34e5975b00ac
+	github.com/MarkRosemaker/openapi-enrich v0.0.0-20260707224939-0d18bdeaf782
 	github.com/go-api-libs/api v0.0.0-20260705004954-dad48fbb4ab2
 	github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d
 	github.com/google/uuid v1.6.0
@@ -20,12 +20,12 @@ require (
 	cloud.google.com/go v0.123.0 // indirect
 	github.com/MarkRosemaker/errpath v0.0.0-20260425165607-bbd4959d04d9 // indirect
 	github.com/MarkRosemaker/json2yaml v0.0.0-20260507220148-d6cc0d01bff0 // indirect
-	github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24 // indirect
-	github.com/MarkRosemaker/openapi v0.0.0-20260611220347-8831c3657808 // indirect
-	github.com/MarkRosemaker/openapi-codegen v0.0.0-20260705224412-2ad4c5cbd1ff // indirect
-	github.com/MarkRosemaker/openapi-compress v0.0.0-20260705041243-c12c4dd2b7da // indirect
-	github.com/MarkRosemaker/openapi-flatten v0.0.0-20260628221033-e2b0f0472c8a // indirect
-	github.com/MarkRosemaker/openapi-merge v0.0.0-20260705040224-a225c6704192 // indirect
+	github.com/MarkRosemaker/jsonutil v0.0.0-20260707232530-a7ea6bdc6036 // indirect
+	github.com/MarkRosemaker/openapi v0.0.0-20260707221914-b2d869ec7390 // indirect
+	github.com/MarkRosemaker/openapi-codegen v0.0.0-20260707233512-a29d3aca543a // indirect
+	github.com/MarkRosemaker/openapi-compress v0.0.0-20260707232256-9224821a8ceb // indirect
+	github.com/MarkRosemaker/openapi-flatten v0.0.0-20260707232015-809afd5a9a01 // indirect
+	github.com/MarkRosemaker/openapi-merge v0.0.0-20260707224901-52ede7ec2be9 // indirect
 	github.com/MarkRosemaker/ordmap v0.0.0-20260611220112-724580dd2bee // indirect
 	github.com/MarkRosemaker/yaml v0.0.0-20260508005758-fe21a538b084 // indirect
 	github.com/MarkRosemaker/yaml2json v0.0.0-20260507220136-7748efc522b2 // indirect
@@ -34,7 +34,7 @@ require (
 	golang.org/x/exp v0.0.0-20260611194520-c48552f49976 // indirect
 	golang.org/x/mod v0.37.0 // indirect
 	golang.org/x/sync v0.21.0 // indirect
-	golang.org/x/text v0.38.0 // indirect
+	golang.org/x/text v0.39.0 // indirect
 	golang.org/x/tools v0.47.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mvdan.cc/gofumpt v0.10.0 // indirect

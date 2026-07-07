@@ -17,9 +17,10 @@ type Document struct {
 	GlobalParams      Params `json:"GlobalParams,omitempty"`
 	Schemas           []Schema
 	Auth              Auth `json:"Security,omitzero"`
-	HasURLFields      bool
-	HasDurationFields bool
-	HasDateFields     bool
+	HasURLFields           bool
+	HasDurationFields      bool
+	HasDateFields          bool
+	HasDateTimeOrIntFields bool
 
 	// InteractionCalls holds one entry per matched interaction.
 	// Populated at code-gen time; not serialized to ir.json (too noisy).
@@ -125,6 +126,11 @@ type Field struct {
 	Description string
 	Required    bool
 	Embedded    bool `json:",omitzero"` // true for allOf $ref entries rendered as embedded structs
+
+	// IsDateTimeOrInt is true when the property's schema is a oneOf of a
+	// date-time string and an integer. The Go type is time.Time, but a custom
+	// (un)marshaller is required to accept either form on the wire.
+	IsDateTimeOrInt bool `json:",omitzero"`
 }
 
 // EnumValue is one member of an enum type.

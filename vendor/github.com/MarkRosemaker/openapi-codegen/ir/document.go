@@ -59,7 +59,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		return nil, fmt.Errorf("paths: %w", err)
 	}
 
-	hasURL, hasDuration, hasDate := needsSpecialImports(schemas, operations)
+	hasURL, hasDuration, hasDate, hasDateTimeOrInt := needsSpecialImports(schemas, operations)
 
 	globalParams := make(Params, 0, len(globalParamsMap))
 	for _, p := range globalParamsMap.ByIndex() {
@@ -87,9 +87,10 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		Operations:        operations,
 		GlobalParams:      globalParams,
 		Auth:              auth,
-		HasURLFields:      hasURL,
-		HasDurationFields: hasDuration,
-		HasDateFields:     hasDate,
+		HasURLFields:           hasURL,
+		HasDurationFields:      hasDuration,
+		HasDateFields:          hasDate,
+		HasDateTimeOrIntFields: hasDateTimeOrInt,
 	}, nil
 }
 
@@ -181,8 +182,9 @@ func isInAll(paths openapi.Paths, p *openapi.Parameter) bool {
 	return true
 }
 
-// needsSpecialImports scans schemas and operation types for url.URL, time.Duration, civil.Date.
-func needsSpecialImports(schemas []Schema, ops []Operation) (hasURL, hasDuration, hasDate bool) {
+// needsSpecialImports scans schemas and operation types for url.URL, time.Duration, civil.Date,
+// and any date-time-or-integer oneOf fields.
+func needsSpecialImports(schemas []Schema, ops []Operation) (hasURL, hasDuration, hasDate, hasDateTimeOrInt bool) {
 	check := func(goType string) {
 		if containsType(goType, "url.URL") {
 			hasURL = true
@@ -198,6 +200,9 @@ func needsSpecialImports(schemas []Schema, ops []Operation) (hasURL, hasDuration
 	for _, s := range schemas {
 		for _, f := range s.Fields {
 			check(f.Type)
+			if f.IsDateTimeOrInt {
+				hasDateTimeOrInt = true
+			}
 		}
 	}
 
@@ -213,7 +218,7 @@ func needsSpecialImports(schemas []Schema, ops []Operation) (hasURL, hasDuration
 		}
 	}
 
-	return hasURL, hasDuration, hasDate
+	return hasURL, hasDuration, hasDate, hasDateTimeOrInt
 }
 
 func containsType(goType, needle string) bool {

@@ -54,6 +54,12 @@ func schemaRef(d *openapi.Document, s *openapi.SchemaRef, name string, mode mode
 		if len(s.Value.Properties) > 0 && mode != neverMove {
 			moveSchemaToComponents(d, name, s)
 		}
+	case "": // no explicit type — oneOf / anyOf / allOf composition or bare properties
+		v := s.Value
+		hasComposition := len(v.OneOf) > 0 || len(v.AnyOf) > 0 || len(v.AllOf) > 0
+		if (hasComposition || len(v.Properties) > 0) && mode != neverMove {
+			moveSchemaToComponents(d, name, s)
+		}
 	default:
 		return fmt.Errorf("unimplemented schema ref type %q", s.Value.Type)
 	}
@@ -70,13 +76,21 @@ func schema(d *openapi.Document, s *openapi.Schema, name string) error {
 		openapi.TypeBoolean: // no need to do anything
 		return nil
 	case openapi.TypeArray, openapi.TypeObject: // do below
-	case "": // is valid if schema contains allOf
+	case "": // is valid if schema contains oneOf, anyOf, allOf, or properties
 	default:
 		return fmt.Errorf("unimplemented schema type %q", s.Type)
 	}
 
 	if err := schemaRefList(d, s.AllOf, name+"AllOf"); err != nil {
 		return &errpath.ErrField{Field: "allOf", Err: err}
+	}
+
+	if err := schemaRefList(d, s.OneOf, name+"OneOf"); err != nil {
+		return &errpath.ErrField{Field: "oneOf", Err: err}
+	}
+
+	if err := schemaRefList(d, s.AnyOf, name+"AnyOf"); err != nil {
+		return &errpath.ErrField{Field: "anyOf", Err: err}
 	}
 
 	if s.Items != nil {
