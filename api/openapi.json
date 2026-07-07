@@ -441,6 +441,19 @@
           "id"
         ]
       },
+      "DateAsStringOrInt": {
+        "oneOf": [
+          {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-05-06T02:26:43.371Z"
+          },
+          {
+            "type": "integer",
+            "example": 1485487350827
+          }
+        ]
+      },
       "Group": {
         "type": "object",
         "properties": {
@@ -507,7 +520,7 @@
         "type": "object",
         "properties": {
           "date": {
-            "$ref": "#/components/schemas/ListUserDataHistoryExpItemDate"
+            "$ref": "#/components/schemas/DateAsStringOrInt"
           },
           "value": {
             "type": "number",
@@ -518,19 +531,6 @@
         "required": [
           "date",
           "value"
-        ]
-      },
-      "ListUserDataHistoryExpItemDate": {
-        "oneOf": [
-          {
-            "type": "string",
-            "format": "date-time",
-            "example": "2026-05-06T02:26:43.371Z"
-          },
-          {
-            "type": "integer",
-            "example": 1485487350827
-          }
         ]
       },
       "Message": {
