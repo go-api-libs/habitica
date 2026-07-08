@@ -81,6 +81,30 @@
           }
         }
       }
+    },
+    "/tasks/{taskId}/score/up": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/taskId2"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/X-Client"
+        }
+      ],
+      "get": {
+        "operationId": "ListTaskScoreUp",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ListTaskScoreUpOkResponse"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -508,6 +532,267 @@
           "messages",
           "blocks",
           "newMessages"
+        ]
+      },
+      "ListTaskScoreUpDataBuffs": {
+        "type": "object",
+        "properties": {
+          "str": {
+            "type": "integer",
+            "example": 10
+          },
+          "int": {
+            "type": "integer",
+            "example": 10
+          },
+          "per": {
+            "type": "integer",
+            "example": 10
+          },
+          "con": {
+            "type": "integer",
+            "example": 10
+          },
+          "stealth": {
+            "type": "integer",
+            "example": 0
+          },
+          "streaks": {
+            "type": "boolean",
+            "example": false
+          },
+          "snowball": {
+            "type": "boolean",
+            "example": false
+          },
+          "spookySparkles": {
+            "type": "boolean",
+            "example": false
+          },
+          "shinySeed": {
+            "type": "boolean",
+            "example": false
+          },
+          "seafoam": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "str",
+          "int",
+          "per",
+          "con",
+          "stealth",
+          "streaks",
+          "snowball",
+          "spookySparkles",
+          "shinySeed",
+          "seafoam"
+        ]
+      },
+      "ListTaskScoreUpDataTmp": {
+        "type": "object",
+        "properties": {
+          "quest": {
+            "$ref": "#/components/schemas/ListTaskScoreUpDataTmpQuest"
+          },
+          "drop": {
+            "$ref": "#/components/schemas/ListTaskScoreUpDataTmpDrop"
+          }
+        },
+        "required": [
+          "quest",
+          "drop"
+        ]
+      },
+      "ListTaskScoreUpDataTmpDrop": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string",
+            "example": "Zombie"
+          },
+          "canDrop": {
+            "type": "boolean",
+            "example": true
+          },
+          "value": {
+            "type": "integer",
+            "example": 1
+          },
+          "key": {
+            "type": "string",
+            "example": "RottenMeat"
+          },
+          "type": {
+            "type": "string",
+            "example": "Food"
+          },
+          "dialog": {
+            "type": "string",
+            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
+          }
+        },
+        "required": [
+          "target",
+          "canDrop",
+          "value",
+          "key",
+          "type",
+          "dialog"
+        ]
+      },
+      "ListTaskScoreUpDataTmpQuest": {
+        "type": "object",
+        "properties": {
+          "progressDelta": {
+            "type": "number",
+            "format": "double",
+            "example": 1.2362778290756147
+          },
+          "collection": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "progressDelta",
+          "collection"
+        ]
+      },
+      "ListTaskScoreUpDataTraining": {
+        "type": "object",
+        "properties": {
+          "int": {
+            "type": "integer",
+            "example": 0
+          },
+          "per": {
+            "type": "integer",
+            "example": 0
+          },
+          "str": {
+            "type": "integer",
+            "example": 0
+          },
+          "con": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "int",
+          "per",
+          "str",
+          "con"
+        ]
+      },
+      "ListTaskScoreUpOkJSONResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/ListTaskScoreUpOkJSONResponseData"
+          },
+          "notifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "notifications"
+        ]
+      },
+      "ListTaskScoreUpOkJSONResponseData": {
+        "type": "object",
+        "properties": {
+          "delta": {
+            "type": "number",
+            "format": "double",
+            "example": 1.0259567046270648
+          },
+          "_tmp": {
+            "$ref": "#/components/schemas/ListTaskScoreUpDataTmp"
+          },
+          "hp": {
+            "type": "integer",
+            "example": 50
+          },
+          "mp": {
+            "type": "number",
+            "format": "double",
+            "example": 66.2390716654227
+          },
+          "exp": {
+            "type": "number",
+            "format": "double",
+            "example": 143.93810026267545
+          },
+          "gp": {
+            "type": "number",
+            "format": "double",
+            "example": 135.12889840462591
+          },
+          "lvl": {
+            "type": "integer",
+            "example": 20
+          },
+          "class": {
+            "type": "string",
+            "example": "rogue"
+          },
+          "points": {
+            "type": "integer",
+            "example": 0
+          },
+          "str": {
+            "type": "integer",
+            "example": 6
+          },
+          "con": {
+            "type": "integer",
+            "example": 3
+          },
+          "int": {
+            "type": "integer",
+            "example": 3
+          },
+          "per": {
+            "type": "integer",
+            "example": 8
+          },
+          "buffs": {
+            "$ref": "#/components/schemas/ListTaskScoreUpDataBuffs"
+          },
+          "training": {
+            "$ref": "#/components/schemas/ListTaskScoreUpDataTraining"
+          }
+        },
+        "required": [
+          "delta",
+          "_tmp",
+          "hp",
+          "mp",
+          "exp",
+          "gp",
+          "lvl",
+          "class",
+          "points",
+          "str",
+          "con",
+          "int",
+          "per",
+          "buffs",
+          "training"
         ]
       },
       "ListUserDataHistoryExp": {
@@ -984,7 +1269,7 @@
             "example": 1.0259567046270648
           },
           "_tmp": {
-            "$ref": "#/components/schemas/TaskTmp"
+            "$ref": "#/components/schemas/ListTaskScoreUpDataTmp"
           },
           "hp": {
             "type": "integer",
@@ -1034,10 +1319,10 @@
             "example": 8
           },
           "buffs": {
-            "$ref": "#/components/schemas/TaskBuffs"
+            "$ref": "#/components/schemas/ListTaskScoreUpDataBuffs"
           },
           "training": {
-            "$ref": "#/components/schemas/TaskTraining"
+            "$ref": "#/components/schemas/ListTaskScoreUpDataTraining"
           }
         },
         "required": [
@@ -1102,63 +1387,6 @@
         ],
         "example": null
       },
-      "TaskBuffs": {
-        "type": "object",
-        "properties": {
-          "str": {
-            "type": "integer",
-            "example": 10
-          },
-          "int": {
-            "type": "integer",
-            "example": 10
-          },
-          "per": {
-            "type": "integer",
-            "example": 10
-          },
-          "con": {
-            "type": "integer",
-            "example": 10
-          },
-          "stealth": {
-            "type": "integer",
-            "example": 0
-          },
-          "streaks": {
-            "type": "boolean",
-            "example": false
-          },
-          "snowball": {
-            "type": "boolean",
-            "example": false
-          },
-          "spookySparkles": {
-            "type": "boolean",
-            "example": false
-          },
-          "shinySeed": {
-            "type": "boolean",
-            "example": false
-          },
-          "seafoam": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "str",
-          "int",
-          "per",
-          "con",
-          "stealth",
-          "streaks",
-          "snowball",
-          "spookySparkles",
-          "shinySeed",
-          "seafoam"
-        ]
-      },
       "TaskHistory": {
         "type": "array",
         "items": {
@@ -1187,103 +1415,6 @@
           "success",
           "data",
           "notifications"
-        ]
-      },
-      "TaskTmp": {
-        "type": "object",
-        "properties": {
-          "quest": {
-            "$ref": "#/components/schemas/TaskTmpQuest"
-          },
-          "drop": {
-            "$ref": "#/components/schemas/TaskTmpDrop"
-          }
-        },
-        "required": [
-          "quest",
-          "drop"
-        ]
-      },
-      "TaskTmpDrop": {
-        "type": "object",
-        "properties": {
-          "target": {
-            "type": "string",
-            "example": "Zombie"
-          },
-          "canDrop": {
-            "type": "boolean",
-            "example": true
-          },
-          "value": {
-            "type": "integer",
-            "example": 1
-          },
-          "key": {
-            "type": "string",
-            "example": "RottenMeat"
-          },
-          "type": {
-            "type": "string",
-            "example": "Food"
-          },
-          "dialog": {
-            "type": "string",
-            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
-          }
-        },
-        "required": [
-          "target",
-          "canDrop",
-          "value",
-          "key",
-          "type",
-          "dialog"
-        ]
-      },
-      "TaskTmpQuest": {
-        "type": "object",
-        "properties": {
-          "progressDelta": {
-            "type": "number",
-            "format": "double",
-            "example": 1.2362778290756147
-          },
-          "collection": {
-            "type": "integer",
-            "example": 1
-          }
-        },
-        "required": [
-          "progressDelta",
-          "collection"
-        ]
-      },
-      "TaskTraining": {
-        "type": "object",
-        "properties": {
-          "int": {
-            "type": "integer",
-            "example": 0
-          },
-          "per": {
-            "type": "integer",
-            "example": 0
-          },
-          "str": {
-            "type": "integer",
-            "example": 0
-          },
-          "con": {
-            "type": "integer",
-            "example": 0
-          }
-        },
-        "required": [
-          "int",
-          "per",
-          "str",
-          "con"
         ]
       },
       "Tasks": {
@@ -5262,6 +5393,16 @@
       }
     },
     "responses": {
+      "ListTaskScoreUpOkResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ListTaskScoreUpOkJSONResponse"
+            }
+          }
+        }
+      },
       "TaskResponse": {
         "description": "OK",
         "content": {
@@ -5327,6 +5468,14 @@
         "name": "taskId",
         "in": "path",
         "description": "The task _id or alias",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "taskId2": {
+        "name": "taskId",
+        "in": "path",
         "required": true,
         "schema": {
           "type": "string"
