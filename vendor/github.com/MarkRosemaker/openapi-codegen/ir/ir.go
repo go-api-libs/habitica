@@ -8,19 +8,19 @@ import (
 
 // Document is the top-level IR type passed to templates.
 type Document struct {
-	Title             string `json:"title,omitzero"`
-	Production        bool   `json:"Production,omitzero"`
-	PackageName       string
-	BaseURL           URLParts
-	UserAgent         string
-	Operations        []Operation
-	GlobalParams      Params `json:"GlobalParams,omitempty"`
-	Schemas           []Schema
-	Auth              Auth `json:"Security,omitzero"`
-	HasURLFields           bool
-	HasDurationFields      bool
-	HasDateFields          bool
-	HasDateTimeOrIntFields bool
+	Title                  string      `json:"title,omitzero"`
+	Production             bool        `json:"production,omitzero"`
+	PackageName            string      `json:"packageName,omitzero"`
+	BaseURL                URLParts    `json:"baseURL,omitzero"`
+	UserAgent              string      `json:"userAgent,omitzero"`
+	Operations             []Operation `json:"operations,omitempty"`
+	GlobalParams           Params      `json:"globalParams,omitempty"`
+	Schemas                []Schema    `json:"schemas,omitempty"`
+	Auth                   Auth        `json:"security,omitzero"`
+	HasURLFields           bool        `json:"hasURLFields,omitzero"`
+	HasDurationFields      bool        `json:"hasDurationFields,omitzero"`
+	HasDateFields          bool        `json:"hasDateFields,omitzero"`
+	HasDateTimeOrIntFields bool        `json:"hasDateTimeOrIntFields,omitzero"`
 
 	// InteractionCalls holds one entry per matched interaction.
 	// Populated at code-gen time; not serialized to ir.json (too noisy).
@@ -43,28 +43,28 @@ type InteractionParam struct {
 
 // URLParts holds a decomposed server URL.
 type URLParts struct {
-	Scheme string
-	Host   string
-	Path   string
+	Scheme string `json:"scheme,omitzero"`
+	Host   string `json:"host,omitzero"`
+	Path   string `json:"path,omitzero"`
 }
 
 // Operation represents a single API operation.
 type Operation struct {
-	Name            string     `json:"Name,omitzero"`
-	Description     string     `json:"Description,omitzero"`
-	Summary         string     `json:"Summary,omitzero"`
-	Method          string     `json:"Method,omitzero"`
-	PathTemplate    string     `json:"PathTemplate,omitzero"`
-	JoinPathArgs    []string   `json:"JoinPathArgs,omitempty"`
-	PathParams      Params     `json:"PathParams,omitempty"`
-	QueryParams     Params     `json:"QueryParams,omitempty"`
-	HeaderParams    Params     `json:"HeaderParam,omitempty"`
-	HasParams       bool       `json:"HasParams,omitzero"`
-	ParamStructName string     `json:"ParamStructName,omitzero"`
-	RequestBody     *ReqBody   `json:"RequestBody,omitempty"`
-	Responses       []Response `json:"Responses,omitempty"`
-	SuccessReturn   *GoType    `json:"SuccessReturn,omitempty"`
-	Deprecated      bool       `json:"Deprecated,omitzero"`
+	Name            string     `json:"name,omitzero"`
+	Description     string     `json:"description,omitzero"`
+	Summary         string     `json:"summary,omitzero"`
+	Method          string     `json:"method,omitzero"`
+	PathTemplate    string     `json:"pathTemplate,omitzero"`
+	JoinPathArgs    []string   `json:"joinPathArgs,omitempty"`
+	PathParams      Params     `json:"pathParams,omitempty"`
+	QueryParams     Params     `json:"queryParams,omitempty"`
+	HeaderParams    Params     `json:"headerParams,omitempty"`
+	HasParams       bool       `json:"hasParams,omitzero"`
+	ParamStructName string     `json:"paramStructName,omitzero"`
+	RequestBody     *ReqBody   `json:"requestBody,omitempty"`
+	Responses       []Response `json:"responses,omitempty"`
+	SuccessReturn   *GoType    `json:"successReturn,omitempty"`
+	Deprecated      bool       `json:"deprecated,omitzero"`
 }
 
 func (op Operation) ParamsInStruct() Params {
@@ -96,14 +96,14 @@ func (op Operation) JSPathTemplate() string {
 
 // Schema represents a named component schema.
 type Schema struct {
-	Name        string      `json:"Name,omitzero"`
-	Description string      `json:"Description,omitzero"`
-	Kind        SchemaKind  `json:"Kind"`
-	Type        string      `json:"Type,omitzero"`
-	Fields      []Field     `json:"Fields,omitzero,omitempty"`
-	EnumValues  []EnumValue `json:"EnumValues,omitzero,omitempty"`
-	MapKey      string      `json:"MapKey,omitzero"`
-	MapValue    string      `json:"MapValue,omitzero"`
+	Name        string      `json:"name,omitzero"`
+	Description string      `json:"description,omitzero"`
+	Kind        SchemaKind  `json:"kind,omitzero"`
+	Type        string      `json:"type,omitzero"`
+	Fields      []Field     `json:"fields,omitempty"`
+	EnumValues  []EnumValue `json:"enumValues,omitempty"`
+	MapKey      string      `json:"mapKey,omitzero"`
+	MapValue    string      `json:"mapValue,omitzero"`
 }
 
 // SchemaKind categorizes a schema into struct, enum, or array alias.
@@ -119,24 +119,24 @@ const (
 
 // Field is a named field within a struct schema.
 type Field struct {
-	Name        string
-	JSONName    string
-	Type        string
-	JSONTag     string
-	Description string
-	Required    bool
-	Embedded    bool `json:",omitzero"` // true for allOf $ref entries rendered as embedded structs
+	Name        string `json:"name,omitzero"`
+	JSONName    string `json:"jsonName,omitzero"`
+	Type        string `json:"type,omitzero"`
+	JSONTag     string `json:"jsonTag,omitzero"`
+	Description string `json:"description,omitzero"`
+	Required    bool   `json:"required,omitzero"`
+	Embedded    bool   `json:"embedded,omitzero"` // true for allOf $ref entries rendered as embedded structs
 
 	// IsDateTimeOrInt is true when the property's schema is a oneOf of a
 	// date-time string and an integer. The Go type is time.Time, but a custom
 	// (un)marshaller is required to accept either form on the wire.
-	IsDateTimeOrInt bool `json:",omitzero"`
+	IsDateTimeOrInt bool `json:"isDateTimeOrInt,omitzero"`
 }
 
 // EnumValue is one member of an enum type.
 type EnumValue struct {
-	GoName string
-	Value  string
+	GoName string `json:"goName,omitzero"`
+	Value  string `json:"value,omitzero"`
 }
 
 type GlobalType string
@@ -162,21 +162,21 @@ func (ps Params) Required() bool {
 
 // Param represents a path or query parameter.
 type Param struct {
-	GlobalType   GlobalType `json:"GlobalType,omitzero"`
-	VarName      string     // camelCase, used as local variable name
-	EnvName      string     `json:"EnvName,omitzero"`
-	GoName       string     // camelCase, used as local variable name
-	FieldName    string     // PascalCase, used as exported struct field name
-	JSONName     string
-	Type         string
-	Required     bool   `json:"Required,omitzero"`
-	ParseExpr    string // server-side: expression to parse string `s` into the param type
-	ParseCast    string `json:"ParseCast,omitzero"` // server-side: optional cast after ParseExpr, e.g. "int32"
-	ParseErrFree bool   // server-side: true when ParseExpr cannot return an error
-	IsEnum       bool   `json:"IsEnum,omitzero"`
-	Description  string `json:"Description,omitzero"`
-	Value        string `json:"Value,omitzero"`   // hardcoded value, always the same
-	Example      string `json:"Example,omitzero"` // hardcoded example for tests
+	GlobalType   GlobalType `json:"globalType,omitzero"`
+	VarName      string     `json:"varName,omitzero"`
+	EnvName      string     `json:"envName,omitzero"`
+	GoName       string     `json:"goName,omitzero"`
+	FieldName    string     `json:"fieldName,omitzero"`
+	JSONName     string     `json:"jsonName,omitzero"`
+	Type         string     `json:"type,omitzero"`
+	Required     bool       `json:"required,omitzero"`
+	ParseExpr    string     `json:"parseExpr,omitzero"`
+	ParseCast    string     `json:"parseCast,omitzero"`
+	ParseErrFree bool       `json:"parseErrFree,omitzero"`
+	IsEnum       bool       `json:"isEnum,omitzero"`
+	Description  string     `json:"description,omitzero"`
+	Value        string     `json:"value,omitzero"`   // hardcoded value, always the same
+	Example      string     `json:"example,omitzero"` // hardcoded example for tests
 }
 
 func (doc Document) APIKey() *Param {
@@ -200,9 +200,9 @@ func (doc Document) getGlobal(tp GlobalType) *Param {
 
 // GoType is a resolved Go type reference.
 type GoType struct {
-	Name      string
-	IsPointer bool
-	IsSlice   bool
+	Name      string `json:"name,omitzero"`
+	IsPointer bool   `json:"isPointer,omitzero"`
+	IsSlice   bool   `json:"isSlice,omitzero"`
 }
 
 // String returns the Go type expression.
@@ -247,25 +247,25 @@ func (t GoType) ZeroValue() string {
 
 // Response represents one expected HTTP response from an operation.
 type Response struct {
-	StatusCode  string
-	GoConstant  string
-	Description string
-	ContentType string
-	GoType      *GoType
-	IsSuccess   bool
+	StatusCode  string  `json:"statusCode,omitzero"`
+	GoConstant  string  `json:"goConstant,omitzero"`
+	Description string  `json:"description,omitzero"`
+	ContentType string  `json:"contentType,omitzero"`
+	GoType      *GoType `json:"goType,omitempty"`
+	IsSuccess   bool    `json:"isSuccess,omitzero"`
 }
 
 // ReqBody is the IR representation of an operation request body.
 type ReqBody struct {
-	TypeName    string
-	ContentType string
-	Required    bool
+	TypeName    string `json:"typeName,omitzero"`
+	ContentType string `json:"contentType,omitzero"`
+	Required    bool   `json:"required,omitzero"`
 }
 
 type Auth struct {
-	Bearer Bearer `json:"Bearer,omitzero"`
+	Bearer Bearer `json:"bearer,omitzero"`
 }
 
 type Bearer struct {
-	Name string
+	Name string `json:"name,omitzero"`
 }

@@ -32,6 +32,8 @@ func TimeUnmarshalIntUnix(dec *jsontext.Decoder, d *time.Time) error {
 	return nil
 }
 
+// TimeUnmarshalStringOrIntUnix unmarshals a time.Time from either an RFC3339
+// string or an integer representing unix seconds. Nulls decode as the zero time.
 func TimeUnmarshalStringOrIntUnix(dec *jsontext.Decoder, d *time.Time) error {
 	tkn, err := dec.ReadToken()
 	if err != nil {
