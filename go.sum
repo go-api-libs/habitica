@@ -12,8 +12,8 @@ github.com/MarkRosemaker/openapi-codegen v0.0.0-20260708041755-76bd4c90a39e h1:F
 github.com/MarkRosemaker/openapi-codegen v0.0.0-20260708041755-76bd4c90a39e/go.mod h1:LZkyOElf6LYD9sohYZJV/h1G3kcWJmdNs630mbStiZA=
 github.com/MarkRosemaker/openapi-compress v0.0.0-20260708041431-2dc36a671966 h1:7yH5IVqtbr8pkyVtvbzVZaFSRAenpVbjPAVmvbSE+V8=
 github.com/MarkRosemaker/openapi-compress v0.0.0-20260708041431-2dc36a671966/go.mod h1:ixHgIy/O2LLMN57lPP8ng5ns4F3MlxGLNPH2vOulV6Q=
-github.com/MarkRosemaker/openapi-enrich v0.0.0-20260708040758-6dc2d9e1ab1e h1:uALBcZ5cnZ1rcm90dlYAjRYveT0+Cs1rIODjgytzuG4=
-github.com/MarkRosemaker/openapi-enrich v0.0.0-20260708040758-6dc2d9e1ab1e/go.mod h1:CCB3QequFsDrNg8JLyLncS+7le9WcdJI58J7+IPzB80=
+github.com/MarkRosemaker/openapi-enrich v0.0.0-20260708160446-639fe878732d h1:zoKaQQmreLK0x/pRMiKrOtoqNZvXqZ3GY2b9Yjjr+xQ=
+github.com/MarkRosemaker/openapi-enrich v0.0.0-20260708160446-639fe878732d/go.mod h1:CCB3QequFsDrNg8JLyLncS+7le9WcdJI58J7+IPzB80=
 github.com/MarkRosemaker/openapi-flatten v0.0.0-20260708041111-50bf77c2f53d h1:kjWYy1QuhT9uSR0jmRY+NaiggKucpc5MntNdwdvcbso=
 github.com/MarkRosemaker/openapi-flatten v0.0.0-20260708041111-50bf77c2f53d/go.mod h1:yb1eriezILr509j85Om37vngBLtY1lMRmHq/kXsLPaE=
 github.com/MarkRosemaker/openapi-merge v0.0.0-20260708040219-26b7609c01a0 h1:0b+z4SmK7+XX8ftXGxid2TVhrYdo2ym8p6Gu982wrlk=
@@ -48,8 +48,8 @@ golang.org/x/exp v0.0.0-20260611194520-c48552f49976 h1:X8Hz2ImujgbmetVuW+w2YkyZC
 golang.org/x/exp v0.0.0-20260611194520-c48552f49976/go.mod h1:vnf4pv9iKZXY58sQE1L86zmNWJ4159e1RkcWiLCkeEY=
 golang.org/x/mod v0.37.0 h1:vF1DjpVEshcIqoEaauuHebaLk1O1forxjxBaVn884JQ=
 golang.org/x/mod v0.37.0/go.mod h1:m8S8VeM9r4dzDwjrKO0a1sZP3YjeMamRRlD+fmR2Q/0=
-golang.org/x/sync v0.21.0 h1:HLII4xRRTtCRkxYp4HNFF0Js/Og6q2i++KXbg0gHCwM=
-golang.org/x/sync v0.21.0/go.mod h1:9xrNwdLfx4jkKbNva9FpL6vEN7evnE43NNNJQ2LF3+0=
+golang.org/x/sync v0.22.0 h1:SZjpbeLmrCk4xhRSZFNZW5gFUeCeFgjekvI/+gfScek=
+golang.org/x/sync v0.22.0/go.mod h1:9xrNwdLfx4jkKbNva9FpL6vEN7evnE43NNNJQ2LF3+0=
 golang.org/x/text v0.39.0 h1:UbZz4pLOvn600D6Oh6GGEI6VAmndrEBLv8/6BEXzyus=
 golang.org/x/text v0.39.0/go.mod h1:3UwRclnC2g0TU9x8PZiyfOajCd1zaUNHF9cvqcQZ+ZM=
 golang.org/x/tools v0.47.0 h1:7Kn5x/d1svx/PzryTsqeoZN4TZwqeH5pGWjefhLi/1Q=

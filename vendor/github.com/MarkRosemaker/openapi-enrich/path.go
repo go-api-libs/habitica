@@ -72,6 +72,13 @@ func (pp parsedPath) fits(segments []string) bool {
 		if len(segments) < len(pp) {
 			return false
 		}
+		// If there are extra segments beyond the template length, only absorb them
+		// if the first consumed segment is NOT a single-segment ID (UUID or integer).
+		// A UUID/integer value can't span multiple URL segments, so extra segments
+		// beyond it indicate a more-specific sub-route that should get its own path.
+		if len(segments) > len(pp) && looksLikeID(segments[len(pp)-1]) {
+			return false
+		}
 	} else {
 		if len(pp) != len(segments) {
 			return false
