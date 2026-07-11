@@ -5557,5 +5557,9 @@
         }
       }
     }
+  },
+  "externalDocs": {
+    "description": "Habitica V3 API Documentation",
+    "url": "https://apidoc.habitica.com/"
   }
 }
