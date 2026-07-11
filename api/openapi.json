@@ -595,76 +595,6 @@
           "seafoam"
         ]
       },
-      "ListTaskScoreUpDataTmp": {
-        "type": "object",
-        "properties": {
-          "quest": {
-            "$ref": "#/components/schemas/ListTaskScoreUpDataTmpQuest"
-          },
-          "drop": {
-            "$ref": "#/components/schemas/ListTaskScoreUpDataTmpDrop"
-          }
-        },
-        "required": [
-          "quest",
-          "drop"
-        ]
-      },
-      "ListTaskScoreUpDataTmpDrop": {
-        "type": "object",
-        "properties": {
-          "target": {
-            "type": "string",
-            "example": "Zombie"
-          },
-          "canDrop": {
-            "type": "boolean",
-            "example": true
-          },
-          "value": {
-            "type": "integer",
-            "example": 1
-          },
-          "key": {
-            "type": "string",
-            "example": "RottenMeat"
-          },
-          "type": {
-            "type": "string",
-            "example": "Food"
-          },
-          "dialog": {
-            "type": "string",
-            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
-          }
-        },
-        "required": [
-          "target",
-          "canDrop",
-          "value",
-          "key",
-          "type",
-          "dialog"
-        ]
-      },
-      "ListTaskScoreUpDataTmpQuest": {
-        "type": "object",
-        "properties": {
-          "progressDelta": {
-            "type": "number",
-            "format": "double",
-            "example": 1.2362778290756147
-          },
-          "collection": {
-            "type": "integer",
-            "example": 1
-          }
-        },
-        "required": [
-          "progressDelta",
-          "collection"
-        ]
-      },
       "ListUserDataHistoryExp": {
         "type": "array",
         "items": {
@@ -998,7 +928,7 @@
             "example": 1.0259567046270648
           },
           "_tmp": {
-            "$ref": "#/components/schemas/ListTaskScoreUpDataTmp"
+            "$ref": "#/components/schemas/Tmp"
           },
           "hp": {
             "type": "integer",
@@ -1246,7 +1176,7 @@
             "example": 1.0259567046270648
           },
           "_tmp": {
-            "$ref": "#/components/schemas/ListTaskScoreUpDataTmp"
+            "$ref": "#/components/schemas/Tmp"
           },
           "hp": {
             "type": "integer",
@@ -1475,6 +1405,76 @@
           "notifications",
           "userV",
           "appVersion"
+        ]
+      },
+      "Tmp": {
+        "type": "object",
+        "properties": {
+          "quest": {
+            "$ref": "#/components/schemas/TmpQuest"
+          },
+          "drop": {
+            "$ref": "#/components/schemas/TmpDrop"
+          }
+        },
+        "required": [
+          "quest",
+          "drop"
+        ]
+      },
+      "TmpDrop": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string",
+            "example": "Zombie"
+          },
+          "canDrop": {
+            "type": "boolean",
+            "example": true
+          },
+          "value": {
+            "type": "integer",
+            "example": 1
+          },
+          "key": {
+            "type": "string",
+            "example": "RottenMeat"
+          },
+          "type": {
+            "type": "string",
+            "example": "Food"
+          },
+          "dialog": {
+            "type": "string",
+            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
+          }
+        },
+        "required": [
+          "target",
+          "canDrop",
+          "value",
+          "key",
+          "type",
+          "dialog"
+        ]
+      },
+      "TmpQuest": {
+        "type": "object",
+        "properties": {
+          "progressDelta": {
+            "type": "number",
+            "format": "double",
+            "example": 1.2362778290756147
+          },
+          "collection": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "progressDelta",
+          "collection"
         ]
       },
       "Training": {

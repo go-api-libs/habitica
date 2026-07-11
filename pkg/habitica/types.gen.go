@@ -167,28 +167,6 @@ type ListTaskScoreUpDataBuffs struct {
 	Seafoam        bool `json:"seafoam,omitzero"`
 }
 
-// ListTaskScoreUpDataTmp defines a model
-type ListTaskScoreUpDataTmp struct {
-	Quest ListTaskScoreUpDataTmpQuest `json:"quest"`
-	Drop  ListTaskScoreUpDataTmpDrop  `json:"drop"`
-}
-
-// ListTaskScoreUpDataTmpDrop defines a model
-type ListTaskScoreUpDataTmpDrop struct {
-	Target  string `json:"target,omitzero"`
-	CanDrop bool   `json:"canDrop,omitzero"`
-	Value   int    `json:"value,omitzero"`
-	Key     string `json:"key,omitzero"`
-	Type    string `json:"type,omitzero"`
-	Dialog  string `json:"dialog,omitzero"`
-}
-
-// ListTaskScoreUpDataTmpQuest defines a model
-type ListTaskScoreUpDataTmpQuest struct {
-	ProgressDelta float64 `json:"progressDelta"`
-	Collection    int     `json:"collection,omitzero"`
-}
-
 // ListUserDataHistoryExp defines a model
 type ListUserDataHistoryExp []ListUserDataHistoryExpItem
 
@@ -283,7 +261,7 @@ type ScoreTaskResponse struct {
 // ScoreTaskResponseData defines a model
 type ScoreTaskResponseData struct {
 	Delta         float64                  `json:"delta"`
-	UnderscoreTmp ListTaskScoreUpDataTmp   `json:"_tmp"`
+	UnderscoreTmp Tmp                      `json:"_tmp"`
 	Hp            int                      `json:"hp,omitzero"`
 	Mp            float64                  `json:"mp"`
 	Exp           float64                  `json:"exp"`
@@ -338,7 +316,7 @@ type Task struct {
 	IsDue             bool                      `json:"isDue,omitempty"`
 	Date              time.Time                 `json:"date,omitempty"`
 	Delta             *float64                  `json:"delta,omitempty"`
-	UnderscoreTmp     *ListTaskScoreUpDataTmp   `json:"_tmp,omitempty"`
+	UnderscoreTmp     *Tmp                      `json:"_tmp,omitempty"`
 	Hp                *int                      `json:"hp,omitempty"`
 	Mp                *float64                  `json:"mp,omitempty"`
 	Exp               *float64                  `json:"exp,omitempty"`
@@ -392,6 +370,28 @@ type TasksResponse struct {
 	Notifications []struct{} `json:"notifications,omitempty"`
 	UserV         int        `json:"userV,omitzero"`
 	AppVersion    string     `json:"appVersion,omitzero"`
+}
+
+// Tmp defines a model
+type Tmp struct {
+	Quest TmpQuest `json:"quest"`
+	Drop  TmpDrop  `json:"drop"`
+}
+
+// TmpDrop defines a model
+type TmpDrop struct {
+	Target  string `json:"target,omitzero"`
+	CanDrop bool   `json:"canDrop,omitzero"`
+	Value   int    `json:"value,omitzero"`
+	Key     string `json:"key,omitzero"`
+	Type    string `json:"type,omitzero"`
+	Dialog  string `json:"dialog,omitzero"`
+}
+
+// TmpQuest defines a model
+type TmpQuest struct {
+	ProgressDelta float64 `json:"progressDelta"`
+	Collection    int     `json:"collection,omitzero"`
 }
 
 // Training defines a model
