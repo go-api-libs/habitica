@@ -256,13 +256,18 @@ func GetTaskByID[R any](ctx context.Context, c *Client, taskID uuid.UUID, params
 	}
 }
 
-// GET /tasks/{taskId}/score/{direction}
-func (c *Client) ListTaskScoreUp(ctx context.Context, taskID uuid.UUID, direction string, params ListTaskScoreUpParams) (*ListTaskScoreUpOkJSONResponse, error) {
-	return ListTaskScoreUp[ListTaskScoreUpOkJSONResponse](ctx, c, taskID, direction, params)
+// Score a task
+//
+//	GET /tasks/{taskId}/score/{direction}
+func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction string, params ScoreTaskParams) (*ListTaskScoreUpOkJSONResponse, error) {
+	return ScoreTask[ListTaskScoreUpOkJSONResponse](ctx, c, taskID, direction, params)
 }
 
-// GET /tasks/{taskId}/score/{direction}
-func ListTaskScoreUp[R any](ctx context.Context, c *Client, taskID uuid.UUID, direction string, params ListTaskScoreUpParams) (*R, error) {
+// Score a task
+// You can define a custom result to unmarshal the response into.
+//
+//	GET /tasks/{taskId}/score/{direction}
+func ScoreTask[R any](ctx context.Context, c *Client, taskID uuid.UUID, direction string, params ScoreTaskParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", direction)
 	req := (&http.Request{
 		Header: http.Header{

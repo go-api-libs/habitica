@@ -36,8 +36,8 @@ type GetTaskByIDParams struct {
 	XAPIUser uuid.UUID
 }
 
-// ListTaskScoreUpParams holds the query parameters for ListTaskScoreUp.
-type ListTaskScoreUpParams struct {
+// ScoreTaskParams holds the query parameters for ScoreTask.
+type ScoreTaskParams struct {
 	XAPIUser uuid.UUID
 }
 

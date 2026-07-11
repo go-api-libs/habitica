@@ -101,7 +101,8 @@
         }
       ],
       "get": {
-        "operationId": "ListTaskScoreUp",
+        "summary": "Score a task",
+        "operationId": "ScoreTask",
         "responses": {
           "200": {
             "$ref": "#/components/responses/ListTaskScoreUpOkResponse"

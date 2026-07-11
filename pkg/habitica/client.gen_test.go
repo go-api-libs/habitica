@@ -321,7 +321,7 @@ func TestClient_Error(t *testing.T) {
 		})
 	})
 
-	t.Run("ListTaskScoreUp", func(t *testing.T) {
+	t.Run("ScoreTask", func(t *testing.T) {
 		t.Setenv("HABITICA_API_KEY", "00000000-0000-0000-0000-000000000000")
 
 		t.Run("transport error", func(t *testing.T) {
@@ -332,7 +332,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTaskScoreUp(t.Context(), uuid.Nil, "", ListTaskScoreUpParams{}); err == nil {
+			if _, err := c.ScoreTask(t.Context(), uuid.Nil, "", ScoreTaskParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, io.EOF) {
 				t.Fatalf("want: %v, got: %v", io.EOF, err)
@@ -352,7 +352,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTaskScoreUp(t.Context(), uuid.Nil, "", ListTaskScoreUpParams{}); err == nil {
+			if _, err := c.ScoreTask(t.Context(), uuid.Nil, "", ScoreTaskParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if apiErr, ok := errors.AsType[*api.Error](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -380,7 +380,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTaskScoreUp(t.Context(), uuid.Nil, "", ListTaskScoreUpParams{}); err == nil {
+			if _, err := c.ScoreTask(t.Context(), uuid.Nil, "", ScoreTaskParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, api.ErrUnknownContentType) {
 				t.Fatalf("want: %v, got: %v", api.ErrUnknownContentType, err)
@@ -405,7 +405,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTaskScoreUp(t.Context(), uuid.Nil, "", ListTaskScoreUpParams{}); err == nil {
+			if _, err := c.ScoreTask(t.Context(), uuid.Nil, "", ScoreTaskParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -498,9 +498,9 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("GetUser: %v", err)
 	}
 
-	if _, err := c.ListTaskScoreUp(ctx, uuid.MustParse("2b774d70-ec8b-41c1-8967-eb6b13d962ba"), "up", ListTaskScoreUpParams{
+	if _, err := c.ScoreTask(ctx, uuid.MustParse("2b774d70-ec8b-41c1-8967-eb6b13d962ba"), "up", ScoreTaskParams{
 		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
 	}); err != nil {
-		t.Fatalf("ListTaskScoreUp: %v", err)
+		t.Fatalf("ScoreTask: %v", err)
 	}
 }
