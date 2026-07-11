@@ -85,7 +85,7 @@
     "/tasks/{taskId}/score/up": {
       "parameters": [
         {
-          "$ref": "#/components/parameters/taskId2"
+          "$ref": "#/components/parameters/taskId"
         },
         {
           "$ref": "#/components/parameters/X-Api-Key"
@@ -5470,15 +5470,8 @@
         "description": "The task _id or alias",
         "required": true,
         "schema": {
-          "type": "string"
-        }
-      },
-      "taskId2": {
-        "name": "taskId",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
+          "type": "string",
+          "format": "uuid"
         }
       },
       "type": {

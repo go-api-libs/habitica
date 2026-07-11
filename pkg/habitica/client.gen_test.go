@@ -238,7 +238,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.GetTaskByID(t.Context(), "", GetTaskByIDParams{}); err == nil {
+			if _, err := c.GetTaskByID(t.Context(), uuid.Nil, GetTaskByIDParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, io.EOF) {
 				t.Fatalf("want: %v, got: %v", io.EOF, err)
@@ -258,7 +258,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.GetTaskByID(t.Context(), "", GetTaskByIDParams{}); err == nil {
+			if _, err := c.GetTaskByID(t.Context(), uuid.Nil, GetTaskByIDParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if apiErr, ok := errors.AsType[*api.Error](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -286,7 +286,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.GetTaskByID(t.Context(), "", GetTaskByIDParams{}); err == nil {
+			if _, err := c.GetTaskByID(t.Context(), uuid.Nil, GetTaskByIDParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, api.ErrUnknownContentType) {
 				t.Fatalf("want: %v, got: %v", api.ErrUnknownContentType, err)
@@ -311,7 +311,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.GetTaskByID(t.Context(), "", GetTaskByIDParams{}); err == nil {
+			if _, err := c.GetTaskByID(t.Context(), uuid.Nil, GetTaskByIDParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -332,7 +332,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTaskScoreUp(t.Context(), "", ListTaskScoreUpParams{}); err == nil {
+			if _, err := c.ListTaskScoreUp(t.Context(), uuid.Nil, ListTaskScoreUpParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, io.EOF) {
 				t.Fatalf("want: %v, got: %v", io.EOF, err)
@@ -352,7 +352,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTaskScoreUp(t.Context(), "", ListTaskScoreUpParams{}); err == nil {
+			if _, err := c.ListTaskScoreUp(t.Context(), uuid.Nil, ListTaskScoreUpParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if apiErr, ok := errors.AsType[*api.Error](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -380,7 +380,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTaskScoreUp(t.Context(), "", ListTaskScoreUpParams{}); err == nil {
+			if _, err := c.ListTaskScoreUp(t.Context(), uuid.Nil, ListTaskScoreUpParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if !errors.Is(err, api.ErrUnknownContentType) {
 				t.Fatalf("want: %v, got: %v", api.ErrUnknownContentType, err)
@@ -405,7 +405,7 @@ func TestClient_Error(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if _, err := c.ListTaskScoreUp(t.Context(), "", ListTaskScoreUpParams{}); err == nil {
+			if _, err := c.ListTaskScoreUp(t.Context(), uuid.Nil, ListTaskScoreUpParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
 				t.Fatalf("got: %T, want: *api.Error", err)
@@ -486,7 +486,7 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("ListTasks: %v", err)
 	}
 
-	if _, err := c.GetTaskByID(ctx, "2b774d70-ec8b-41c1-8967-eb6b13d962ba", GetTaskByIDParams{
+	if _, err := c.GetTaskByID(ctx, uuid.MustParse("2b774d70-ec8b-41c1-8967-eb6b13d962ba"), GetTaskByIDParams{
 		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
 	}); err != nil {
 		t.Fatalf("GetTaskByID: %v", err)
@@ -498,9 +498,9 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("GetUser: %v", err)
 	}
 
-	if _, err := c.GetTaskByID(ctx, "2b774d70-ec8b-41c1-8967-eb6b13d962ba/score/up", GetTaskByIDParams{
+	if _, err := c.ListTaskScoreUp(ctx, uuid.MustParse("2b774d70-ec8b-41c1-8967-eb6b13d962ba"), ListTaskScoreUpParams{
 		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
 	}); err != nil {
-		t.Fatalf("GetTaskByID: %v", err)
+		t.Fatalf("ListTaskScoreUp: %v", err)
 	}
 }

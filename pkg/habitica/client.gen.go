@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/go-api-libs/api"
+	"github.com/google/uuid"
 )
 
 const defaultUserAgent = "Habitica API Library (github.com/go-api-libs/habitica)"
@@ -205,7 +206,7 @@ func ListTasks[R any](ctx context.Context, c *Client, params ListTasksParams) (*
 // Get a task
 //
 //	GET /tasks/{taskId}
-func (c *Client) GetTaskByID(ctx context.Context, taskID string, params GetTaskByIDParams) (*TaskResponse, error) {
+func (c *Client) GetTaskByID(ctx context.Context, taskID uuid.UUID, params GetTaskByIDParams) (*TaskResponse, error) {
 	return GetTaskByID[TaskResponse](ctx, c, taskID, params)
 }
 
@@ -213,8 +214,8 @@ func (c *Client) GetTaskByID(ctx context.Context, taskID string, params GetTaskB
 // You can define a custom result to unmarshal the response into.
 //
 //	GET /tasks/{taskId}
-func GetTaskByID[R any](ctx context.Context, c *Client, taskID string, params GetTaskByIDParams) (*R, error) {
-	u := c.baseURL.JoinPath("tasks", taskID)
+func GetTaskByID[R any](ctx context.Context, c *Client, taskID uuid.UUID, params GetTaskByIDParams) (*R, error) {
+	u := c.baseURL.JoinPath("tasks", taskID.String())
 	req := (&http.Request{
 		Header: http.Header{
 			"X-Api-Key":  []string{c.apiKey},
@@ -256,13 +257,13 @@ func GetTaskByID[R any](ctx context.Context, c *Client, taskID string, params Ge
 }
 
 // GET /tasks/{taskId}/score/up
-func (c *Client) ListTaskScoreUp(ctx context.Context, taskID string, params ListTaskScoreUpParams) (*ListTaskScoreUpOkJSONResponse, error) {
+func (c *Client) ListTaskScoreUp(ctx context.Context, taskID uuid.UUID, params ListTaskScoreUpParams) (*ListTaskScoreUpOkJSONResponse, error) {
 	return ListTaskScoreUp[ListTaskScoreUpOkJSONResponse](ctx, c, taskID, params)
 }
 
 // GET /tasks/{taskId}/score/up
-func ListTaskScoreUp[R any](ctx context.Context, c *Client, taskID string, params ListTaskScoreUpParams) (*R, error) {
-	u := c.baseURL.JoinPath("tasks", taskID, "score", "up")
+func ListTaskScoreUp[R any](ctx context.Context, c *Client, taskID uuid.UUID, params ListTaskScoreUpParams) (*R, error) {
+	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", "up")
 	req := (&http.Request{
 		Header: http.Header{
 			"X-Api-Key":  []string{c.apiKey},
