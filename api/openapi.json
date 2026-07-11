@@ -105,7 +105,7 @@
         "operationId": "ScoreTask",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/ListTaskScoreUpOkResponse"
+            "$ref": "#/components/responses/ScoreTask"
           }
         }
       }
@@ -5397,7 +5397,7 @@
       }
     },
     "responses": {
-      "ListTaskScoreUpOkResponse": {
+      "ScoreTask": {
         "description": "OK",
         "content": {
           "application/json": {
