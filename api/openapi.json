@@ -450,6 +450,63 @@
           "updated"
         ]
       },
+      "Buffs": {
+        "type": "object",
+        "properties": {
+          "str": {
+            "type": "integer",
+            "example": 10
+          },
+          "int": {
+            "type": "integer",
+            "example": 10
+          },
+          "per": {
+            "type": "integer",
+            "example": 10
+          },
+          "con": {
+            "type": "integer",
+            "example": 10
+          },
+          "stealth": {
+            "type": "integer",
+            "example": 0
+          },
+          "streaks": {
+            "type": "boolean",
+            "example": false
+          },
+          "snowball": {
+            "type": "boolean",
+            "example": false
+          },
+          "spookySparkles": {
+            "type": "boolean",
+            "example": false
+          },
+          "shinySeed": {
+            "type": "boolean",
+            "example": false
+          },
+          "seafoam": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "str",
+          "int",
+          "per",
+          "con",
+          "stealth",
+          "streaks",
+          "snowball",
+          "spookySparkles",
+          "shinySeed",
+          "seafoam"
+        ]
+      },
       "Challenge": {
         "type": "object",
         "properties": {
@@ -573,63 +630,6 @@
           "messages",
           "blocks",
           "newMessages"
-        ]
-      },
-      "ListTaskScoreUpDataBuffs": {
-        "type": "object",
-        "properties": {
-          "str": {
-            "type": "integer",
-            "example": 10
-          },
-          "int": {
-            "type": "integer",
-            "example": 10
-          },
-          "per": {
-            "type": "integer",
-            "example": 10
-          },
-          "con": {
-            "type": "integer",
-            "example": 10
-          },
-          "stealth": {
-            "type": "integer",
-            "example": 0
-          },
-          "streaks": {
-            "type": "boolean",
-            "example": false
-          },
-          "snowball": {
-            "type": "boolean",
-            "example": false
-          },
-          "spookySparkles": {
-            "type": "boolean",
-            "example": false
-          },
-          "shinySeed": {
-            "type": "boolean",
-            "example": false
-          },
-          "seafoam": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "str",
-          "int",
-          "per",
-          "con",
-          "stealth",
-          "streaks",
-          "snowball",
-          "spookySparkles",
-          "shinySeed",
-          "seafoam"
         ]
       },
       "ListUserDataHistoryExp": {
@@ -1033,7 +1033,7 @@
             "example": 8
           },
           "buffs": {
-            "$ref": "#/components/schemas/ListTaskScoreUpDataBuffs"
+            "$ref": "#/components/schemas/Buffs"
           },
           "training": {
             "$ref": "#/components/schemas/Training"
@@ -1281,7 +1281,7 @@
             "example": 8
           },
           "buffs": {
-            "$ref": "#/components/schemas/ListTaskScoreUpDataBuffs"
+            "$ref": "#/components/schemas/Buffs"
           },
           "training": {
             "$ref": "#/components/schemas/Training"
