@@ -189,32 +189,6 @@ type ListTaskScoreUpDataTmpQuest struct {
 	Collection    int     `json:"collection,omitzero"`
 }
 
-// ListTaskScoreUpOkJSONResponse defines a model
-type ListTaskScoreUpOkJSONResponse struct {
-	Success       bool                              `json:"success,omitzero"`
-	Data          ListTaskScoreUpOkJSONResponseData `json:"data"`
-	Notifications []struct{}                        `json:"notifications,omitempty"`
-}
-
-// ListTaskScoreUpOkJSONResponseData defines a model
-type ListTaskScoreUpOkJSONResponseData struct {
-	Delta         float64                  `json:"delta"`
-	UnderscoreTmp ListTaskScoreUpDataTmp   `json:"_tmp"`
-	Hp            int                      `json:"hp,omitzero"`
-	Mp            float64                  `json:"mp"`
-	Exp           float64                  `json:"exp"`
-	Gp            float64                  `json:"gp"`
-	Lvl           int                      `json:"lvl,omitzero"`
-	Class         string                   `json:"class,omitzero"`
-	Points        int                      `json:"points,omitzero"`
-	Str           int                      `json:"str,omitzero"`
-	Con           int                      `json:"con,omitzero"`
-	Int           int                      `json:"int,omitzero"`
-	Per           int                      `json:"per,omitzero"`
-	Buffs         ListTaskScoreUpDataBuffs `json:"buffs"`
-	Training      Training                 `json:"training"`
-}
-
 // ListUserDataHistoryExp defines a model
 type ListUserDataHistoryExp []ListUserDataHistoryExpItem
 
@@ -297,6 +271,32 @@ type RepeatWeekly struct {
 	F  bool `json:"f,omitzero"`
 	S  bool `json:"s,omitzero"`
 	Su bool `json:"su,omitzero"`
+}
+
+// ScoreTaskResponse defines a model
+type ScoreTaskResponse struct {
+	Success       bool                  `json:"success,omitzero"`
+	Data          ScoreTaskResponseData `json:"data"`
+	Notifications []struct{}            `json:"notifications,omitempty"`
+}
+
+// ScoreTaskResponseData defines a model
+type ScoreTaskResponseData struct {
+	Delta         float64                  `json:"delta"`
+	UnderscoreTmp ListTaskScoreUpDataTmp   `json:"_tmp"`
+	Hp            int                      `json:"hp,omitzero"`
+	Mp            float64                  `json:"mp"`
+	Exp           float64                  `json:"exp"`
+	Gp            float64                  `json:"gp"`
+	Lvl           int                      `json:"lvl,omitzero"`
+	Class         string                   `json:"class,omitzero"`
+	Points        int                      `json:"points,omitzero"`
+	Str           int                      `json:"str,omitzero"`
+	Con           int                      `json:"con,omitzero"`
+	Int           int                      `json:"int,omitzero"`
+	Per           int                      `json:"per,omitzero"`
+	Buffs         ListTaskScoreUpDataBuffs `json:"buffs"`
+	Training      Training                 `json:"training"`
 }
 
 // Task defines a model

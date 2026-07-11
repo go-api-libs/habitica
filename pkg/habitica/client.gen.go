@@ -259,8 +259,8 @@ func GetTaskByID[R any](ctx context.Context, c *Client, taskID uuid.UUID, params
 // Score a task
 //
 //	GET /tasks/{taskId}/score/{direction}
-func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction string, params ScoreTaskParams) (*ListTaskScoreUpOkJSONResponse, error) {
-	return ScoreTask[ListTaskScoreUpOkJSONResponse](ctx, c, taskID, direction, params)
+func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction string, params ScoreTaskParams) (*ScoreTaskResponse, error) {
+	return ScoreTask[ScoreTaskResponse](ctx, c, taskID, direction, params)
 }
 
 // Score a task
