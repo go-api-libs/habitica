@@ -28,56 +28,73 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 			relPath = "/" + relPath
 		}
 
-		var matched bool
-		for i := range doc.Operations {
-			op := &doc.Operations[i]
-			if op.Method != ia.Request.Method {
-				continue
-			}
-
-			pathVals, ok := matchPathTemplate(op.PathTemplate, relPath)
-			if !ok {
-				continue
-			}
-
-			call := ir.InteractionCall{Op: op}
-
-			for _, pp := range op.PathParams {
-				call.PathArgs = append(call.PathArgs, goLiteralForType(pp.Type, pathVals[pp.JSONName]))
-			}
-
-			q := u.Query()
-			for _, qp := range op.QueryParams {
-				val := q.Get(qp.JSONName)
-				if val != "" {
-					call.QueryArgs = append(call.QueryArgs, ir.InteractionParam{
-						FieldName: qp.FieldName,
-						Literal:   goLiteralForType(qp.Type, val),
-					})
-				}
-			}
-
-			for _, hp := range op.HeaderParams {
-				val := ia.Request.Headers.Get(hp.JSONName)
-				if val != "" {
-					call.HeaderArgs = append(call.HeaderArgs, ir.InteractionParam{
-						FieldName: hp.FieldName,
-						Literal:   goLiteralForType(hp.Type, val),
-					})
-				}
-			}
-
-			doc.InteractionCalls = append(doc.InteractionCalls, call)
-			matched = true
-			break
-		}
-
-		if !matched {
+		op, pathVals := pickOperation(doc.Operations, ia.Request.Method, relPath)
+		if op == nil {
 			return fmt.Errorf("interaction %s %s: no matching operation found", ia.Request.Method, ia.Request.URL)
 		}
+
+		call := ir.InteractionCall{Op: op}
+
+		for _, pp := range op.PathParams {
+			call.PathArgs = append(call.PathArgs, goLiteralForType(pp.Type, pathVals[pp.JSONName]))
+		}
+
+		q := u.Query()
+		for _, qp := range op.QueryParams {
+			val := q.Get(qp.JSONName)
+			if val != "" {
+				call.QueryArgs = append(call.QueryArgs, ir.InteractionParam{
+					FieldName: qp.FieldName,
+					Literal:   goLiteralForType(qp.Type, val),
+				})
+			}
+		}
+
+		for _, hp := range op.HeaderParams {
+			val := ia.Request.Headers.Get(hp.JSONName)
+			if val != "" {
+				call.HeaderArgs = append(call.HeaderArgs, ir.InteractionParam{
+					FieldName: hp.FieldName,
+					Literal:   goLiteralForType(hp.Type, val),
+				})
+			}
+		}
+
+		doc.InteractionCalls = append(doc.InteractionCalls, call)
 	}
 
 	return nil
+}
+
+// pickOperation returns the operation whose method and path template match the
+// URL, preferring an exact segment-count match over a trailing-wildcard match
+// so that e.g. /tasks/{taskId}/score/up wins over /tasks/{taskId} for a URL
+// like /tasks/abc/score/up.
+func pickOperation(ops []ir.Operation, method, relPath string) (*ir.Operation, map[string]string) {
+	var wildcardOp *ir.Operation
+	var wildcardVals map[string]string
+	for i := range ops {
+		op := &ops[i]
+		if op.Method != method {
+			continue
+		}
+
+		vals, ok, exact := matchPathTemplate(op.PathTemplate, relPath)
+		if !ok {
+			continue
+		}
+
+		if exact {
+			return op, vals
+		}
+
+		if wildcardOp == nil {
+			wildcardOp = op
+			wildcardVals = vals
+		}
+	}
+
+	return wildcardOp, wildcardVals
 }
 
 // matchPathTemplate matches a URL path against an operation path template,
@@ -85,16 +102,18 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 // Template segments may be full-segment ({name}) or mid-segment (CIK{name}.json).
 // A trailing pure {param} segment acts as a wildcard that consumes all remaining
 // path segments joined by "/", enabling multi-segment captures like {path} in
-// /package/{path} matching /package/github.com/user/repo.
-func matchPathTemplate(template, path string) (map[string]string, bool) {
+// /package/{path} matching /package/github.com/user/repo. The third return
+// value reports whether the match was segment-for-segment exact; callers should
+// prefer an exact match over a wildcard one.
+func matchPathTemplate(template, path string) (params map[string]string, matched, exact bool) {
 	tParts := strings.Split(template, "/")
 	pParts := strings.Split(path, "/")
 
 	if len(tParts) > len(pParts) {
-		return nil, false
+		return nil, false, false
 	}
 
-	params := make(map[string]string)
+	params = make(map[string]string)
 	for i, tp := range tParts {
 		// Last template segment that is a pure {param} and there are extra path
 		// segments: consume all remaining segments as one slash-joined value.
@@ -104,15 +123,16 @@ func matchPathTemplate(template, path string) (map[string]string, bool) {
 			strings.Count(tp, "{") == 1 &&
 			len(pParts) > i+1 {
 			params[tp[1:len(tp)-1]] = strings.Join(pParts[i:], "/")
-			return params, true
+			return params, true, false
 		}
 
 		if !extractSegmentParam(tp, pParts[i], params) {
-			return nil, false
+			return nil, false, false
 		}
 	}
 
-	return params, len(tParts) == len(pParts)
+	sameLen := len(tParts) == len(pParts)
+	return params, sameLen, sameLen
 }
 
 // extractSegmentParam matches one template segment against one path segment,
