@@ -82,10 +82,13 @@
         }
       }
     },
-    "/tasks/{taskId}/score/up": {
+    "/tasks/{taskId}/score/{direction}": {
       "parameters": [
         {
           "$ref": "#/components/parameters/taskId"
+        },
+        {
+          "$ref": "#/components/parameters/direction"
         },
         {
           "$ref": "#/components/parameters/X-Api-Key"
@@ -5464,10 +5467,23 @@
           "example": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
         }
       },
+      "direction": {
+        "name": "direction",
+        "in": "path",
+        "description": "The direction for scoring the task",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "up",
+            "down"
+          ]
+        }
+      },
       "taskId": {
         "name": "taskId",
         "in": "path",
-        "description": "The task _id or alias",
+        "description": "The task id or alias",
         "required": true,
         "schema": {
           "type": "string",

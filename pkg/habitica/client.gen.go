@@ -256,14 +256,14 @@ func GetTaskByID[R any](ctx context.Context, c *Client, taskID uuid.UUID, params
 	}
 }
 
-// GET /tasks/{taskId}/score/up
-func (c *Client) ListTaskScoreUp(ctx context.Context, taskID uuid.UUID, params ListTaskScoreUpParams) (*ListTaskScoreUpOkJSONResponse, error) {
-	return ListTaskScoreUp[ListTaskScoreUpOkJSONResponse](ctx, c, taskID, params)
+// GET /tasks/{taskId}/score/{direction}
+func (c *Client) ListTaskScoreUp(ctx context.Context, taskID uuid.UUID, direction string, params ListTaskScoreUpParams) (*ListTaskScoreUpOkJSONResponse, error) {
+	return ListTaskScoreUp[ListTaskScoreUpOkJSONResponse](ctx, c, taskID, direction, params)
 }
 
-// GET /tasks/{taskId}/score/up
-func ListTaskScoreUp[R any](ctx context.Context, c *Client, taskID uuid.UUID, params ListTaskScoreUpParams) (*R, error) {
-	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", "up")
+// GET /tasks/{taskId}/score/{direction}
+func ListTaskScoreUp[R any](ctx context.Context, c *Client, taskID uuid.UUID, direction string, params ListTaskScoreUpParams) (*R, error) {
+	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", direction)
 	req := (&http.Request{
 		Header: http.Header{
 			"X-Api-Key":  []string{c.apiKey},
