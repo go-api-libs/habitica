@@ -161,6 +161,13 @@ type Drop struct {
 	Dialog  string `json:"dialog,omitzero"`
 }
 
+// Error defines a model
+type Error struct {
+	Success bool   `json:"success,omitzero"`
+	Error   string `json:"error,omitzero"`
+	Message string `json:"message,omitzero"`
+}
+
 // Group defines a model
 type Group struct {
 	Approval         Approval   `json:"approval"`

@@ -106,6 +106,9 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/ScoreTask"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -574,6 +577,28 @@
           "key",
           "type",
           "dialog"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "string",
+            "example": "Error"
+          },
+          "message": {
+            "type": "string",
+            "example": "Not found."
+          }
+        },
+        "required": [
+          "success",
+          "error",
+          "message"
         ]
       },
       "Group": {
@@ -5397,6 +5422,16 @@
       }
     },
     "responses": {
+      "Error": {
+        "description": "An error returned by the server, e.g. Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
       "ScoreTask": {
         "description": "OK",
         "content": {

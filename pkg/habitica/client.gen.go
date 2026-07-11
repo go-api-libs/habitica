@@ -8,6 +8,7 @@ import (
 	"context"
 	"encoding/json/v2"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -304,6 +305,9 @@ func ScoreTask[R any](ctx context.Context, c *Client, taskID uuid.UUID, directio
 		default:
 			return nil, api.NewErrUnknownContentType(rsp)
 		}
+	case http.StatusNotFound:
+		// An error returned by the server, e.g. Not Found
+		return nil, fmt.Errorf("ScoreTask: status %s", rsp.Status)
 	default:
 		return nil, api.NewErrUnknownStatusCode(rsp)
 	}

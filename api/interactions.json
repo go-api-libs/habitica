@@ -1819,5 +1819,27 @@
 				"notifications": []
 			}
 		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "https://habitica.com/api/v3/tasks/4f2d942d-67e8-4cc0-ac08-61962296660b/score/up",
+			"header": {
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 404,
+			"header": {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			"body": {
+				"success": false,
+				"error": "NotFound",
+				"message": "Not found."
+			}
+		}
 	}
 ]
