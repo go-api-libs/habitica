@@ -482,6 +482,43 @@
           }
         ]
       },
+      "Drop": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string",
+            "example": "Zombie"
+          },
+          "canDrop": {
+            "type": "boolean",
+            "example": true
+          },
+          "value": {
+            "type": "integer",
+            "example": 1
+          },
+          "key": {
+            "type": "string",
+            "example": "RottenMeat"
+          },
+          "type": {
+            "type": "string",
+            "example": "Food"
+          },
+          "dialog": {
+            "type": "string",
+            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
+          }
+        },
+        "required": [
+          "target",
+          "canDrop",
+          "value",
+          "key",
+          "type",
+          "dialog"
+        ]
+      },
       "Group": {
         "type": "object",
         "properties": {
@@ -825,6 +862,24 @@
         "items": {
           "$ref": "#/components/schemas/PushDevice"
         }
+      },
+      "Quest": {
+        "type": "object",
+        "properties": {
+          "progressDelta": {
+            "type": "number",
+            "format": "double",
+            "example": 1.2362778290756147
+          },
+          "collection": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "progressDelta",
+          "collection"
+        ]
       },
       "Reminder": {
         "type": "object",
@@ -1411,70 +1466,15 @@
         "type": "object",
         "properties": {
           "quest": {
-            "$ref": "#/components/schemas/TmpQuest"
+            "$ref": "#/components/schemas/Quest"
           },
           "drop": {
-            "$ref": "#/components/schemas/TmpDrop"
+            "$ref": "#/components/schemas/Drop"
           }
         },
         "required": [
           "quest",
           "drop"
-        ]
-      },
-      "TmpDrop": {
-        "type": "object",
-        "properties": {
-          "target": {
-            "type": "string",
-            "example": "Zombie"
-          },
-          "canDrop": {
-            "type": "boolean",
-            "example": true
-          },
-          "value": {
-            "type": "integer",
-            "example": 1
-          },
-          "key": {
-            "type": "string",
-            "example": "RottenMeat"
-          },
-          "type": {
-            "type": "string",
-            "example": "Food"
-          },
-          "dialog": {
-            "type": "string",
-            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
-          }
-        },
-        "required": [
-          "target",
-          "canDrop",
-          "value",
-          "key",
-          "type",
-          "dialog"
-        ]
-      },
-      "TmpQuest": {
-        "type": "object",
-        "properties": {
-          "progressDelta": {
-            "type": "number",
-            "format": "double",
-            "example": 1.2362778290756147
-          },
-          "collection": {
-            "type": "integer",
-            "example": 1
-          }
-        },
-        "required": [
-          "progressDelta",
-          "collection"
         ]
       },
       "Training": {

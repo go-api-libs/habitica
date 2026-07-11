@@ -137,6 +137,16 @@ type Challenge struct {
 	ID     uuid.UUID `json:"id,omitzero"`
 }
 
+// Drop defines a model
+type Drop struct {
+	Target  string `json:"target,omitzero"`
+	CanDrop bool   `json:"canDrop,omitzero"`
+	Value   int    `json:"value,omitzero"`
+	Key     string `json:"key,omitzero"`
+	Type    string `json:"type,omitzero"`
+	Dialog  string `json:"dialog,omitzero"`
+}
+
 // Group defines a model
 type Group struct {
 	Approval         Approval   `json:"approval"`
@@ -229,6 +239,12 @@ type PushDevice struct {
 
 // PushDevices defines a model
 type PushDevices []PushDevice
+
+// Quest defines a model
+type Quest struct {
+	ProgressDelta float64 `json:"progressDelta"`
+	Collection    int     `json:"collection,omitzero"`
+}
 
 // Reminder defines a model
 type Reminder struct {
@@ -374,24 +390,8 @@ type TasksResponse struct {
 
 // Tmp defines a model
 type Tmp struct {
-	Quest TmpQuest `json:"quest"`
-	Drop  TmpDrop  `json:"drop"`
-}
-
-// TmpDrop defines a model
-type TmpDrop struct {
-	Target  string `json:"target,omitzero"`
-	CanDrop bool   `json:"canDrop,omitzero"`
-	Value   int    `json:"value,omitzero"`
-	Key     string `json:"key,omitzero"`
-	Type    string `json:"type,omitzero"`
-	Dialog  string `json:"dialog,omitzero"`
-}
-
-// TmpQuest defines a model
-type TmpQuest struct {
-	ProgressDelta float64 `json:"progressDelta"`
-	Collection    int     `json:"collection,omitzero"`
+	Quest Quest `json:"quest"`
+	Drop  Drop  `json:"drop"`
 }
 
 // Training defines a model
