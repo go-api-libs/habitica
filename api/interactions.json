@@ -1755,7 +1755,7 @@
 	},
 	{
 		"request": {
-			"method": "GET",
+			"method": "POST",
 			"url": "https://habitica.com/api/v3/tasks/2b774d70-ec8b-41c1-8967-eb6b13d962ba/score/up",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
@@ -1822,7 +1822,7 @@
 	},
 	{
 		"request": {
-			"method": "GET",
+			"method": "POST",
 			"url": "https://habitica.com/api/v3/tasks/4f2d942d-67e8-4cc0-ac08-61962296660b/score/up",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",

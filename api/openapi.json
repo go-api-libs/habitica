@@ -100,7 +100,7 @@
           "$ref": "#/components/parameters/X-Client"
         }
       ],
-      "get": {
+      "post": {
         "summary": "Score a task",
         "operationId": "ScoreTask",
         "responses": {

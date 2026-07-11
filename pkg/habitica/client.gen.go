@@ -259,7 +259,7 @@ func GetTaskByID[R any](ctx context.Context, c *Client, taskID uuid.UUID, params
 
 // Score a task
 //
-//	GET /tasks/{taskId}/score/{direction}
+//	POST /tasks/{taskId}/score/{direction}
 func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction string, params ScoreTaskParams) (*ScoreTaskResponse, error) {
 	return ScoreTask[ScoreTaskResponse](ctx, c, taskID, direction, params)
 }
@@ -267,7 +267,7 @@ func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction stri
 // Score a task
 // You can define a custom result to unmarshal the response into.
 //
-//	GET /tasks/{taskId}/score/{direction}
+//	POST /tasks/{taskId}/score/{direction}
 func ScoreTask[R any](ctx context.Context, c *Client, taskID uuid.UUID, direction string, params ScoreTaskParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", direction)
 	req := (&http.Request{
@@ -278,7 +278,7 @@ func ScoreTask[R any](ctx context.Context, c *Client, taskID uuid.UUID, directio
 			"User-Agent": []string{c.userAgent},
 		},
 		Host:       u.Host,
-		Method:     http.MethodGet,
+		Method:     http.MethodPost,
 		Proto:      "HTTP/1.1",
 		ProtoMajor: 1,
 		ProtoMinor: 1,
