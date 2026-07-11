@@ -189,14 +189,6 @@ type ListTaskScoreUpDataTmpQuest struct {
 	Collection    int     `json:"collection,omitzero"`
 }
 
-// ListTaskScoreUpDataTraining defines a model
-type ListTaskScoreUpDataTraining struct {
-	Int int `json:"int,omitzero"`
-	Per int `json:"per,omitzero"`
-	Str int `json:"str,omitzero"`
-	Con int `json:"con,omitzero"`
-}
-
 // ListTaskScoreUpOkJSONResponse defines a model
 type ListTaskScoreUpOkJSONResponse struct {
 	Success       bool                              `json:"success,omitzero"`
@@ -206,21 +198,21 @@ type ListTaskScoreUpOkJSONResponse struct {
 
 // ListTaskScoreUpOkJSONResponseData defines a model
 type ListTaskScoreUpOkJSONResponseData struct {
-	Delta         float64                     `json:"delta"`
-	UnderscoreTmp ListTaskScoreUpDataTmp      `json:"_tmp"`
-	Hp            int                         `json:"hp,omitzero"`
-	Mp            float64                     `json:"mp"`
-	Exp           float64                     `json:"exp"`
-	Gp            float64                     `json:"gp"`
-	Lvl           int                         `json:"lvl,omitzero"`
-	Class         string                      `json:"class,omitzero"`
-	Points        int                         `json:"points,omitzero"`
-	Str           int                         `json:"str,omitzero"`
-	Con           int                         `json:"con,omitzero"`
-	Int           int                         `json:"int,omitzero"`
-	Per           int                         `json:"per,omitzero"`
-	Buffs         ListTaskScoreUpDataBuffs    `json:"buffs"`
-	Training      ListTaskScoreUpDataTraining `json:"training"`
+	Delta         float64                  `json:"delta"`
+	UnderscoreTmp ListTaskScoreUpDataTmp   `json:"_tmp"`
+	Hp            int                      `json:"hp,omitzero"`
+	Mp            float64                  `json:"mp"`
+	Exp           float64                  `json:"exp"`
+	Gp            float64                  `json:"gp"`
+	Lvl           int                      `json:"lvl,omitzero"`
+	Class         string                   `json:"class,omitzero"`
+	Points        int                      `json:"points,omitzero"`
+	Str           int                      `json:"str,omitzero"`
+	Con           int                      `json:"con,omitzero"`
+	Int           int                      `json:"int,omitzero"`
+	Per           int                      `json:"per,omitzero"`
+	Buffs         ListTaskScoreUpDataBuffs `json:"buffs"`
+	Training      Training                 `json:"training"`
 }
 
 // ListUserDataHistoryExp defines a model
@@ -309,57 +301,57 @@ type RepeatWeekly struct {
 
 // Task defines a model
 type Task struct {
-	UnderscoreID      uuid.UUID                    `json:"_id,omitzero"`
-	UserID            uuid.UUID                    `json:"userId,omitzero"`
-	Text              string                       `json:"text,omitzero"`
-	Alias             string                       `json:"alias,omitzero"`
-	Type              string                       `json:"type,omitzero"`
-	Notes             string                       `json:"notes,omitzero"`
-	Tags              []uuid.UUID                  `json:"tags,omitempty"`
-	Value             float64                      `json:"value"`
-	Priority          float64                      `json:"priority"`
-	Attribute         string                       `json:"attribute,omitzero"`
-	Challenge         Challenge                    `json:"challenge"`
-	Group             Group                        `json:"group"`
-	Reminders         Reminders                    `json:"reminders,omitempty"`
-	CreatedAt         time.Time                    `json:"createdAt,omitzero"`
-	UpdatedAt         time.Time                    `json:"updatedAt,omitzero"`
-	History           TaskHistory                  `json:"history,omitempty"`
-	Down              bool                         `json:"down,omitzero"`
-	Up                bool                         `json:"up,omitzero"`
-	ID                uuid.UUID                    `json:"id,omitzero"`
-	CounterUp         int                          `json:"counterUp,omitzero"`
-	CounterDown       int                          `json:"counterDown,omitzero"`
-	Frequency         string                       `json:"frequency,omitzero"`
-	ByHabitica        bool                         `json:"byHabitica,omitzero"`
-	Repeat            *RepeatWeekly                `json:"repeat,omitempty"`
-	EveryX            *int                         `json:"everyX,omitempty"`
-	Streak            *int                         `json:"streak,omitempty"`
-	NextDue           []time.Time                  `json:"nextDue,omitempty"`
-	YesterDaily       bool                         `json:"yesterDaily,omitempty"`
-	Completed         bool                         `json:"completed,omitempty"`
-	CollapseChecklist bool                         `json:"collapseChecklist,omitempty"`
-	StartDate         time.Time                    `json:"startDate,omitempty"`
-	DaysOfMonth       []int                        `json:"daysOfMonth,omitempty"`
-	WeeksOfMonth      []struct{}                   `json:"weeksOfMonth,omitempty"`
-	Checklist         []struct{}                   `json:"checklist,omitempty"`
-	IsDue             bool                         `json:"isDue,omitempty"`
-	Date              time.Time                    `json:"date,omitempty"`
-	Delta             *float64                     `json:"delta,omitempty"`
-	UnderscoreTmp     *ListTaskScoreUpDataTmp      `json:"_tmp,omitempty"`
-	Hp                *int                         `json:"hp,omitempty"`
-	Mp                *float64                     `json:"mp,omitempty"`
-	Exp               *float64                     `json:"exp,omitempty"`
-	Gp                *float64                     `json:"gp,omitempty"`
-	Lvl               *int                         `json:"lvl,omitempty"`
-	Class             string                       `json:"class,omitzero"`
-	Points            *int                         `json:"points,omitempty"`
-	Str               *int                         `json:"str,omitempty"`
-	Con               *int                         `json:"con,omitempty"`
-	Int               *int                         `json:"int,omitempty"`
-	Per               *int                         `json:"per,omitempty"`
-	Buffs             *ListTaskScoreUpDataBuffs    `json:"buffs,omitempty"`
-	Training          *ListTaskScoreUpDataTraining `json:"training,omitempty"`
+	UnderscoreID      uuid.UUID                 `json:"_id,omitzero"`
+	UserID            uuid.UUID                 `json:"userId,omitzero"`
+	Text              string                    `json:"text,omitzero"`
+	Alias             string                    `json:"alias,omitzero"`
+	Type              string                    `json:"type,omitzero"`
+	Notes             string                    `json:"notes,omitzero"`
+	Tags              []uuid.UUID               `json:"tags,omitempty"`
+	Value             float64                   `json:"value"`
+	Priority          float64                   `json:"priority"`
+	Attribute         string                    `json:"attribute,omitzero"`
+	Challenge         Challenge                 `json:"challenge"`
+	Group             Group                     `json:"group"`
+	Reminders         Reminders                 `json:"reminders,omitempty"`
+	CreatedAt         time.Time                 `json:"createdAt,omitzero"`
+	UpdatedAt         time.Time                 `json:"updatedAt,omitzero"`
+	History           TaskHistory               `json:"history,omitempty"`
+	Down              bool                      `json:"down,omitzero"`
+	Up                bool                      `json:"up,omitzero"`
+	ID                uuid.UUID                 `json:"id,omitzero"`
+	CounterUp         int                       `json:"counterUp,omitzero"`
+	CounterDown       int                       `json:"counterDown,omitzero"`
+	Frequency         string                    `json:"frequency,omitzero"`
+	ByHabitica        bool                      `json:"byHabitica,omitzero"`
+	Repeat            *RepeatWeekly             `json:"repeat,omitempty"`
+	EveryX            *int                      `json:"everyX,omitempty"`
+	Streak            *int                      `json:"streak,omitempty"`
+	NextDue           []time.Time               `json:"nextDue,omitempty"`
+	YesterDaily       bool                      `json:"yesterDaily,omitempty"`
+	Completed         bool                      `json:"completed,omitempty"`
+	CollapseChecklist bool                      `json:"collapseChecklist,omitempty"`
+	StartDate         time.Time                 `json:"startDate,omitempty"`
+	DaysOfMonth       []int                     `json:"daysOfMonth,omitempty"`
+	WeeksOfMonth      []struct{}                `json:"weeksOfMonth,omitempty"`
+	Checklist         []struct{}                `json:"checklist,omitempty"`
+	IsDue             bool                      `json:"isDue,omitempty"`
+	Date              time.Time                 `json:"date,omitempty"`
+	Delta             *float64                  `json:"delta,omitempty"`
+	UnderscoreTmp     *ListTaskScoreUpDataTmp   `json:"_tmp,omitempty"`
+	Hp                *int                      `json:"hp,omitempty"`
+	Mp                *float64                  `json:"mp,omitempty"`
+	Exp               *float64                  `json:"exp,omitempty"`
+	Gp                *float64                  `json:"gp,omitempty"`
+	Lvl               *int                      `json:"lvl,omitempty"`
+	Class             string                    `json:"class,omitzero"`
+	Points            *int                      `json:"points,omitempty"`
+	Str               *int                      `json:"str,omitempty"`
+	Con               *int                      `json:"con,omitempty"`
+	Int               *int                      `json:"int,omitempty"`
+	Per               *int                      `json:"per,omitempty"`
+	Buffs             *ListTaskScoreUpDataBuffs `json:"buffs,omitempty"`
+	Training          *Training                 `json:"training,omitempty"`
 }
 
 // TaskActivity defines a model
@@ -400,6 +392,14 @@ type TasksResponse struct {
 	Notifications []struct{} `json:"notifications,omitempty"`
 	UserV         int        `json:"userV,omitzero"`
 	AppVersion    string     `json:"appVersion,omitzero"`
+}
+
+// Training defines a model
+type Training struct {
+	Int int `json:"int,omitzero"`
+	Per int `json:"per,omitzero"`
+	Str int `json:"str,omitzero"`
+	Con int `json:"con,omitzero"`
 }
 
 // UltimateGearSets defines a model

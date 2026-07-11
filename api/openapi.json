@@ -665,33 +665,6 @@
           "collection"
         ]
       },
-      "ListTaskScoreUpDataTraining": {
-        "type": "object",
-        "properties": {
-          "int": {
-            "type": "integer",
-            "example": 0
-          },
-          "per": {
-            "type": "integer",
-            "example": 0
-          },
-          "str": {
-            "type": "integer",
-            "example": 0
-          },
-          "con": {
-            "type": "integer",
-            "example": 0
-          }
-        },
-        "required": [
-          "int",
-          "per",
-          "str",
-          "con"
-        ]
-      },
       "ListTaskScoreUpOkJSONResponse": {
         "type": "object",
         "properties": {
@@ -778,7 +751,7 @@
             "$ref": "#/components/schemas/ListTaskScoreUpDataBuffs"
           },
           "training": {
-            "$ref": "#/components/schemas/ListTaskScoreUpDataTraining"
+            "$ref": "#/components/schemas/Training"
           }
         },
         "required": [
@@ -1326,7 +1299,7 @@
             "$ref": "#/components/schemas/ListTaskScoreUpDataBuffs"
           },
           "training": {
-            "$ref": "#/components/schemas/ListTaskScoreUpDataTraining"
+            "$ref": "#/components/schemas/Training"
           }
         },
         "required": [
@@ -1502,6 +1475,33 @@
           "notifications",
           "userV",
           "appVersion"
+        ]
+      },
+      "Training": {
+        "type": "object",
+        "properties": {
+          "int": {
+            "type": "integer",
+            "example": 0
+          },
+          "per": {
+            "type": "integer",
+            "example": 0
+          },
+          "str": {
+            "type": "integer",
+            "example": 0
+          },
+          "con": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "int",
+          "per",
+          "str",
+          "con"
         ]
       },
       "UltimateGearSets": {
