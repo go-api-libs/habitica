@@ -279,13 +279,15 @@ type ScoreTaskResponse struct {
 	Success       bool                  `json:"success,omitzero"`
 	Data          ScoreTaskResponseData `json:"data"`
 	Notifications []struct{}            `json:"notifications,omitempty"`
+	UserV         *int                  `json:"userV,omitempty"`
+	AppVersion    string                `json:"appVersion,omitzero"`
 }
 
 // ScoreTaskResponseData defines a model
 type ScoreTaskResponseData struct {
 	Delta         float64  `json:"delta"`
 	UnderscoreTmp Tmp      `json:"_tmp"`
-	Hp            int      `json:"hp,omitzero"`
+	Hp            float64  `json:"hp"`
 	Mp            float64  `json:"mp"`
 	Exp           float64  `json:"exp"`
 	Gp            float64  `json:"gp"`
@@ -397,16 +399,17 @@ type TasksResponse struct {
 
 // Tmp defines a model
 type Tmp struct {
-	Quest Quest `json:"quest"`
-	Drop  Drop  `json:"drop"`
+	Quest       Quest    `json:"quest"`
+	Drop        Drop     `json:"drop"`
+	StreakBonus *float64 `json:"streakBonus,omitempty"`
 }
 
 // Training defines a model
 type Training struct {
-	Int int `json:"int,omitzero"`
-	Per int `json:"per,omitzero"`
-	Str int `json:"str,omitzero"`
-	Con int `json:"con,omitzero"`
+	Int int     `json:"int,omitzero"`
+	Per int     `json:"per,omitzero"`
+	Str float64 `json:"str"`
+	Con int     `json:"con,omitzero"`
 }
 
 // UltimateGearSets defines a model

@@ -509,4 +509,10 @@ func TestClient_Interactions(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("ScoreTask: %v", err)
 	}
+
+	if _, err := c.ScoreTask(ctx, uuid.MustParse("488a92c0-164c-445a-be31-1bcb1b04ab04"), "up", ScoreTaskParams{
+		XAPIUser: uuid.MustParse("8027d396-e2bb-4389-b002-782025424e75"),
+	}); err != nil {
+		t.Fatalf("ScoreTask: %v", err)
+	}
 }
