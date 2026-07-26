@@ -164,7 +164,7 @@ type Drop struct {
 // Error defines a model
 type Error struct {
 	Success bool   `json:"success,omitzero"`
-	Error   string `json:"error,omitzero"`
+	Err     string `json:"error,omitzero"`
 	Message string `json:"message,omitzero"`
 }
 

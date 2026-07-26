@@ -8,7 +8,6 @@ import (
 	"context"
 	"encoding/json/v2"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -307,7 +306,17 @@ func ScoreTask[R any](ctx context.Context, c *Client, taskID uuid.UUID, directio
 		}
 	case http.StatusNotFound:
 		// An error returned by the server, e.g. Not Found
-		return nil, fmt.Errorf("ScoreTask: status %s", rsp.Status)
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out Error
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				return nil, api.WrapDecodingError(rsp, err)
+			}
+
+			return nil, api.NewErrCustom(rsp, &out)
+		default:
+			return nil, api.NewErrUnknownContentType(rsp)
+		}
 	default:
 		return nil, api.NewErrUnknownStatusCode(rsp)
 	}
