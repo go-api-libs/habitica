@@ -393,7 +393,17 @@ func fieldGoName(jsonName string) string {
 
 	sanitized := r.Replace(jsonName)
 	sanitized = replaceLeadingDigits(sanitized)
-	return strcase.ToGoPascal(sanitized)
+	name := strcase.ToGoPascal(sanitized)
+
+	// "Error" collides with the built-in error interface's Error() string
+	// method (a struct can't have both a field and a method named Error),
+	// so callers can never make the generated type satisfy error. Rename
+	// the field; the json tag still uses the original JSON name.
+	if name == "Error" {
+		return "Err"
+	}
+
+	return name
 }
 
 // enumConstName builds the Go constant name for an enum value, e.g. MyEnum + "foo_bar" → MyEnumFooBar.
