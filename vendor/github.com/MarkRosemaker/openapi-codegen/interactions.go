@@ -3,6 +3,7 @@ package codegen
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/MarkRosemaker/openapi-codegen/ir"
@@ -60,9 +61,33 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 			}
 		}
 
+		if r := findResponse(op, ia.Response.StatusCode); r != nil {
+			call.IsSuccess = r.IsSuccess
+			if !r.IsSuccess && r.GoType != nil {
+				call.ErrorType = r.GoType.String()
+			}
+		} else {
+			// No declared response for this exact status code: fall back to the
+			// HTTP convention so the generated assertion at least checks err==nil
+			// vs err!=nil correctly, without asserting a specific error type.
+			call.IsSuccess = ia.Response.StatusCode >= 200 && ia.Response.StatusCode < 300
+		}
+
 		doc.InteractionCalls = append(doc.InteractionCalls, call)
 	}
 
+	return nil
+}
+
+// findResponse returns the operation's declared response matching statusCode,
+// or nil if the operation has no response entry for that exact numeric code.
+func findResponse(op *ir.Operation, statusCode int) *ir.Response {
+	for i := range op.Responses {
+		r := &op.Responses[i]
+		if n, err := strconv.Atoi(r.StatusCode); err == nil && n == statusCode {
+			return r
+		}
+	}
 	return nil
 }
 

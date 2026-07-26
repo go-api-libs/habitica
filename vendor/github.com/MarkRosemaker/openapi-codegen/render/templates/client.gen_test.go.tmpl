@@ -223,15 +223,31 @@ func TestClient_Interactions(t *testing.T) {
 		{{range .QueryArgs}}{{.FieldName}}: {{.Literal}},
 		{{ end -}}
 		{{range .HeaderArgs}}{{.FieldName}}: {{.Literal}},
-		{{end}}}{{else if .Op.QueryParams}}, nil{{end}}{{if .Op.RequestBody}}, {{if .Op.RequestBody.Required}}{{.Op.RequestBody.TypeName}}{}{{else}}nil{{end}}{{end}}); err != nil {
+		{{end}}}{{else if .Op.QueryParams}}, nil{{end}}{{if .Op.RequestBody}}, {{if .Op.RequestBody.Required}}{{.Op.RequestBody.TypeName}}{}{{else}}nil{{end}}{{end}});
+	{{- if .IsSuccess}} err != nil {
 		t.Fatalf("{{.Op.Name}}: %v", err)
 	}
+	{{- else}} err == nil {
+		t.Fatal("{{.Op.Name}}: expected error")
+	}{{- if .ErrorType}} else if _, ok := errors.AsType[*{{.ErrorType}}](err); !ok {
+		t.Fatalf("{{.Op.Name}}: got: %T, want: *{{.ErrorType}}", err)
+	}
+	{{- end}}
+	{{- end}}
 	{{else}}
 	if err := c.{{.Op.Name}}(ctx{{range .PathArgs}}, {{.}}{{end}}{{if .QueryArgs}}, &{{.Op.ParamStructName}}{
 		{{range .QueryArgs}}{{.FieldName}}: {{.Literal}},
-		{{end}}}{{else if .Op.QueryParams}}, nil{{end}}{{if .Op.RequestBody}}, {{if .Op.RequestBody.Required}}{{.Op.RequestBody.TypeName}}{}{{else}}nil{{end}}{{end}}); err != nil {
+		{{end}}}{{else if .Op.QueryParams}}, nil{{end}}{{if .Op.RequestBody}}, {{if .Op.RequestBody.Required}}{{.Op.RequestBody.TypeName}}{}{{else}}nil{{end}}{{end}});
+	{{- if .IsSuccess}} err != nil {
 		t.Fatalf("{{.Op.Name}}: %v", err)
 	}
+	{{- else}} err == nil {
+		t.Fatal("{{.Op.Name}}: expected error")
+	}{{- if .ErrorType}} else if _, ok := errors.AsType[*{{.ErrorType}}](err); !ok {
+		t.Fatalf("{{.Op.Name}}: got: %T, want: *{{.ErrorType}}", err)
+	}
+	{{- end}}
+	{{- end}}
 	{{end}}
 	{{- end}}
 }

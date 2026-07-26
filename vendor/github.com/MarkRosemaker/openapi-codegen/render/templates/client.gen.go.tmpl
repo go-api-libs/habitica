@@ -252,19 +252,23 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 {{- range .Responses}}
 	case {{.GoConstant}}:
 		{{ with .Description }}{{ toGoComment . }}{{ end }}
-{{- if .IsSuccess}}
+{{- if or .IsSuccess .GoType }}
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "{{ .ContentType }}":
 			{{- if eq .ContentType "application/json" }}
-			var out R
+			var out {{ if .IsSuccess }}R{{ else }}{{ .GoType }}{{ end }}
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				return nil, api.WrapDecodingError(rsp, err)
+				return {{if $op.SuccessReturn}}nil, {{end}}api.WrapDecodingError(rsp, err)
 			}
 
+			{{ if .IsSuccess -}}
 			return &out, nil
-			{{- end }}
+			{{ else -}}
+			return {{if $op.SuccessReturn}}nil, {{end}}api.NewErrCustom(rsp, &out)
+			{{ end -}}
+		{{- end -}}
 		default:
-			return nil, api.NewErrUnknownContentType(rsp)
+			return {{if $op.SuccessReturn}}nil, {{end}}api.NewErrUnknownContentType(rsp)
 		}
 {{- else}}
 		return {{if $op.SuccessReturn}}nil, {{end}}fmt.Errorf("{{$op.Name}}: status %s", rsp.Status)

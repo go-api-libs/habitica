@@ -33,6 +33,12 @@ type InteractionCall struct {
 	PathArgs   []string           // Go literal per path param, same order as Op.PathParams
 	QueryArgs  []InteractionParam // set query params only (omitted = use nil params)
 	HeaderArgs []InteractionParam // set query params only (omitted = use nil params)
+	// IsSuccess is true when StatusCode matches one of Op's declared success responses.
+	IsSuccess bool
+	// ErrorType is the Go type name of the declared error response schema for
+	// StatusCode, empty when the operation has no schema for that status (the
+	// client falls back to a generic status-string error in that case).
+	ErrorType string
 }
 
 // InteractionParam is one query param with its Go literal value.
