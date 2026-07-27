@@ -10,34 +10,34 @@ github.com/MarkRosemaker/json2yaml
 # github.com/MarkRosemaker/jsonutil v0.0.0-20260718153618-78b5039427a4
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/jsonutil
-# github.com/MarkRosemaker/openapi v0.0.0-20260718220251-1bf2cab23c1d
+# github.com/MarkRosemaker/openapi v0.0.0-20260727220235-6e72a7e8a2f4
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi
-# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260727101120-3b15878a9f50
+# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260727221733-554909453082
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/cmd/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/config
 github.com/MarkRosemaker/openapi-codegen/ir
 github.com/MarkRosemaker/openapi-codegen/render
-# github.com/MarkRosemaker/openapi-compress v0.0.0-20260718221534-972a6c005575
+# github.com/MarkRosemaker/openapi-compress v0.0.0-20260727221502-8ea50d563378
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-compress
 github.com/MarkRosemaker/openapi-compress/cmd/openapi-compress
-# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260718220849-60334c972076
+# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260727220835-78ca656d6461
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/cassette
 github.com/MarkRosemaker/openapi-enrich/cmd/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/recorder
-# github.com/MarkRosemaker/openapi-flatten v0.0.0-20260718221215-0f7b06edb27b
+# github.com/MarkRosemaker/openapi-flatten v0.0.0-20260727221142-fbb76c527648
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-flatten
 github.com/MarkRosemaker/openapi-flatten/cmd/openapi-flatten
-# github.com/MarkRosemaker/openapi-merge v0.0.0-20260718220308-ae0544f2c955
+# github.com/MarkRosemaker/openapi-merge v0.0.0-20260727220253-e57399e490db
 ## explicit; go 1.26.3
 github.com/MarkRosemaker/openapi-merge
-# github.com/MarkRosemaker/ordmap v0.0.0-20260718220113-57637f5c3ff8
+# github.com/MarkRosemaker/ordmap v0.0.0-20260727220052-3181ae3b2977
 ## explicit; go 1.25.0
 github.com/MarkRosemaker/ordmap
 # github.com/MarkRosemaker/yaml v0.0.0-20260508005758-fe21a538b084
