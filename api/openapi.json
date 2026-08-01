@@ -140,6 +140,9 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/Cast"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -664,11 +667,11 @@
           },
           "error": {
             "type": "string",
-            "example": "Error"
+            "example": "NotAuthorized"
           },
           "message": {
             "type": "string",
-            "example": "Not found."
+            "example": "Not enough mana."
           }
         },
         "required": [

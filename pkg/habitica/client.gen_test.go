@@ -618,4 +618,13 @@ func TestClient_Interactions(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("Cast: %v", err)
 	}
+
+	if _, err := c.Cast(ctx, "smash", CastParams{
+		TargetID: uuid.MustParse("f7591dce-398a-4e12-ba23-18542f9f0bef"),
+		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+	}); err == nil {
+		t.Fatal("Cast: expected error")
+	} else if _, ok := errors.AsType[*Error](err); !ok {
+		t.Fatalf("Cast: got: %T, want: *Error", err)
+	}
 }
