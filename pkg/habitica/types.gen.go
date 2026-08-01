@@ -236,6 +236,25 @@ type Messages struct {
 	ZeroSixEightFe676885443ffA0cd673d7b766f01        Message  `json:"068fe676-8854-43ff-a0cd-673d7b766f01"`
 }
 
+// Notification defines a model
+type Notification struct {
+	Type string            `json:"type,omitzero"`
+	Data *NotificationData `json:"data,omitempty"`
+	Seen bool              `json:"seen,omitempty"`
+	ID   *uuid.UUID        `json:"id,omitempty"`
+}
+
+// NotificationData defines a model
+type NotificationData struct {
+	Icon        string `json:"icon,omitzero"`
+	Title       string `json:"title,omitzero"`
+	Text        string `json:"text,omitzero"`
+	Destination string `json:"destination,omitzero"`
+}
+
+// Notifications defines a model
+type Notifications []Notification
+
 // PushDevice defines a model
 type PushDevice struct {
 	RegID     string    `json:"regId,omitzero"`
@@ -390,11 +409,11 @@ type TasksOrder struct {
 
 // TasksResponse defines a model
 type TasksResponse struct {
-	Success       bool       `json:"success,omitzero"`
-	Data          Tasks      `json:"data,omitempty"`
-	Notifications []struct{} `json:"notifications,omitempty"`
-	UserV         int        `json:"userV,omitzero"`
-	AppVersion    string     `json:"appVersion,omitzero"`
+	Success       bool          `json:"success,omitzero"`
+	Data          Tasks         `json:"data,omitempty"`
+	Notifications Notifications `json:"notifications,omitempty"`
+	UserV         int           `json:"userV,omitzero"`
+	AppVersion    string        `json:"appVersion,omitzero"`
 }
 
 // Tmp defines a model

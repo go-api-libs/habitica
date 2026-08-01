@@ -53,6 +53,9 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/TasksResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -853,6 +856,61 @@
           "068fe676-8854-43ff-a0cd-673d7b766f01"
         ]
       },
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "ITEM_RECEIVED"
+          },
+          "data": {
+            "$ref": "#/components/schemas/NotificationData"
+          },
+          "seen": {
+            "type": "boolean",
+            "example": false
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "c6333f37-308d-4a56-bf5f-a700ecb268c1"
+          }
+        },
+        "example": null
+      },
+      "NotificationData": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string",
+            "example": "notif_cake_naming_day"
+          },
+          "title": {
+            "type": "string",
+            "example": "Happy Naming Day!"
+          },
+          "text": {
+            "type": "string",
+            "example": "To celebrate the day we became Habitica, we’ve awarded you some cake!"
+          },
+          "destination": {
+            "type": "string",
+            "example": "/inventory/items"
+          }
+        },
+        "required": [
+          "icon",
+          "title",
+          "text",
+          "destination"
+        ]
+      },
+      "Notifications": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Notification"
+        }
+      },
       "PushDevice": {
         "type": "object",
         "properties": {
@@ -1473,11 +1531,7 @@
             "$ref": "#/components/schemas/Tasks"
           },
           "notifications": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
+            "$ref": "#/components/schemas/Notifications"
           },
           "userV": {
             "type": "integer",

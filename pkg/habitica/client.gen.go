@@ -198,6 +198,19 @@ func ListTasks[R any](ctx context.Context, c *Client, params ListTasksParams) (*
 		default:
 			return nil, api.NewErrUnknownContentType(rsp)
 		}
+	case http.StatusBadRequest:
+		// An error returned by the server, e.g. Not Found
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out Error
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				return nil, api.WrapDecodingError(rsp, err)
+			}
+
+			return nil, api.NewErrCustom(rsp, &out)
+		default:
+			return nil, api.NewErrUnknownContentType(rsp)
+		}
 	default:
 		return nil, api.NewErrUnknownStatusCode(rsp)
 	}
