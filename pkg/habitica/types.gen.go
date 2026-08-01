@@ -522,9 +522,9 @@ type Stats struct {
 	Exp         int      `json:"exp,omitzero"`
 	Mp          float64  `json:"mp"`
 	Hp          float64  `json:"hp"`
-	ToNextLevel *int     `json:"toNextLevel,omitempty"`
-	MaxHealth   *int     `json:"maxHealth,omitempty"`
-	MaxMp       *int     `json:"maxMP,omitempty"`
+	ToNextLevel int      `json:"toNextLevel,omitzero"`
+	MaxHealth   int      `json:"maxHealth,omitzero"`
+	MaxMp       int      `json:"maxMP,omitzero"`
 }
 
 // Task defines a model
