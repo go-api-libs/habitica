@@ -483,7 +483,7 @@ type RepeatWeekly struct {
 type ScoreTaskResponse struct {
 	Success       bool                  `json:"success,omitzero"`
 	Data          ScoreTaskResponseData `json:"data"`
-	Notifications []struct{}            `json:"notifications,omitempty"`
+	Notifications Notifications         `json:"notifications,omitempty"`
 	UserV         *int                  `json:"userV,omitempty"`
 	AppVersion    string                `json:"appVersion,omitzero"`
 }
@@ -599,9 +599,9 @@ type TaskHistory []TaskActivity
 
 // TaskResponse defines a model
 type TaskResponse struct {
-	Success       bool       `json:"success,omitzero"`
-	Data          Task       `json:"data"`
-	Notifications []struct{} `json:"notifications,omitempty"`
+	Success       bool          `json:"success,omitzero"`
+	Data          Task          `json:"data"`
+	Notifications Notifications `json:"notifications,omitempty"`
 }
 
 // Tasks defines a model
@@ -718,7 +718,7 @@ type UserData struct {
 	PushDevices            PushDevices         `json:"pushDevices,omitempty"`
 	Extra                  struct{}            `json:"extra"`
 	Tags                   UserDataTags        `json:"tags,omitempty"`
-	Notifications          []struct{}          `json:"notifications,omitempty"`
+	Notifications          Notifications       `json:"notifications,omitempty"`
 	Guilds                 []uuid.UUID         `json:"guilds,omitempty"`
 	Challenges             []uuid.UUID         `json:"challenges,omitempty"`
 	NewMessages            struct{}            `json:"newMessages"`

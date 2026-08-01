@@ -1744,11 +1744,7 @@
             "$ref": "#/components/schemas/ScoreTaskResponseData"
           },
           "notifications": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
+            "$ref": "#/components/schemas/Notifications"
           },
           "userV": {
             "type": "integer",
@@ -2245,11 +2241,7 @@
             "$ref": "#/components/schemas/Task"
           },
           "notifications": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
+            "$ref": "#/components/schemas/Notifications"
           }
         },
         "required": [
@@ -2671,11 +2663,7 @@
             "$ref": "#/components/schemas/UserDataTags"
           },
           "notifications": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
+            "$ref": "#/components/schemas/Notifications"
           },
           "guilds": {
             "type": "array",
