@@ -677,6 +677,381 @@
           "message"
         ]
       },
+      "Flags": {
+        "type": "object",
+        "properties": {
+          "tour": {
+            "$ref": "#/components/schemas/FlagsTour"
+          },
+          "tutorial": {
+            "$ref": "#/components/schemas/FlagsTutorial"
+          },
+          "customizationsNotification": {
+            "type": "boolean",
+            "example": true
+          },
+          "showTour": {
+            "type": "boolean",
+            "example": true
+          },
+          "dropsEnabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "itemsEnabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "lastNewStuffRead": {
+            "type": "string",
+            "format": "uuid",
+            "example": "e456638e-2fa9-44f8-b986-5ec053ef64f2"
+          },
+          "rewrite": {
+            "type": "boolean",
+            "example": true
+          },
+          "classSelected": {
+            "type": "boolean",
+            "example": true
+          },
+          "rebirthEnabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "recaptureEmailsPhase": {
+            "type": "integer",
+            "example": 0
+          },
+          "weeklyRecapEmailsPhase": {
+            "type": "integer",
+            "example": 0
+          },
+          "communityGuidelinesAccepted": {
+            "type": "boolean",
+            "example": true
+          },
+          "cronCount": {
+            "type": "integer",
+            "example": 1508
+          },
+          "welcomed": {
+            "type": "boolean",
+            "example": true
+          },
+          "armoireEnabled": {
+            "type": "boolean",
+            "example": true
+          },
+          "armoireOpened": {
+            "type": "boolean",
+            "example": true
+          },
+          "armoireEmpty": {
+            "type": "boolean",
+            "example": false
+          },
+          "cardReceived": {
+            "type": "boolean",
+            "example": false
+          },
+          "warnedLowHealth": {
+            "type": "boolean",
+            "example": true
+          },
+          "verifiedUsername": {
+            "type": "boolean",
+            "example": true
+          },
+          "levelDrops": {
+            "$ref": "#/components/schemas/FlagsLevelDrops"
+          },
+          "lastWeeklyRecap": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-01-26T18:12:42.189Z"
+          },
+          "initializedUserHistory": {
+            "type": "boolean",
+            "example": true
+          },
+          "thirdPartyTools": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-08-01T21:13:24.390Z"
+          },
+          "newStuff": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "tour",
+          "tutorial",
+          "customizationsNotification",
+          "showTour",
+          "dropsEnabled",
+          "itemsEnabled",
+          "lastNewStuffRead",
+          "rewrite",
+          "classSelected",
+          "rebirthEnabled",
+          "recaptureEmailsPhase",
+          "weeklyRecapEmailsPhase",
+          "communityGuidelinesAccepted",
+          "cronCount",
+          "welcomed",
+          "armoireEnabled",
+          "armoireOpened",
+          "armoireEmpty",
+          "cardReceived",
+          "warnedLowHealth",
+          "verifiedUsername",
+          "levelDrops",
+          "lastWeeklyRecap",
+          "initializedUserHistory",
+          "thirdPartyTools",
+          "newStuff"
+        ]
+      },
+      "FlagsLevelDrops": {
+        "type": "object",
+        "properties": {
+          "atom1": {
+            "type": "boolean",
+            "example": true
+          },
+          "vice1": {
+            "type": "boolean",
+            "example": true
+          },
+          "goldenknight1": {
+            "type": "boolean",
+            "example": true
+          },
+          "moonstone1": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "atom1",
+          "vice1",
+          "goldenknight1",
+          "moonstone1"
+        ]
+      },
+      "FlagsTour": {
+        "type": "object",
+        "properties": {
+          "intro": {
+            "type": "integer",
+            "example": -2
+          },
+          "classes": {
+            "type": "integer",
+            "example": 0
+          },
+          "stats": {
+            "type": "integer",
+            "example": -2
+          },
+          "tavern": {
+            "type": "integer",
+            "example": -2
+          },
+          "party": {
+            "type": "integer",
+            "example": -2
+          },
+          "guilds": {
+            "type": "integer",
+            "example": -2
+          },
+          "challenges": {
+            "type": "integer",
+            "example": -2
+          },
+          "market": {
+            "type": "integer",
+            "example": -2
+          },
+          "pets": {
+            "type": "integer",
+            "example": -2
+          },
+          "mounts": {
+            "type": "integer",
+            "example": -2
+          },
+          "hall": {
+            "type": "integer",
+            "example": -2
+          },
+          "equipment": {
+            "type": "integer",
+            "example": -2
+          },
+          "groupPlans": {
+            "type": "integer",
+            "example": -1
+          }
+        },
+        "required": [
+          "intro",
+          "classes",
+          "stats",
+          "tavern",
+          "party",
+          "guilds",
+          "challenges",
+          "market",
+          "pets",
+          "mounts",
+          "hall",
+          "equipment",
+          "groupPlans"
+        ]
+      },
+      "FlagsTutorial": {
+        "type": "object",
+        "properties": {
+          "common": {
+            "$ref": "#/components/schemas/FlagsTutorialCommon"
+          },
+          "ios": {
+            "$ref": "#/components/schemas/FlagsTutorialIos"
+          }
+        },
+        "required": [
+          "common",
+          "ios"
+        ]
+      },
+      "FlagsTutorialCommon": {
+        "type": "object",
+        "properties": {
+          "habits": {
+            "type": "boolean",
+            "example": true
+          },
+          "dailies": {
+            "type": "boolean",
+            "example": true
+          },
+          "todos": {
+            "type": "boolean",
+            "example": true
+          },
+          "rewards": {
+            "type": "boolean",
+            "example": true
+          },
+          "party": {
+            "type": "boolean",
+            "example": true
+          },
+          "pets": {
+            "type": "boolean",
+            "example": true
+          },
+          "gems": {
+            "type": "boolean",
+            "example": true
+          },
+          "skills": {
+            "type": "boolean",
+            "example": true
+          },
+          "classes": {
+            "type": "boolean",
+            "example": true
+          },
+          "tavern": {
+            "type": "boolean",
+            "example": true
+          },
+          "equipment": {
+            "type": "boolean",
+            "example": true
+          },
+          "items": {
+            "type": "boolean",
+            "example": true
+          },
+          "mounts": {
+            "type": "boolean",
+            "example": true
+          },
+          "inbox": {
+            "type": "boolean",
+            "example": true
+          },
+          "stats": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "habits",
+          "dailies",
+          "todos",
+          "rewards",
+          "party",
+          "pets",
+          "gems",
+          "skills",
+          "classes",
+          "tavern",
+          "equipment",
+          "items",
+          "mounts",
+          "inbox",
+          "stats"
+        ]
+      },
+      "FlagsTutorialIos": {
+        "type": "object",
+        "properties": {
+          "addTask": {
+            "type": "boolean",
+            "example": false
+          },
+          "editTask": {
+            "type": "boolean",
+            "example": false
+          },
+          "deleteTask": {
+            "type": "boolean",
+            "example": false
+          },
+          "filterTask": {
+            "type": "boolean",
+            "example": false
+          },
+          "groupPets": {
+            "type": "boolean",
+            "example": false
+          },
+          "inviteParty": {
+            "type": "boolean",
+            "example": false
+          },
+          "reorderTask": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "addTask",
+          "editTask",
+          "deleteTask",
+          "filterTask",
+          "groupPets",
+          "inviteParty",
+          "reorderTask"
+        ]
+      },
       "Group": {
         "type": "object",
         "properties": {
@@ -983,6 +1358,255 @@
         "items": {
           "$ref": "#/components/schemas/Notification"
         }
+      },
+      "Party": {
+        "type": "object",
+        "properties": {
+          "quest": {
+            "$ref": "#/components/schemas/PartyQuest"
+          },
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "df72f208-0697-4e94-8973-7665a62f680f"
+          },
+          "order": {
+            "type": "string",
+            "example": "level"
+          },
+          "orderAscending": {
+            "type": "string",
+            "example": "ascending"
+          }
+        },
+        "required": [
+          "quest",
+          "_id",
+          "order",
+          "orderAscending"
+        ]
+      },
+      "PartyQuest": {
+        "type": "object",
+        "properties": {
+          "progress": {
+            "$ref": "#/components/schemas/PartyQuestProgress"
+          },
+          "RSVPNeeded": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "progress",
+          "RSVPNeeded"
+        ]
+      },
+      "PartyQuestProgress": {
+        "type": "object",
+        "properties": {
+          "up": {
+            "type": "number",
+            "format": "double",
+            "example": 36.68395499693019
+          },
+          "down": {
+            "type": "integer",
+            "example": 0
+          },
+          "collectedItems": {
+            "type": "integer",
+            "example": 3
+          },
+          "collect": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "up",
+          "down",
+          "collectedItems",
+          "collect"
+        ]
+      },
+      "PinnedItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "armoire"
+          },
+          "path": {
+            "type": "string",
+            "example": "armoire"
+          }
+        },
+        "required": [
+          "type",
+          "path"
+        ]
+      },
+      "PinnedItems": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PinnedItem"
+        }
+      },
+      "Purchased": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/PurchasedPlan"
+          },
+          "txnCount": {
+            "type": "integer",
+            "example": 0
+          },
+          "background": {
+            "$ref": "#/components/schemas/PurchasedBackground"
+          },
+          "shirt": {
+            "type": "object"
+          },
+          "hair": {
+            "type": "object"
+          },
+          "skin": {
+            "type": "object"
+          },
+          "ads": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "plan",
+          "txnCount",
+          "background",
+          "shirt",
+          "hair",
+          "skin",
+          "ads"
+        ]
+      },
+      "PurchasedBackground": {
+        "type": "object",
+        "properties": {
+          "yellow": {
+            "type": "boolean",
+            "example": true
+          },
+          "red": {
+            "type": "boolean",
+            "example": true
+          },
+          "purple": {
+            "type": "boolean",
+            "example": true
+          },
+          "green": {
+            "type": "boolean",
+            "example": true
+          },
+          "blue": {
+            "type": "boolean",
+            "example": true
+          },
+          "violet": {
+            "type": "boolean",
+            "example": true
+          },
+          "on_a_strange_planet": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "yellow",
+          "red",
+          "purple",
+          "green",
+          "blue",
+          "violet",
+          "on_a_strange_planet"
+        ]
+      },
+      "PurchasedPlan": {
+        "type": "object",
+        "properties": {
+          "consecutive": {
+            "$ref": "#/components/schemas/PurchasedPlanConsecutive"
+          },
+          "mysteryItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "gemsBought": {
+            "type": "integer",
+            "example": 0
+          },
+          "extraMonths": {
+            "type": "integer",
+            "example": 0
+          },
+          "quantity": {
+            "type": "integer",
+            "example": 1
+          },
+          "dateUpdated": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-09-25T07:33:49.386Z"
+          },
+          "perkMonthCount": {
+            "type": "integer",
+            "example": -1
+          },
+          "cumulativeCount": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "consecutive",
+          "mysteryItems",
+          "gemsBought",
+          "extraMonths",
+          "quantity",
+          "dateUpdated",
+          "perkMonthCount",
+          "cumulativeCount"
+        ]
+      },
+      "PurchasedPlanConsecutive": {
+        "type": "object",
+        "properties": {
+          "trinkets": {
+            "type": "integer",
+            "example": 0
+          },
+          "gemCapExtra": {
+            "type": "integer",
+            "example": 0
+          },
+          "offset": {
+            "type": "integer",
+            "example": 0
+          },
+          "count": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "trinkets",
+          "gemCapExtra",
+          "offset",
+          "count"
+        ]
       },
       "PushDevice": {
         "type": "object",
@@ -1810,10 +2434,10 @@
             "type": "object"
           },
           "purchased": {
-            "$ref": "#/components/schemas/UserDataPurchased"
+            "$ref": "#/components/schemas/Purchased"
           },
           "flags": {
-            "$ref": "#/components/schemas/UserDataFlags"
+            "$ref": "#/components/schemas/Flags"
           },
           "history": {
             "$ref": "#/components/schemas/UserDataHistory"
@@ -1825,7 +2449,7 @@
             "$ref": "#/components/schemas/UserDataInvitations"
           },
           "party": {
-            "$ref": "#/components/schemas/UserDataParty"
+            "$ref": "#/components/schemas/Party"
           },
           "preferences": {
             "$ref": "#/components/schemas/UserDataPreferences"
@@ -1913,7 +2537,7 @@
             "example": "20267namingday"
           },
           "pinnedItems": {
-            "$ref": "#/components/schemas/UserDataPinnedItems"
+            "$ref": "#/components/schemas/PinnedItems"
           },
           "unpinnedItems": {
             "type": "array",
@@ -1970,10 +2594,10 @@
             "type": "object"
           },
           "purchased": {
-            "$ref": "#/components/schemas/UserDataPurchased"
+            "$ref": "#/components/schemas/Purchased"
           },
           "flags": {
-            "$ref": "#/components/schemas/UserDataFlags"
+            "$ref": "#/components/schemas/Flags"
           },
           "history": {
             "$ref": "#/components/schemas/UserDataHistory"
@@ -1985,7 +2609,7 @@
             "$ref": "#/components/schemas/UserDataInvitations"
           },
           "party": {
-            "$ref": "#/components/schemas/UserDataParty"
+            "$ref": "#/components/schemas/Party"
           },
           "preferences": {
             "$ref": "#/components/schemas/UserDataPreferences"
@@ -2075,7 +2699,7 @@
             "example": "20264april-fools-2026"
           },
           "pinnedItems": {
-            "$ref": "#/components/schemas/UserDataPinnedItems"
+            "$ref": "#/components/schemas/PinnedItems"
           },
           "unpinnedItems": {
             "type": "array",
@@ -2148,381 +2772,6 @@
           "_subSignature",
           "id",
           "needsCron"
-        ]
-      },
-      "UserDataFlags": {
-        "type": "object",
-        "properties": {
-          "tour": {
-            "$ref": "#/components/schemas/UserDataFlagsTour"
-          },
-          "tutorial": {
-            "$ref": "#/components/schemas/UserDataFlagsTutorial"
-          },
-          "customizationsNotification": {
-            "type": "boolean",
-            "example": true
-          },
-          "showTour": {
-            "type": "boolean",
-            "example": true
-          },
-          "dropsEnabled": {
-            "type": "boolean",
-            "example": true
-          },
-          "itemsEnabled": {
-            "type": "boolean",
-            "example": true
-          },
-          "lastNewStuffRead": {
-            "type": "string",
-            "format": "uuid",
-            "example": "e456638e-2fa9-44f8-b986-5ec053ef64f2"
-          },
-          "rewrite": {
-            "type": "boolean",
-            "example": true
-          },
-          "classSelected": {
-            "type": "boolean",
-            "example": true
-          },
-          "rebirthEnabled": {
-            "type": "boolean",
-            "example": true
-          },
-          "recaptureEmailsPhase": {
-            "type": "integer",
-            "example": 0
-          },
-          "weeklyRecapEmailsPhase": {
-            "type": "integer",
-            "example": 0
-          },
-          "communityGuidelinesAccepted": {
-            "type": "boolean",
-            "example": true
-          },
-          "cronCount": {
-            "type": "integer",
-            "example": 1508
-          },
-          "welcomed": {
-            "type": "boolean",
-            "example": true
-          },
-          "armoireEnabled": {
-            "type": "boolean",
-            "example": true
-          },
-          "armoireOpened": {
-            "type": "boolean",
-            "example": true
-          },
-          "armoireEmpty": {
-            "type": "boolean",
-            "example": false
-          },
-          "cardReceived": {
-            "type": "boolean",
-            "example": false
-          },
-          "warnedLowHealth": {
-            "type": "boolean",
-            "example": true
-          },
-          "verifiedUsername": {
-            "type": "boolean",
-            "example": true
-          },
-          "levelDrops": {
-            "$ref": "#/components/schemas/UserDataFlagsLevelDrops"
-          },
-          "lastWeeklyRecap": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2017-01-26T18:12:42.189Z"
-          },
-          "initializedUserHistory": {
-            "type": "boolean",
-            "example": true
-          },
-          "thirdPartyTools": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2026-08-01T21:13:24.390Z"
-          },
-          "newStuff": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "tour",
-          "tutorial",
-          "customizationsNotification",
-          "showTour",
-          "dropsEnabled",
-          "itemsEnabled",
-          "lastNewStuffRead",
-          "rewrite",
-          "classSelected",
-          "rebirthEnabled",
-          "recaptureEmailsPhase",
-          "weeklyRecapEmailsPhase",
-          "communityGuidelinesAccepted",
-          "cronCount",
-          "welcomed",
-          "armoireEnabled",
-          "armoireOpened",
-          "armoireEmpty",
-          "cardReceived",
-          "warnedLowHealth",
-          "verifiedUsername",
-          "levelDrops",
-          "lastWeeklyRecap",
-          "initializedUserHistory",
-          "thirdPartyTools",
-          "newStuff"
-        ]
-      },
-      "UserDataFlagsLevelDrops": {
-        "type": "object",
-        "properties": {
-          "atom1": {
-            "type": "boolean",
-            "example": true
-          },
-          "vice1": {
-            "type": "boolean",
-            "example": true
-          },
-          "goldenknight1": {
-            "type": "boolean",
-            "example": true
-          },
-          "moonstone1": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "atom1",
-          "vice1",
-          "goldenknight1",
-          "moonstone1"
-        ]
-      },
-      "UserDataFlagsTour": {
-        "type": "object",
-        "properties": {
-          "intro": {
-            "type": "integer",
-            "example": -2
-          },
-          "classes": {
-            "type": "integer",
-            "example": 0
-          },
-          "stats": {
-            "type": "integer",
-            "example": -2
-          },
-          "tavern": {
-            "type": "integer",
-            "example": -2
-          },
-          "party": {
-            "type": "integer",
-            "example": -2
-          },
-          "guilds": {
-            "type": "integer",
-            "example": -2
-          },
-          "challenges": {
-            "type": "integer",
-            "example": -2
-          },
-          "market": {
-            "type": "integer",
-            "example": -2
-          },
-          "pets": {
-            "type": "integer",
-            "example": -2
-          },
-          "mounts": {
-            "type": "integer",
-            "example": -2
-          },
-          "hall": {
-            "type": "integer",
-            "example": -2
-          },
-          "equipment": {
-            "type": "integer",
-            "example": -2
-          },
-          "groupPlans": {
-            "type": "integer",
-            "example": -1
-          }
-        },
-        "required": [
-          "intro",
-          "classes",
-          "stats",
-          "tavern",
-          "party",
-          "guilds",
-          "challenges",
-          "market",
-          "pets",
-          "mounts",
-          "hall",
-          "equipment",
-          "groupPlans"
-        ]
-      },
-      "UserDataFlagsTutorial": {
-        "type": "object",
-        "properties": {
-          "common": {
-            "$ref": "#/components/schemas/UserDataFlagsTutorialCommon"
-          },
-          "ios": {
-            "$ref": "#/components/schemas/UserDataFlagsTutorialIos"
-          }
-        },
-        "required": [
-          "common",
-          "ios"
-        ]
-      },
-      "UserDataFlagsTutorialCommon": {
-        "type": "object",
-        "properties": {
-          "habits": {
-            "type": "boolean",
-            "example": true
-          },
-          "dailies": {
-            "type": "boolean",
-            "example": true
-          },
-          "todos": {
-            "type": "boolean",
-            "example": true
-          },
-          "rewards": {
-            "type": "boolean",
-            "example": true
-          },
-          "party": {
-            "type": "boolean",
-            "example": true
-          },
-          "pets": {
-            "type": "boolean",
-            "example": true
-          },
-          "gems": {
-            "type": "boolean",
-            "example": true
-          },
-          "skills": {
-            "type": "boolean",
-            "example": true
-          },
-          "classes": {
-            "type": "boolean",
-            "example": true
-          },
-          "tavern": {
-            "type": "boolean",
-            "example": true
-          },
-          "equipment": {
-            "type": "boolean",
-            "example": true
-          },
-          "items": {
-            "type": "boolean",
-            "example": true
-          },
-          "mounts": {
-            "type": "boolean",
-            "example": true
-          },
-          "inbox": {
-            "type": "boolean",
-            "example": true
-          },
-          "stats": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "habits",
-          "dailies",
-          "todos",
-          "rewards",
-          "party",
-          "pets",
-          "gems",
-          "skills",
-          "classes",
-          "tavern",
-          "equipment",
-          "items",
-          "mounts",
-          "inbox",
-          "stats"
-        ]
-      },
-      "UserDataFlagsTutorialIos": {
-        "type": "object",
-        "properties": {
-          "addTask": {
-            "type": "boolean",
-            "example": false
-          },
-          "editTask": {
-            "type": "boolean",
-            "example": false
-          },
-          "deleteTask": {
-            "type": "boolean",
-            "example": false
-          },
-          "filterTask": {
-            "type": "boolean",
-            "example": false
-          },
-          "groupPets": {
-            "type": "boolean",
-            "example": false
-          },
-          "inviteParty": {
-            "type": "boolean",
-            "example": false
-          },
-          "reorderTask": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "addTask",
-          "editTask",
-          "deleteTask",
-          "filterTask",
-          "groupPets",
-          "inviteParty",
-          "reorderTask"
         ]
       },
       "UserDataHistory": {
@@ -4856,99 +5105,6 @@
           "goodluck"
         ]
       },
-      "UserDataParty": {
-        "type": "object",
-        "properties": {
-          "quest": {
-            "$ref": "#/components/schemas/UserDataPartyQuest"
-          },
-          "_id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "df72f208-0697-4e94-8973-7665a62f680f"
-          },
-          "order": {
-            "type": "string",
-            "example": "level"
-          },
-          "orderAscending": {
-            "type": "string",
-            "example": "ascending"
-          }
-        },
-        "required": [
-          "quest",
-          "_id",
-          "order",
-          "orderAscending"
-        ]
-      },
-      "UserDataPartyQuest": {
-        "type": "object",
-        "properties": {
-          "progress": {
-            "$ref": "#/components/schemas/UserDataPartyQuestProgress"
-          },
-          "RSVPNeeded": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "progress",
-          "RSVPNeeded"
-        ]
-      },
-      "UserDataPartyQuestProgress": {
-        "type": "object",
-        "properties": {
-          "up": {
-            "type": "number",
-            "format": "double",
-            "example": 36.68395499693019
-          },
-          "down": {
-            "type": "integer",
-            "example": 0
-          },
-          "collectedItems": {
-            "type": "integer",
-            "example": 3
-          },
-          "collect": {
-            "type": "object"
-          }
-        },
-        "required": [
-          "up",
-          "down",
-          "collectedItems",
-          "collect"
-        ]
-      },
-      "UserDataPinnedItems": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/UserDataPinnedItemsItem"
-        }
-      },
-      "UserDataPinnedItemsItem": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "example": "armoire"
-          },
-          "path": {
-            "type": "string",
-            "example": "armoire"
-          }
-        },
-        "required": [
-          "type",
-          "path"
-        ]
-      },
       "UserDataPreferences": {
         "type": "object",
         "properties": {
@@ -5422,162 +5578,6 @@
         },
         "required": [
           "name"
-        ]
-      },
-      "UserDataPurchased": {
-        "type": "object",
-        "properties": {
-          "plan": {
-            "$ref": "#/components/schemas/UserDataPurchasedPlan"
-          },
-          "txnCount": {
-            "type": "integer",
-            "example": 0
-          },
-          "background": {
-            "$ref": "#/components/schemas/UserDataPurchasedBackground"
-          },
-          "shirt": {
-            "type": "object"
-          },
-          "hair": {
-            "type": "object"
-          },
-          "skin": {
-            "type": "object"
-          },
-          "ads": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "plan",
-          "txnCount",
-          "background",
-          "shirt",
-          "hair",
-          "skin",
-          "ads"
-        ]
-      },
-      "UserDataPurchasedBackground": {
-        "type": "object",
-        "properties": {
-          "yellow": {
-            "type": "boolean",
-            "example": true
-          },
-          "red": {
-            "type": "boolean",
-            "example": true
-          },
-          "purple": {
-            "type": "boolean",
-            "example": true
-          },
-          "green": {
-            "type": "boolean",
-            "example": true
-          },
-          "blue": {
-            "type": "boolean",
-            "example": true
-          },
-          "violet": {
-            "type": "boolean",
-            "example": true
-          },
-          "on_a_strange_planet": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "yellow",
-          "red",
-          "purple",
-          "green",
-          "blue",
-          "violet",
-          "on_a_strange_planet"
-        ]
-      },
-      "UserDataPurchasedPlan": {
-        "type": "object",
-        "properties": {
-          "consecutive": {
-            "$ref": "#/components/schemas/UserDataPurchasedPlanConsecutive"
-          },
-          "mysteryItems": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
-          },
-          "gemsBought": {
-            "type": "integer",
-            "example": 0
-          },
-          "extraMonths": {
-            "type": "integer",
-            "example": 0
-          },
-          "quantity": {
-            "type": "integer",
-            "example": 1
-          },
-          "dateUpdated": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2017-09-25T07:33:49.386Z"
-          },
-          "perkMonthCount": {
-            "type": "integer",
-            "example": -1
-          },
-          "cumulativeCount": {
-            "type": "integer",
-            "example": 0
-          }
-        },
-        "required": [
-          "consecutive",
-          "mysteryItems",
-          "gemsBought",
-          "extraMonths",
-          "quantity",
-          "dateUpdated",
-          "perkMonthCount",
-          "cumulativeCount"
-        ]
-      },
-      "UserDataPurchasedPlanConsecutive": {
-        "type": "object",
-        "properties": {
-          "trinkets": {
-            "type": "integer",
-            "example": 0
-          },
-          "gemCapExtra": {
-            "type": "integer",
-            "example": 0
-          },
-          "offset": {
-            "type": "integer",
-            "example": 0
-          },
-          "count": {
-            "type": "integer",
-            "example": 0
-          }
-        },
-        "required": [
-          "trinkets",
-          "gemCapExtra",
-          "offset",
-          "count"
         ]
       },
       "UserDataStats": {

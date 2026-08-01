@@ -190,6 +190,97 @@ type Error struct {
 	Message string `json:"message,omitzero"`
 }
 
+// Flags defines a model
+type Flags struct {
+	Tour                        FlagsTour       `json:"tour"`
+	Tutorial                    FlagsTutorial   `json:"tutorial"`
+	CustomizationsNotification  bool            `json:"customizationsNotification,omitzero"`
+	ShowTour                    bool            `json:"showTour,omitzero"`
+	DropsEnabled                bool            `json:"dropsEnabled,omitzero"`
+	ItemsEnabled                bool            `json:"itemsEnabled,omitzero"`
+	LastNewStuffRead            uuid.UUID       `json:"lastNewStuffRead,omitzero"`
+	Rewrite                     bool            `json:"rewrite,omitzero"`
+	ClassSelected               bool            `json:"classSelected,omitzero"`
+	RebirthEnabled              bool            `json:"rebirthEnabled,omitzero"`
+	RecaptureEmailsPhase        int             `json:"recaptureEmailsPhase,omitzero"`
+	WeeklyRecapEmailsPhase      int             `json:"weeklyRecapEmailsPhase,omitzero"`
+	CommunityGuidelinesAccepted bool            `json:"communityGuidelinesAccepted,omitzero"`
+	CronCount                   int             `json:"cronCount,omitzero"`
+	Welcomed                    bool            `json:"welcomed,omitzero"`
+	ArmoireEnabled              bool            `json:"armoireEnabled,omitzero"`
+	ArmoireOpened               bool            `json:"armoireOpened,omitzero"`
+	ArmoireEmpty                bool            `json:"armoireEmpty,omitzero"`
+	CardReceived                bool            `json:"cardReceived,omitzero"`
+	WarnedLowHealth             bool            `json:"warnedLowHealth,omitzero"`
+	VerifiedUsername            bool            `json:"verifiedUsername,omitzero"`
+	LevelDrops                  FlagsLevelDrops `json:"levelDrops"`
+	LastWeeklyRecap             time.Time       `json:"lastWeeklyRecap,omitzero"`
+	InitializedUserHistory      bool            `json:"initializedUserHistory,omitzero"`
+	ThirdPartyTools             time.Time       `json:"thirdPartyTools,omitzero"`
+	NewStuff                    bool            `json:"newStuff,omitzero"`
+}
+
+// FlagsLevelDrops defines a model
+type FlagsLevelDrops struct {
+	Atom1         bool `json:"atom1,omitzero"`
+	Vice1         bool `json:"vice1,omitzero"`
+	Goldenknight1 bool `json:"goldenknight1,omitzero"`
+	Moonstone1    bool `json:"moonstone1,omitzero"`
+}
+
+// FlagsTour defines a model
+type FlagsTour struct {
+	Intro      int `json:"intro,omitzero"`
+	Classes    int `json:"classes,omitzero"`
+	Stats      int `json:"stats,omitzero"`
+	Tavern     int `json:"tavern,omitzero"`
+	Party      int `json:"party,omitzero"`
+	Guilds     int `json:"guilds,omitzero"`
+	Challenges int `json:"challenges,omitzero"`
+	Market     int `json:"market,omitzero"`
+	Pets       int `json:"pets,omitzero"`
+	Mounts     int `json:"mounts,omitzero"`
+	Hall       int `json:"hall,omitzero"`
+	Equipment  int `json:"equipment,omitzero"`
+	GroupPlans int `json:"groupPlans,omitzero"`
+}
+
+// FlagsTutorial defines a model
+type FlagsTutorial struct {
+	Common FlagsTutorialCommon `json:"common"`
+	Ios    FlagsTutorialIos    `json:"ios"`
+}
+
+// FlagsTutorialCommon defines a model
+type FlagsTutorialCommon struct {
+	Habits    bool `json:"habits,omitzero"`
+	Dailies   bool `json:"dailies,omitzero"`
+	Todos     bool `json:"todos,omitzero"`
+	Rewards   bool `json:"rewards,omitzero"`
+	Party     bool `json:"party,omitzero"`
+	Pets      bool `json:"pets,omitzero"`
+	Gems      bool `json:"gems,omitzero"`
+	Skills    bool `json:"skills,omitzero"`
+	Classes   bool `json:"classes,omitzero"`
+	Tavern    bool `json:"tavern,omitzero"`
+	Equipment bool `json:"equipment,omitzero"`
+	Items     bool `json:"items,omitzero"`
+	Mounts    bool `json:"mounts,omitzero"`
+	Inbox     bool `json:"inbox,omitzero"`
+	Stats     bool `json:"stats,omitzero"`
+}
+
+// FlagsTutorialIos defines a model
+type FlagsTutorialIos struct {
+	AddTask     bool `json:"addTask,omitzero"`
+	EditTask    bool `json:"editTask,omitzero"`
+	DeleteTask  bool `json:"deleteTask,omitzero"`
+	FilterTask  bool `json:"filterTask,omitzero"`
+	GroupPets   bool `json:"groupPets,omitzero"`
+	InviteParty bool `json:"inviteParty,omitzero"`
+	ReorderTask bool `json:"reorderTask,omitzero"`
+}
+
 // Group defines a model
 type Group struct {
 	Approval         Approval   `json:"approval"`
@@ -276,6 +367,79 @@ type NotificationData struct {
 
 // Notifications defines a model
 type Notifications []Notification
+
+// Party defines a model
+type Party struct {
+	Quest          PartyQuest `json:"quest"`
+	UnderscoreID   uuid.UUID  `json:"_id,omitzero"`
+	Order          string     `json:"order,omitzero"`
+	OrderAscending string     `json:"orderAscending,omitzero"`
+}
+
+// PartyQuest defines a model
+type PartyQuest struct {
+	Progress   PartyQuestProgress `json:"progress"`
+	RsvpNeeded bool               `json:"RSVPNeeded,omitzero"`
+}
+
+// PartyQuestProgress defines a model
+type PartyQuestProgress struct {
+	Up             float64  `json:"up"`
+	Down           int      `json:"down,omitzero"`
+	CollectedItems int      `json:"collectedItems,omitzero"`
+	Collect        struct{} `json:"collect"`
+}
+
+// PinnedItem defines a model
+type PinnedItem struct {
+	Type string `json:"type,omitzero"`
+	Path string `json:"path,omitzero"`
+}
+
+// PinnedItems defines a model
+type PinnedItems []PinnedItem
+
+// Purchased defines a model
+type Purchased struct {
+	Plan       PurchasedPlan       `json:"plan"`
+	TxnCount   int                 `json:"txnCount,omitzero"`
+	Background PurchasedBackground `json:"background"`
+	Shirt      struct{}            `json:"shirt"`
+	Hair       struct{}            `json:"hair"`
+	Skin       struct{}            `json:"skin"`
+	Ads        bool                `json:"ads,omitzero"`
+}
+
+// PurchasedBackground defines a model
+type PurchasedBackground struct {
+	Yellow           bool `json:"yellow,omitzero"`
+	Red              bool `json:"red,omitzero"`
+	Purple           bool `json:"purple,omitzero"`
+	Green            bool `json:"green,omitzero"`
+	Blue             bool `json:"blue,omitzero"`
+	Violet           bool `json:"violet,omitzero"`
+	OnAStrangePlanet bool `json:"on_a_strange_planet,omitzero"`
+}
+
+// PurchasedPlan defines a model
+type PurchasedPlan struct {
+	Consecutive     PurchasedPlanConsecutive `json:"consecutive"`
+	MysteryItems    []struct{}               `json:"mysteryItems,omitempty"`
+	GemsBought      int                      `json:"gemsBought,omitzero"`
+	ExtraMonths     int                      `json:"extraMonths,omitzero"`
+	Quantity        int                      `json:"quantity,omitzero"`
+	DateUpdated     time.Time                `json:"dateUpdated,omitzero"`
+	PerkMonthCount  int                      `json:"perkMonthCount,omitzero"`
+	CumulativeCount int                      `json:"cumulativeCount,omitzero"`
+}
+
+// PurchasedPlanConsecutive defines a model
+type PurchasedPlanConsecutive struct {
+	Trinkets    int `json:"trinkets,omitzero"`
+	GemCapExtra int `json:"gemCapExtra,omitzero"`
+	Offset      int `json:"offset,omitzero"`
+	Count       int `json:"count,omitzero"`
+}
 
 // PushDevice defines a model
 type PushDevice struct {
@@ -492,12 +656,12 @@ type User struct {
 	Backer                 *struct{}            `json:"backer,omitempty"`
 	Contributor            *struct{}            `json:"contributor,omitempty"`
 	Permissions            *struct{}            `json:"permissions,omitempty"`
-	Purchased              *UserDataPurchased   `json:"purchased,omitempty"`
-	Flags                  *UserDataFlags       `json:"flags,omitempty"`
+	Purchased              *Purchased           `json:"purchased,omitempty"`
+	Flags                  *Flags               `json:"flags,omitempty"`
 	History                *UserDataHistory     `json:"history,omitempty"`
 	Items                  *UserDataItems       `json:"items,omitempty"`
 	Invitations            *UserDataInvitations `json:"invitations,omitempty"`
-	Party                  *UserDataParty       `json:"party,omitempty"`
+	Party                  *Party               `json:"party,omitempty"`
 	Preferences            *UserDataPreferences `json:"preferences,omitempty"`
 	Profile                *UserDataProfile     `json:"profile,omitempty"`
 	Stats                  *Stats               `json:"stats,omitempty"`
@@ -518,7 +682,7 @@ type User struct {
 	UnderscoreV            *int                 `json:"_v,omitempty"`
 	APIToken               *uuid.UUID           `json:"apiToken,omitempty"`
 	Migration              string               `json:"migration,omitzero"`
-	PinnedItems            UserDataPinnedItems  `json:"pinnedItems,omitempty"`
+	PinnedItems            PinnedItems          `json:"pinnedItems,omitempty"`
 	UnpinnedItems          []struct{}           `json:"unpinnedItems,omitempty"`
 	InvitesSent            *int                 `json:"invitesSent,omitempty"`
 	PinnedItemsOrder       []struct{}           `json:"pinnedItemsOrder,omitempty"`
@@ -533,12 +697,12 @@ type UserData struct {
 	Backer                 struct{}            `json:"backer"`
 	Contributor            struct{}            `json:"contributor"`
 	Permissions            struct{}            `json:"permissions"`
-	Purchased              UserDataPurchased   `json:"purchased"`
-	Flags                  UserDataFlags       `json:"flags"`
+	Purchased              Purchased           `json:"purchased"`
+	Flags                  Flags               `json:"flags"`
 	History                UserDataHistory     `json:"history"`
 	Items                  UserDataItems       `json:"items"`
 	Invitations            UserDataInvitations `json:"invitations"`
-	Party                  UserDataParty       `json:"party"`
+	Party                  Party               `json:"party"`
 	Preferences            UserDataPreferences `json:"preferences"`
 	Profile                UserDataProfile     `json:"profile"`
 	Stats                  UserDataStats       `json:"stats"`
@@ -559,104 +723,13 @@ type UserData struct {
 	Balance                int                 `json:"balance,omitzero"`
 	UnderscoreV            int                 `json:"_v,omitzero"`
 	Migration              string              `json:"migration,omitzero"`
-	PinnedItems            UserDataPinnedItems `json:"pinnedItems,omitempty"`
+	PinnedItems            PinnedItems         `json:"pinnedItems,omitempty"`
 	UnpinnedItems          []struct{}          `json:"unpinnedItems,omitempty"`
 	InvitesSent            int                 `json:"invitesSent,omitzero"`
 	PinnedItemsOrder       []struct{}          `json:"pinnedItemsOrder,omitempty"`
 	UnderscoreSubSignature string              `json:"_subSignature,omitzero"`
 	ID                     uuid.UUID           `json:"id,omitzero"`
 	NeedsCron              bool                `json:"needsCron,omitzero"`
-}
-
-// UserDataFlags defines a model
-type UserDataFlags struct {
-	Tour                        UserDataFlagsTour       `json:"tour"`
-	Tutorial                    UserDataFlagsTutorial   `json:"tutorial"`
-	CustomizationsNotification  bool                    `json:"customizationsNotification,omitzero"`
-	ShowTour                    bool                    `json:"showTour,omitzero"`
-	DropsEnabled                bool                    `json:"dropsEnabled,omitzero"`
-	ItemsEnabled                bool                    `json:"itemsEnabled,omitzero"`
-	LastNewStuffRead            uuid.UUID               `json:"lastNewStuffRead,omitzero"`
-	Rewrite                     bool                    `json:"rewrite,omitzero"`
-	ClassSelected               bool                    `json:"classSelected,omitzero"`
-	RebirthEnabled              bool                    `json:"rebirthEnabled,omitzero"`
-	RecaptureEmailsPhase        int                     `json:"recaptureEmailsPhase,omitzero"`
-	WeeklyRecapEmailsPhase      int                     `json:"weeklyRecapEmailsPhase,omitzero"`
-	CommunityGuidelinesAccepted bool                    `json:"communityGuidelinesAccepted,omitzero"`
-	CronCount                   int                     `json:"cronCount,omitzero"`
-	Welcomed                    bool                    `json:"welcomed,omitzero"`
-	ArmoireEnabled              bool                    `json:"armoireEnabled,omitzero"`
-	ArmoireOpened               bool                    `json:"armoireOpened,omitzero"`
-	ArmoireEmpty                bool                    `json:"armoireEmpty,omitzero"`
-	CardReceived                bool                    `json:"cardReceived,omitzero"`
-	WarnedLowHealth             bool                    `json:"warnedLowHealth,omitzero"`
-	VerifiedUsername            bool                    `json:"verifiedUsername,omitzero"`
-	LevelDrops                  UserDataFlagsLevelDrops `json:"levelDrops"`
-	LastWeeklyRecap             time.Time               `json:"lastWeeklyRecap,omitzero"`
-	InitializedUserHistory      bool                    `json:"initializedUserHistory,omitzero"`
-	ThirdPartyTools             time.Time               `json:"thirdPartyTools,omitzero"`
-	NewStuff                    bool                    `json:"newStuff,omitzero"`
-}
-
-// UserDataFlagsLevelDrops defines a model
-type UserDataFlagsLevelDrops struct {
-	Atom1         bool `json:"atom1,omitzero"`
-	Vice1         bool `json:"vice1,omitzero"`
-	Goldenknight1 bool `json:"goldenknight1,omitzero"`
-	Moonstone1    bool `json:"moonstone1,omitzero"`
-}
-
-// UserDataFlagsTour defines a model
-type UserDataFlagsTour struct {
-	Intro      int `json:"intro,omitzero"`
-	Classes    int `json:"classes,omitzero"`
-	Stats      int `json:"stats,omitzero"`
-	Tavern     int `json:"tavern,omitzero"`
-	Party      int `json:"party,omitzero"`
-	Guilds     int `json:"guilds,omitzero"`
-	Challenges int `json:"challenges,omitzero"`
-	Market     int `json:"market,omitzero"`
-	Pets       int `json:"pets,omitzero"`
-	Mounts     int `json:"mounts,omitzero"`
-	Hall       int `json:"hall,omitzero"`
-	Equipment  int `json:"equipment,omitzero"`
-	GroupPlans int `json:"groupPlans,omitzero"`
-}
-
-// UserDataFlagsTutorial defines a model
-type UserDataFlagsTutorial struct {
-	Common UserDataFlagsTutorialCommon `json:"common"`
-	Ios    UserDataFlagsTutorialIos    `json:"ios"`
-}
-
-// UserDataFlagsTutorialCommon defines a model
-type UserDataFlagsTutorialCommon struct {
-	Habits    bool `json:"habits,omitzero"`
-	Dailies   bool `json:"dailies,omitzero"`
-	Todos     bool `json:"todos,omitzero"`
-	Rewards   bool `json:"rewards,omitzero"`
-	Party     bool `json:"party,omitzero"`
-	Pets      bool `json:"pets,omitzero"`
-	Gems      bool `json:"gems,omitzero"`
-	Skills    bool `json:"skills,omitzero"`
-	Classes   bool `json:"classes,omitzero"`
-	Tavern    bool `json:"tavern,omitzero"`
-	Equipment bool `json:"equipment,omitzero"`
-	Items     bool `json:"items,omitzero"`
-	Mounts    bool `json:"mounts,omitzero"`
-	Inbox     bool `json:"inbox,omitzero"`
-	Stats     bool `json:"stats,omitzero"`
-}
-
-// UserDataFlagsTutorialIos defines a model
-type UserDataFlagsTutorialIos struct {
-	AddTask     bool `json:"addTask,omitzero"`
-	EditTask    bool `json:"editTask,omitzero"`
-	DeleteTask  bool `json:"deleteTask,omitzero"`
-	FilterTask  bool `json:"filterTask,omitzero"`
-	GroupPets   bool `json:"groupPets,omitzero"`
-	InviteParty bool `json:"inviteParty,omitzero"`
-	ReorderTask bool `json:"reorderTask,omitzero"`
 }
 
 // UserDataHistory defines a model
@@ -1161,37 +1234,6 @@ type UserDataItemsSpecial struct {
 	Goodluck          int        `json:"goodluck,omitzero"`
 }
 
-// UserDataParty defines a model
-type UserDataParty struct {
-	Quest          UserDataPartyQuest `json:"quest"`
-	UnderscoreID   uuid.UUID          `json:"_id,omitzero"`
-	Order          string             `json:"order,omitzero"`
-	OrderAscending string             `json:"orderAscending,omitzero"`
-}
-
-// UserDataPartyQuest defines a model
-type UserDataPartyQuest struct {
-	Progress   UserDataPartyQuestProgress `json:"progress"`
-	RsvpNeeded bool                       `json:"RSVPNeeded,omitzero"`
-}
-
-// UserDataPartyQuestProgress defines a model
-type UserDataPartyQuestProgress struct {
-	Up             float64  `json:"up"`
-	Down           int      `json:"down,omitzero"`
-	CollectedItems int      `json:"collectedItems,omitzero"`
-	Collect        struct{} `json:"collect"`
-}
-
-// UserDataPinnedItems defines a model
-type UserDataPinnedItems []UserDataPinnedItemsItem
-
-// UserDataPinnedItemsItem defines a model
-type UserDataPinnedItemsItem struct {
-	Type string `json:"type,omitzero"`
-	Path string `json:"path,omitzero"`
-}
-
 // UserDataPreferences defines a model
 type UserDataPreferences struct {
 	Hair                             UserDataPreferencesHair               `json:"hair"`
@@ -1306,48 +1348,6 @@ type UserDataPreferencesTasksActiveFilter struct {
 // UserDataProfile defines a model
 type UserDataProfile struct {
 	Name string `json:"name,omitzero"`
-}
-
-// UserDataPurchased defines a model
-type UserDataPurchased struct {
-	Plan       UserDataPurchasedPlan       `json:"plan"`
-	TxnCount   int                         `json:"txnCount,omitzero"`
-	Background UserDataPurchasedBackground `json:"background"`
-	Shirt      struct{}                    `json:"shirt"`
-	Hair       struct{}                    `json:"hair"`
-	Skin       struct{}                    `json:"skin"`
-	Ads        bool                        `json:"ads,omitzero"`
-}
-
-// UserDataPurchasedBackground defines a model
-type UserDataPurchasedBackground struct {
-	Yellow           bool `json:"yellow,omitzero"`
-	Red              bool `json:"red,omitzero"`
-	Purple           bool `json:"purple,omitzero"`
-	Green            bool `json:"green,omitzero"`
-	Blue             bool `json:"blue,omitzero"`
-	Violet           bool `json:"violet,omitzero"`
-	OnAStrangePlanet bool `json:"on_a_strange_planet,omitzero"`
-}
-
-// UserDataPurchasedPlan defines a model
-type UserDataPurchasedPlan struct {
-	Consecutive     UserDataPurchasedPlanConsecutive `json:"consecutive"`
-	MysteryItems    []struct{}                       `json:"mysteryItems,omitempty"`
-	GemsBought      int                              `json:"gemsBought,omitzero"`
-	ExtraMonths     int                              `json:"extraMonths,omitzero"`
-	Quantity        int                              `json:"quantity,omitzero"`
-	DateUpdated     time.Time                        `json:"dateUpdated,omitzero"`
-	PerkMonthCount  int                              `json:"perkMonthCount,omitzero"`
-	CumulativeCount int                              `json:"cumulativeCount,omitzero"`
-}
-
-// UserDataPurchasedPlanConsecutive defines a model
-type UserDataPurchasedPlanConsecutive struct {
-	Trinkets    int `json:"trinkets,omitzero"`
-	GemCapExtra int `json:"gemCapExtra,omitzero"`
-	Offset      int `json:"offset,omitzero"`
-	Count       int `json:"count,omitzero"`
 }
 
 // UserDataStats defines a model
