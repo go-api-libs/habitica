@@ -1904,6 +1904,18 @@
             "type": "number",
             "format": "double",
             "example": 45.59999999999991
+          },
+          "toNextLevel": {
+            "type": "integer",
+            "example": 2340
+          },
+          "maxHealth": {
+            "type": "integer",
+            "example": 50
+          },
+          "maxMP": {
+            "type": "integer",
+            "example": 128
           }
         },
         "required": [
@@ -2621,7 +2633,7 @@
             "$ref": "#/components/schemas/UserDataProfile"
           },
           "stats": {
-            "$ref": "#/components/schemas/UserDataStats"
+            "$ref": "#/components/schemas/Stats"
           },
           "inbox": {
             "$ref": "#/components/schemas/Inbox"
@@ -5581,94 +5593,6 @@
         },
         "required": [
           "name"
-        ]
-      },
-      "UserDataStats": {
-        "type": "object",
-        "properties": {
-          "buffs": {
-            "$ref": "#/components/schemas/Buffs"
-          },
-          "training": {
-            "$ref": "#/components/schemas/Training"
-          },
-          "per": {
-            "type": "integer",
-            "example": 11
-          },
-          "int": {
-            "type": "integer",
-            "example": 11
-          },
-          "con": {
-            "type": "integer",
-            "example": 22
-          },
-          "str": {
-            "type": "integer",
-            "example": 32
-          },
-          "points": {
-            "type": "integer",
-            "example": 0
-          },
-          "class": {
-            "type": "string",
-            "example": "warrior"
-          },
-          "lvl": {
-            "type": "integer",
-            "example": 76
-          },
-          "gp": {
-            "type": "number",
-            "format": "double",
-            "example": 8040.613527611553
-          },
-          "exp": {
-            "type": "integer",
-            "example": 208
-          },
-          "mp": {
-            "type": "number",
-            "format": "double",
-            "example": 16.91314431111516
-          },
-          "hp": {
-            "type": "number",
-            "format": "double",
-            "example": 42.79999999999994
-          },
-          "toNextLevel": {
-            "type": "integer",
-            "example": 2340
-          },
-          "maxHealth": {
-            "type": "integer",
-            "example": 50
-          },
-          "maxMP": {
-            "type": "integer",
-            "example": 128
-          }
-        },
-        "required": [
-          "buffs",
-          "training",
-          "per",
-          "int",
-          "con",
-          "str",
-          "points",
-          "class",
-          "lvl",
-          "gp",
-          "exp",
-          "mp",
-          "hp",
-          "toNextLevel",
-          "maxHealth",
-          "maxMP"
         ]
       },
       "UserDataTags": {
