@@ -115,6 +115,34 @@
           }
         }
       }
+    },
+    "/user/class/cast/{spellId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/spellId"
+        },
+        {
+          "$ref": "#/components/parameters/targetId"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/X-Client"
+        }
+      ],
+      "post": {
+        "description": "Cast a skill (spell) on a target",
+        "operationId": "Cast",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Cast"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -511,6 +539,51 @@
           "spookySparkles",
           "shinySeed",
           "seafoam"
+        ]
+      },
+      "CastResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CastResponseData"
+          },
+          "notifications": {
+            "$ref": "#/components/schemas/Notifications"
+          },
+          "userV": {
+            "type": "integer",
+            "example": 16038
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "5.48.7"
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "notifications",
+          "userV",
+          "appVersion"
+        ]
+      },
+      "CastResponseData": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "task": {
+            "$ref": "#/components/schemas/Task"
+          }
+        },
+        "required": [
+          "user",
+          "task"
         ]
       },
       "Challenge": {
@@ -1149,15 +1222,90 @@
           "training"
         ]
       },
+      "Stats": {
+        "type": "object",
+        "properties": {
+          "buffs": {
+            "$ref": "#/components/schemas/Buffs"
+          },
+          "training": {
+            "$ref": "#/components/schemas/UserDataStatsTraining"
+          },
+          "per": {
+            "type": "integer",
+            "example": 11
+          },
+          "int": {
+            "type": "integer",
+            "example": 11
+          },
+          "con": {
+            "type": "integer",
+            "example": 22
+          },
+          "str": {
+            "type": "integer",
+            "example": 32
+          },
+          "points": {
+            "type": "integer",
+            "example": 0
+          },
+          "class": {
+            "type": "string",
+            "example": "warrior"
+          },
+          "lvl": {
+            "type": "integer",
+            "example": 76
+          },
+          "gp": {
+            "type": "number",
+            "format": "double",
+            "example": 8192.49676456646
+          },
+          "exp": {
+            "type": "integer",
+            "example": 1215
+          },
+          "mp": {
+            "type": "number",
+            "format": "double",
+            "example": 113.38473780814007
+          },
+          "hp": {
+            "type": "number",
+            "format": "double",
+            "example": 45.59999999999991
+          }
+        },
+        "required": [
+          "buffs",
+          "training",
+          "per",
+          "int",
+          "con",
+          "str",
+          "points",
+          "class",
+          "lvl",
+          "gp",
+          "exp",
+          "mp",
+          "hp"
+        ]
+      },
       "Task": {
         "type": "object",
         "properties": {
           "_id": {
+            "description": "The ID of the task.",
             "type": "string",
             "format": "uuid",
             "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
           },
           "userId": {
+            "description": "The ID of the user who owns the tasks.",
             "type": "string",
             "format": "uuid",
             "example": "b0413351-405f-416f-8787-947ec1c85199"
@@ -1636,11 +1784,7 @@
             "$ref": "#/components/schemas/UserData"
           },
           "notifications": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
+            "$ref": "#/components/schemas/Notifications"
           },
           "userV": {
             "type": "integer",
@@ -1649,6 +1793,154 @@
           "appVersion": {
             "type": "string",
             "example": "5.48.6"
+          },
+          "auth": {
+            "$ref": "#/components/schemas/Auth"
+          },
+          "achievements": {
+            "$ref": "#/components/schemas/Achievements"
+          },
+          "backer": {
+            "type": "object"
+          },
+          "contributor": {
+            "type": "object"
+          },
+          "permissions": {
+            "type": "object"
+          },
+          "purchased": {
+            "$ref": "#/components/schemas/UserDataPurchased"
+          },
+          "flags": {
+            "$ref": "#/components/schemas/UserDataFlags"
+          },
+          "history": {
+            "$ref": "#/components/schemas/UserDataHistory"
+          },
+          "items": {
+            "$ref": "#/components/schemas/UserDataItems"
+          },
+          "invitations": {
+            "$ref": "#/components/schemas/UserDataInvitations"
+          },
+          "party": {
+            "$ref": "#/components/schemas/UserDataParty"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/UserDataPreferences"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/UserDataProfile"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/Stats"
+          },
+          "inbox": {
+            "$ref": "#/components/schemas/Inbox"
+          },
+          "tasksOrder": {
+            "$ref": "#/components/schemas/TasksOrder"
+          },
+          "_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "8027d396-e2bb-4389-b002-782025424e75"
+          },
+          "_ABtest": {
+            "type": "string",
+            "example": ""
+          },
+          "loginIncentives": {
+            "type": "integer",
+            "example": 1560
+          },
+          "webhooks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "pushDevices": {
+            "$ref": "#/components/schemas/PushDevices"
+          },
+          "extra": {
+            "type": "object"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/UserDataTags"
+          },
+          "guilds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "cf0a9cb8-606e-4bf0-bcad-f9b1715b8819"
+            }
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3cb189ef-3a5d-4177-8bc6-fad7f4c055bf"
+            }
+          },
+          "newMessages": {
+            "type": "object"
+          },
+          "lastCron": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-08-01T03:16:28.361Z"
+          },
+          "balance": {
+            "type": "integer",
+            "example": 26
+          },
+          "_v": {
+            "type": "integer",
+            "example": 16038
+          },
+          "apiToken": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b65ecff6-60dd-4947-a904-c6678b9c6e81"
+          },
+          "migration": {
+            "type": "string",
+            "example": "20267namingday"
+          },
+          "pinnedItems": {
+            "$ref": "#/components/schemas/UserDataPinnedItems"
+          },
+          "unpinnedItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "invitesSent": {
+            "type": "integer",
+            "example": 4
+          },
+          "pinnedItemsOrder": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "_subSignature": {
+            "type": "string",
+            "example": "NOT_RUNNING"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "8027d396-e2bb-4389-b002-782025424e75"
           }
         },
         "required": [
@@ -1886,7 +2178,7 @@
           "lastNewStuffRead": {
             "type": "string",
             "format": "uuid",
-            "example": "de377c3a-208e-4b23-98d1-58f7c4f305d5"
+            "example": "e456638e-2fa9-44f8-b986-5ec053ef64f2"
           },
           "rewrite": {
             "type": "boolean",
@@ -1914,7 +2206,7 @@
           },
           "cronCount": {
             "type": "integer",
-            "example": 1486
+            "example": 1508
           },
           "welcomed": {
             "type": "boolean",
@@ -1959,7 +2251,7 @@
           "thirdPartyTools": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-07-05T21:37:40.576Z"
+            "example": "2026-08-01T21:13:24.390Z"
           },
           "newStuff": {
             "type": "boolean",
@@ -2333,27 +2625,27 @@
         "properties": {
           "Wolf": {
             "type": "integer",
-            "example": 103
+            "example": 105
           },
           "Cactus": {
             "type": "integer",
-            "example": 131
+            "example": 135
           },
           "PandaCub": {
             "type": "integer",
-            "example": 115
+            "example": 119
           },
           "Fox": {
             "type": "integer",
-            "example": 100
+            "example": 101
           },
           "BearCub": {
             "type": "integer",
-            "example": 106
+            "example": 109
           },
           "Dragon": {
             "type": "integer",
-            "example": 116
+            "example": 119
           },
           "LionCub": {
             "type": "integer",
@@ -2361,11 +2653,11 @@
           },
           "FlyingPig": {
             "type": "integer",
-            "example": 107
+            "example": 110
           },
           "TigerCub": {
             "type": "integer",
-            "example": 122
+            "example": 123
           }
         },
         "required": [
@@ -2385,83 +2677,83 @@
         "properties": {
           "Potatoe": {
             "type": "integer",
-            "example": 91
+            "example": 94
           },
           "Chocolate": {
             "type": "integer",
-            "example": 110
+            "example": 113
           },
           "CottonCandyPink": {
             "type": "integer",
-            "example": 105
+            "example": 107
           },
           "Meat": {
             "type": "integer",
-            "example": 86
+            "example": 87
           },
           "CottonCandyBlue": {
             "type": "integer",
-            "example": 95
+            "example": 97
           },
           "RottenMeat": {
             "type": "integer",
-            "example": 109
+            "example": 110
           },
           "Cake_Skeleton": {
             "type": "integer",
-            "example": 15
+            "example": 16
           },
           "Cake_Base": {
             "type": "integer",
-            "example": 17
+            "example": 18
           },
           "Cake_CottonCandyBlue": {
             "type": "integer",
-            "example": 14
+            "example": 15
           },
           "Cake_CottonCandyPink": {
             "type": "integer",
-            "example": 15
+            "example": 16
           },
           "Cake_Shade": {
             "type": "integer",
-            "example": 14
+            "example": 15
           },
           "Cake_White": {
             "type": "integer",
-            "example": 15
+            "example": 16
           },
           "Cake_Golden": {
             "type": "integer",
-            "example": 14
+            "example": 16
           },
           "Cake_Zombie": {
             "type": "integer",
-            "example": 17
+            "example": 18
           },
           "Cake_Desert": {
             "type": "integer",
-            "example": 14
+            "example": 15
           },
           "Cake_Red": {
             "type": "integer",
-            "example": 16
+            "example": 17
           },
           "Honey": {
             "type": "integer",
-            "example": 124
+            "example": 126
           },
           "Strawberry": {
             "type": "integer",
-            "example": 110
+            "example": 111
           },
           "Milk": {
             "type": "integer",
-            "example": 79
+            "example": 81
           },
           "Fish": {
             "type": "integer",
-            "example": 91
+            "example": 102
           },
           "Saddle": {
             "type": "integer",
@@ -3326,19 +3618,19 @@
           },
           "Desert": {
             "type": "integer",
-            "example": 130
+            "example": 131
           },
           "CottonCandyPink": {
             "type": "integer",
-            "example": 79
+            "example": 80
           },
           "CottonCandyBlue": {
             "type": "integer",
-            "example": 64
+            "example": 66
           },
           "Red": {
             "type": "integer",
-            "example": 99
+            "example": 101
           },
           "Zombie": {
             "type": "integer",
@@ -3346,23 +3638,23 @@
           },
           "Base": {
             "type": "integer",
-            "example": 146
+            "example": 149
           },
           "White": {
             "type": "integer",
-            "example": 142
+            "example": 145
           },
           "Shade": {
             "type": "integer",
-            "example": 100
+            "example": 105
           },
           "Skeleton": {
             "type": "integer",
-            "example": 92
+            "example": 95
           },
           "Golden": {
             "type": "integer",
-            "example": 55
+            "example": 59
           }
         },
         "required": [
@@ -3389,7 +3681,7 @@
           "date": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-07-05T21:20:38.720Z"
+            "example": "2026-08-01T14:45:39.388Z"
           }
         },
         "required": [
@@ -4613,7 +4905,7 @@
           "up": {
             "type": "number",
             "format": "double",
-            "example": 2.722206363050413
+            "example": 36.68395499693019
           },
           "down": {
             "type": "integer",
@@ -4780,7 +5072,7 @@
           },
           "language": {
             "type": "string",
-            "example": "de"
+            "example": "en"
           },
           "webhooks": {
             "type": "object"
@@ -5292,7 +5584,7 @@
         "type": "object",
         "properties": {
           "buffs": {
-            "$ref": "#/components/schemas/UserDataStatsBuffs"
+            "$ref": "#/components/schemas/Buffs"
           },
           "training": {
             "$ref": "#/components/schemas/UserDataStatsTraining"
@@ -5376,63 +5668,6 @@
           "maxMP"
         ]
       },
-      "UserDataStatsBuffs": {
-        "type": "object",
-        "properties": {
-          "str": {
-            "type": "integer",
-            "example": 0
-          },
-          "int": {
-            "type": "integer",
-            "example": 0
-          },
-          "per": {
-            "type": "integer",
-            "example": 0
-          },
-          "con": {
-            "type": "integer",
-            "example": 0
-          },
-          "stealth": {
-            "type": "integer",
-            "example": 0
-          },
-          "streaks": {
-            "type": "boolean",
-            "example": false
-          },
-          "seafoam": {
-            "type": "boolean",
-            "example": false
-          },
-          "shinySeed": {
-            "type": "boolean",
-            "example": false
-          },
-          "snowball": {
-            "type": "boolean",
-            "example": false
-          },
-          "spookySparkles": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "str",
-          "int",
-          "per",
-          "con",
-          "stealth",
-          "streaks",
-          "seafoam",
-          "shinySeed",
-          "snowball",
-          "spookySparkles"
-        ]
-      },
       "UserDataStatsTraining": {
         "type": "object",
         "properties": {
@@ -5491,6 +5726,16 @@
       }
     },
     "responses": {
+      "Cast": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CastResponse"
+            }
+          }
+        }
+      },
       "Error": {
         "description": "An error returned by the server, e.g. Not Found",
         "content": {
@@ -5583,6 +5828,47 @@
             "up",
             "down"
           ]
+        }
+      },
+      "spellId": {
+        "name": "spellId",
+        "in": "path",
+        "description": "The name of the spell or skill",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "fireball",
+            "mpheal",
+            "earth",
+            "frost",
+            "smash",
+            "defensiveStance",
+            "valorousPresence",
+            "intimidate",
+            "pickPocket",
+            "backStab",
+            "toolsOfTrade",
+            "stealth",
+            "heal",
+            "protectAura",
+            "brightness",
+            "healAll",
+            "snowball",
+            "spookySparkles",
+            "seafoam",
+            "shinySeed"
+          ]
+        }
+      },
+      "targetId": {
+        "name": "targetId",
+        "in": "query",
+        "description": "The ID of the target task",
+        "schema": {
+          "type": "string",
+          "format": "uuid",
+          "example": "f7591dce-398a-4e12-ba23-18542f9f0bef"
         }
       },
       "taskId": {
