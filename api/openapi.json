@@ -1853,7 +1853,7 @@
             "$ref": "#/components/schemas/Buffs"
           },
           "training": {
-            "$ref": "#/components/schemas/UserDataStatsTraining"
+            "$ref": "#/components/schemas/Training"
           },
           "per": {
             "type": "integer",
@@ -5587,7 +5587,7 @@
             "$ref": "#/components/schemas/Buffs"
           },
           "training": {
-            "$ref": "#/components/schemas/UserDataStatsTraining"
+            "$ref": "#/components/schemas/Training"
           },
           "per": {
             "type": "integer",
@@ -5666,34 +5666,6 @@
           "toNextLevel",
           "maxHealth",
           "maxMP"
-        ]
-      },
-      "UserDataStatsTraining": {
-        "type": "object",
-        "properties": {
-          "con": {
-            "type": "integer",
-            "example": 0
-          },
-          "str": {
-            "type": "number",
-            "format": "double",
-            "example": 29.414499390190787
-          },
-          "per": {
-            "type": "integer",
-            "example": 0
-          },
-          "int": {
-            "type": "integer",
-            "example": 0
-          }
-        },
-        "required": [
-          "con",
-          "str",
-          "per",
-          "int"
         ]
       },
       "UserDataTags": {

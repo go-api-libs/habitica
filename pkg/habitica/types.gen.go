@@ -509,19 +509,19 @@ type ScoreTaskResponseData struct {
 
 // Stats defines a model
 type Stats struct {
-	Buffs    Buffs                 `json:"buffs"`
-	Training UserDataStatsTraining `json:"training"`
-	Per      int                   `json:"per,omitzero"`
-	Int      int                   `json:"int,omitzero"`
-	Con      int                   `json:"con,omitzero"`
-	Str      int                   `json:"str,omitzero"`
-	Points   int                   `json:"points,omitzero"`
-	Class    string                `json:"class,omitzero"`
-	Lvl      int                   `json:"lvl,omitzero"`
-	Gp       float64               `json:"gp"`
-	Exp      int                   `json:"exp,omitzero"`
-	Mp       float64               `json:"mp"`
-	Hp       float64               `json:"hp"`
+	Buffs    Buffs    `json:"buffs"`
+	Training Training `json:"training"`
+	Per      int      `json:"per,omitzero"`
+	Int      int      `json:"int,omitzero"`
+	Con      int      `json:"con,omitzero"`
+	Str      int      `json:"str,omitzero"`
+	Points   int      `json:"points,omitzero"`
+	Class    string   `json:"class,omitzero"`
+	Lvl      int      `json:"lvl,omitzero"`
+	Gp       float64  `json:"gp"`
+	Exp      int      `json:"exp,omitzero"`
+	Mp       float64  `json:"mp"`
+	Hp       float64  `json:"hp"`
 }
 
 // Task defines a model
@@ -1352,30 +1352,22 @@ type UserDataProfile struct {
 
 // UserDataStats defines a model
 type UserDataStats struct {
-	Buffs       Buffs                 `json:"buffs"`
-	Training    UserDataStatsTraining `json:"training"`
-	Per         int                   `json:"per,omitzero"`
-	Int         int                   `json:"int,omitzero"`
-	Con         int                   `json:"con,omitzero"`
-	Str         int                   `json:"str,omitzero"`
-	Points      int                   `json:"points,omitzero"`
-	Class       string                `json:"class,omitzero"`
-	Lvl         int                   `json:"lvl,omitzero"`
-	Gp          float64               `json:"gp"`
-	Exp         int                   `json:"exp,omitzero"`
-	Mp          float64               `json:"mp"`
-	Hp          float64               `json:"hp"`
-	ToNextLevel int                   `json:"toNextLevel,omitzero"`
-	MaxHealth   int                   `json:"maxHealth,omitzero"`
-	MaxMp       int                   `json:"maxMP,omitzero"`
-}
-
-// UserDataStatsTraining defines a model
-type UserDataStatsTraining struct {
-	Con int     `json:"con,omitzero"`
-	Str float64 `json:"str"`
-	Per int     `json:"per,omitzero"`
-	Int int     `json:"int,omitzero"`
+	Buffs       Buffs    `json:"buffs"`
+	Training    Training `json:"training"`
+	Per         int      `json:"per,omitzero"`
+	Int         int      `json:"int,omitzero"`
+	Con         int      `json:"con,omitzero"`
+	Str         int      `json:"str,omitzero"`
+	Points      int      `json:"points,omitzero"`
+	Class       string   `json:"class,omitzero"`
+	Lvl         int      `json:"lvl,omitzero"`
+	Gp          float64  `json:"gp"`
+	Exp         int      `json:"exp,omitzero"`
+	Mp          float64  `json:"mp"`
+	Hp          float64  `json:"hp"`
+	ToNextLevel int      `json:"toNextLevel,omitzero"`
+	MaxHealth   int      `json:"maxHealth,omitzero"`
+	MaxMp       int      `json:"maxMP,omitzero"`
 }
 
 // UserDataTags defines a model
