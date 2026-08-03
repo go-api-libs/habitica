@@ -409,3 +409,51 @@ func Cast[R any](ctx context.Context, c *Client, spellID string, params CastPara
 		return nil, api.NewErrUnknownStatusCode(rsp)
 	}
 }
+
+// POST /user/buy-health-potion
+func (c *Client) BuyHealthPotion(ctx context.Context, params BuyHealthPotionParams) (*BuyHealthPotionResponse, error) {
+	return BuyHealthPotion[BuyHealthPotionResponse](ctx, c, params)
+}
+
+// POST /user/buy-health-potion
+func BuyHealthPotion[R any](ctx context.Context, c *Client, params BuyHealthPotionParams) (*R, error) {
+	u := c.baseURL.JoinPath("user", "buy-health-potion")
+	req := (&http.Request{
+		Header: http.Header{
+			"X-Api-Key":  []string{c.apiKey},
+			"X-Client":   []string{c.client},
+			"X-Api-User": []string{params.XAPIUser.String()},
+			"User-Agent": []string{c.userAgent},
+		},
+		Host:       u.Host,
+		Method:     http.MethodPost,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		URL:        u,
+	}).WithContext(ctx)
+
+	rsp, err := c.cli.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer rsp.Body.Close()
+
+	switch rsp.StatusCode {
+	case http.StatusOK:
+		// OK
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out R
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				return nil, api.WrapDecodingError(rsp, err)
+			}
+
+			return &out, nil
+		default:
+			return nil, api.NewErrUnknownContentType(rsp)
+		}
+	default:
+		return nil, api.NewErrUnknownStatusCode(rsp)
+	}
+}

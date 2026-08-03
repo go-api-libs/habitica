@@ -48,6 +48,11 @@ type CastParams struct {
 	XAPIUser uuid.UUID
 }
 
+// BuyHealthPotionParams holds the query parameters for BuyHealthPotion.
+type BuyHealthPotionParams struct {
+	XAPIUser uuid.UUID
+}
+
 // Achievements defines a model
 type Achievements struct {
 	UltimateGearSets   UltimateGearSets   `json:"ultimateGearSets"`
@@ -150,6 +155,16 @@ type Buffs struct {
 	SpookySparkles bool `json:"spookySparkles,omitzero"`
 	ShinySeed      bool `json:"shinySeed,omitzero"`
 	Seafoam        bool `json:"seafoam,omitzero"`
+}
+
+// BuyHealthPotionResponse defines a model
+type BuyHealthPotionResponse struct {
+	Success       bool       `json:"success,omitzero"`
+	Data          Stats      `json:"data"`
+	Message       string     `json:"message,omitzero"`
+	Notifications []struct{} `json:"notifications,omitempty"`
+	UserV         int        `json:"userV,omitzero"`
+	AppVersion    string     `json:"appVersion,omitzero"`
 }
 
 // CastResponse defines a model

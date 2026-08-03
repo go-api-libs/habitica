@@ -3904,5 +3904,60 @@
 				"message": "Not enough mana."
 			}
 		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "https://habitica.com/api/v3/user/buy-health-potion",
+			"header": {
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			"body": {
+				"success": true,
+				"data": {
+					"buffs": {
+						"snowball": false,
+						"spookySparkles": false,
+						"shinySeed": false,
+						"seafoam": false,
+						"str": 0,
+						"int": 0,
+						"per": 0,
+						"con": 0,
+						"stealth": 0,
+						"streaks": false
+					},
+					"training": {
+						"con": 0,
+						"str": 29.414499390190787,
+						"per": 0,
+						"int": 0
+					},
+					"per": 11,
+					"int": 11,
+					"con": 22,
+					"str": 32,
+					"points": 0,
+					"class": "warrior",
+					"lvl": 76,
+					"gp": 8202.019428014579,
+					"exp": 1273,
+					"mp": 8.213685133445228,
+					"hp": 26.899999999999906
+				},
+				"message": "Bought Health Potion",
+				"notifications": [],
+				"userV": 16060,
+				"appVersion": "5.48.7"
+			}
+		}
 	}
 ]

@@ -146,6 +146,27 @@
           }
         }
       }
+    },
+    "/user/buy-health-potion": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/X-Client"
+        }
+      ],
+      "post": {
+        "operationId": "BuyHealthPotion",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/BuyHealthPotion"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -542,6 +563,45 @@
           "spookySparkles",
           "shinySeed",
           "seafoam"
+        ]
+      },
+      "BuyHealthPotionResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/Stats"
+          },
+          "message": {
+            "type": "string",
+            "example": "Bought Health Potion"
+          },
+          "notifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "example": null
+            }
+          },
+          "userV": {
+            "type": "integer",
+            "example": 16060
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "5.48.7"
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "message",
+          "notifications",
+          "userV",
+          "appVersion"
         ]
       },
       "CastResponse": {
@@ -5616,6 +5676,16 @@
       }
     },
     "responses": {
+      "BuyHealthPotion": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BuyHealthPotionResponse"
+            }
+          }
+        }
+      },
       "Cast": {
         "description": "OK",
         "content": {
