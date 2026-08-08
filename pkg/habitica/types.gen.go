@@ -53,6 +53,11 @@ type BuyHealthPotionParams struct {
 	XAPIUser uuid.UUID
 }
 
+// CronParams holds the query parameters for Cron.
+type CronParams struct {
+	XAPIUser uuid.UUID
+}
+
 // Achievements defines a model
 type Achievements struct {
 	UltimateGearSets   UltimateGearSets   `json:"ultimateGearSets"`
@@ -159,12 +164,12 @@ type Buffs struct {
 
 // BuyHealthPotionResponse defines a model
 type BuyHealthPotionResponse struct {
-	Success       bool       `json:"success,omitzero"`
-	Data          Stats      `json:"data"`
-	Message       string     `json:"message,omitzero"`
-	Notifications []struct{} `json:"notifications,omitempty"`
-	UserV         int        `json:"userV,omitzero"`
-	AppVersion    string     `json:"appVersion,omitzero"`
+	Success       bool          `json:"success,omitzero"`
+	Data          Stats         `json:"data"`
+	Message       string        `json:"message,omitzero"`
+	Notifications Notifications `json:"notifications,omitempty"`
+	UserV         int           `json:"userV,omitzero"`
+	AppVersion    string        `json:"appVersion,omitzero"`
 }
 
 // CastResponse defines a model
@@ -186,6 +191,15 @@ type CastResponseData struct {
 type Challenge struct {
 	TaskID uuid.UUID `json:"taskId,omitzero"`
 	ID     uuid.UUID `json:"id,omitzero"`
+}
+
+// CronResponse defines a model
+type CronResponse struct {
+	Success       bool          `json:"success,omitzero"`
+	Data          struct{}      `json:"data"`
+	Notifications Notifications `json:"notifications,omitempty"`
+	UserV         int           `json:"userV,omitzero"`
+	AppVersion    string        `json:"appVersion,omitzero"`
 }
 
 // Drop defines a model

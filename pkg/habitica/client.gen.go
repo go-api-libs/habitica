@@ -457,3 +457,56 @@ func BuyHealthPotion[R any](ctx context.Context, c *Client, params BuyHealthPoti
 		return nil, api.NewErrUnknownStatusCode(rsp)
 	}
 }
+
+// This causes cron to run. It assumes that the user has already been shown the Record Yesterday's Activity ("Check off any Dailies you did yesterday") screen and so it will immediately apply damage for incomplete due Dailies.
+//
+//	POST /cron
+func (c *Client) Cron(ctx context.Context, params CronParams) (*CronResponse, error) {
+	return Cron[CronResponse](ctx, c, params)
+}
+
+// This causes cron to run. It assumes that the user has already been shown the Record Yesterday's Activity ("Check off any Dailies you did yesterday") screen and so it will immediately apply damage for incomplete due Dailies.
+// You can define a custom result to unmarshal the response into.
+//
+//	POST /cron
+func Cron[R any](ctx context.Context, c *Client, params CronParams) (*R, error) {
+	u := c.baseURL.JoinPath("cron")
+	req := (&http.Request{
+		Header: http.Header{
+			"X-Api-Key":  []string{c.apiKey},
+			"X-Client":   []string{c.client},
+			"X-Api-User": []string{params.XAPIUser.String()},
+			"User-Agent": []string{c.userAgent},
+		},
+		Host:       u.Host,
+		Method:     http.MethodPost,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		URL:        u,
+	}).WithContext(ctx)
+
+	rsp, err := c.cli.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer rsp.Body.Close()
+
+	switch rsp.StatusCode {
+	case http.StatusOK:
+		// OK
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out R
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				return nil, api.WrapDecodingError(rsp, err)
+			}
+
+			return &out, nil
+		default:
+			return nil, api.NewErrUnknownContentType(rsp)
+		}
+	default:
+		return nil, api.NewErrUnknownStatusCode(rsp)
+	}
+}

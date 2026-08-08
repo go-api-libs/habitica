@@ -3959,5 +3959,29 @@
 				"appVersion": "5.48.7"
 			}
 		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "https://habitica.com/api/v3/cron",
+			"header": {
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			"body": {
+				"success": true,
+				"data": {},
+				"notifications": [],
+				"userV": 16098,
+				"appVersion": "5.49.0"
+			}
+		}
 	}
 ]

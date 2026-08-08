@@ -167,6 +167,29 @@
           }
         }
       }
+    },
+    "/cron": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/X-Client"
+        }
+      ],
+      "post": {
+        "summary": "Run cron",
+        "description": "This causes cron to run. It assumes that the user has already been shown the Record Yesterday's Activity (\"Check off any Dailies you did yesterday\") screen and so it will immediately apply damage for incomplete due Dailies.",
+        "operationId": "Cron",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CronResponse"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -580,11 +603,7 @@
             "example": "Bought Health Potion"
           },
           "notifications": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "example": null
-            }
+            "$ref": "#/components/schemas/Notifications"
           },
           "userV": {
             "type": "integer",
@@ -666,6 +685,36 @@
         "required": [
           "taskId",
           "id"
+        ]
+      },
+      "CronResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object"
+          },
+          "notifications": {
+            "$ref": "#/components/schemas/Notifications"
+          },
+          "userV": {
+            "type": "integer",
+            "example": 16098
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "5.49.0"
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "notifications",
+          "userV",
+          "appVersion"
         ]
       },
       "DateAsStringOrInt": {
@@ -5692,6 +5741,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/CastResponse"
+            }
+          }
+        }
+      },
+      "CronResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CronResponse"
             }
           }
         }
