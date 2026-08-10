@@ -827,4 +827,10 @@ func TestClient_Interactions(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("Cron: %v", err)
 	}
+
+	if _, err := c.ScoreTask(ctx, uuid.MustParse("91cf329e-0d0a-4c15-92a0-2e6748a470c9"), "up", ScoreTaskParams{
+		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+	}); err != nil {
+		t.Fatalf("ScoreTask: %v", err)
+	}
 }

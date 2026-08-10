@@ -756,6 +756,14 @@
           "dialog": {
             "type": "string",
             "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
+          },
+          "premium": {
+            "type": "boolean",
+            "example": false
+          },
+          "limited": {
+            "type": "boolean",
+            "example": false
           }
         },
         "required": [

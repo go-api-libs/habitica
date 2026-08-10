@@ -3983,5 +3983,73 @@
 				"appVersion": "5.49.0"
 			}
 		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "https://habitica.com/api/v3/tasks/91cf329e-0d0a-4c15-92a0-2e6748a470c9/score/up",
+			"header": {
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			"body": {
+				"success": true,
+				"data": {
+					"delta": 0.5798096619915684,
+					"_tmp": {
+						"quest": {
+							"progressDelta": 1
+						},
+						"drop": {
+							"value": 4,
+							"key": "CottonCandyBlue",
+							"premium": false,
+							"limited": false,
+							"type": "HatchingPotion",
+							"dialog": "Du hast ein Zuckerwattenblaues Schlüpfelixier gefunden!"
+						}
+					},
+					"buffs": {
+						"str": 0,
+						"int": 0,
+						"per": 0,
+						"con": 0,
+						"stealth": 0,
+						"streaks": false,
+						"seafoam": false,
+						"shinySeed": false,
+						"snowball": false,
+						"spookySparkles": false
+					},
+					"training": {
+						"con": 0,
+						"str": 29.414499390190787,
+						"per": 0,
+						"int": 0
+					},
+					"per": 11,
+					"int": 11,
+					"con": 22,
+					"str": 32,
+					"points": 0,
+					"class": "warrior",
+					"lvl": 76,
+					"gp": 8280,
+					"exp": 1574,
+					"mp": 13,
+					"hp": 36
+				},
+				"notifications": [],
+				"userV": 16121,
+				"appVersion": "5.49.0"
+			}
+		}
 	}
 ]

@@ -210,6 +210,8 @@ type Drop struct {
 	Key     string `json:"key,omitzero"`
 	Type    string `json:"type,omitzero"`
 	Dialog  string `json:"dialog,omitzero"`
+	Premium bool   `json:"premium,omitempty"`
+	Limited bool   `json:"limited,omitempty"`
 }
 
 // Error defines a model
