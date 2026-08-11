@@ -4051,5 +4051,75 @@
 				"appVersion": "5.49.0"
 			}
 		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "https://habitica.com/api/v3/tasks/0278da0a-6af9-47df-b0f6-79846adb3f36/score/up",
+			"header": {
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			"body": {
+				"success": true,
+				"data": {
+					"delta": 0.5798096619915684,
+					"_tmp": {
+						"crit": 2.992163009404389,
+						"quest": {
+							"progressDelta": 3,
+							"collection": 1
+						},
+						"drop": {
+							"value": 2,
+							"key": "White",
+							"premium": false,
+							"limited": false,
+							"type": "HatchingPotion",
+							"dialog": "Du hast ein Weißes Schlüpfelixier gefunden!"
+						}
+					},
+					"buffs": {
+						"str": 0,
+						"int": 0,
+						"per": 0,
+						"con": 0,
+						"stealth": 0,
+						"streaks": false,
+						"seafoam": false,
+						"shinySeed": false,
+						"snowball": false,
+						"spookySparkles": false
+					},
+					"training": {
+						"con": 0,
+						"str": 29.414499390190787,
+						"per": 0,
+						"int": 0
+					},
+					"per": 11,
+					"int": 11,
+					"con": 22,
+					"str": 32,
+					"points": 0,
+					"class": "warrior",
+					"lvl": 76,
+					"gp": 8290,
+					"exp": 1636,
+					"mp": 10,
+					"hp": 36
+				},
+				"notifications": [],
+				"userV": 16131,
+				"appVersion": "5.49.0"
+			}
+		}
 	}
 ]

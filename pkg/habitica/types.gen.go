@@ -660,6 +660,7 @@ type Tmp struct {
 	Quest       Quest    `json:"quest"`
 	Drop        Drop     `json:"drop"`
 	StreakBonus *float64 `json:"streakBonus,omitempty"`
+	Crit        *float64 `json:"crit,omitempty"`
 }
 
 // Training defines a model

@@ -2462,6 +2462,11 @@
             "type": "number",
             "format": "double",
             "example": 0.129413516556518
+          },
+          "crit": {
+            "type": "number",
+            "format": "double",
+            "example": 2.992163009404389
           }
         },
         "required": [
