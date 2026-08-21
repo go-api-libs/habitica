@@ -2,11 +2,13 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Habitica API",
-    "version": "0.0.1"
+    "version": "0.0.1",
+    "Extensions": null
   },
   "servers": [
     {
-      "url": "https://habitica.com/api/v3/"
+      "url": "https://habitica.com/api/v3/",
+      "Extensions": null
     }
   ],
   "paths": {
@@ -30,8 +32,10 @@
           "200": {
             "$ref": "#/components/responses/User"
           }
-        }
-      }
+        },
+        "Extensions": null
+      },
+      "Extensions": null
     },
     "/tasks/user": {
       "parameters": [
@@ -57,8 +61,10 @@
           "400": {
             "$ref": "#/components/responses/Error"
           }
-        }
-      }
+        },
+        "Extensions": null
+      },
+      "Extensions": null
     },
     "/tasks/{taskId}": {
       "parameters": [
@@ -82,8 +88,10 @@
           "200": {
             "$ref": "#/components/responses/TaskResponse"
           }
-        }
-      }
+        },
+        "Extensions": null
+      },
+      "Extensions": null
     },
     "/tasks/{taskId}/score/{direction}": {
       "parameters": [
@@ -113,8 +121,10 @@
           "404": {
             "$ref": "#/components/responses/Error"
           }
-        }
-      }
+        },
+        "Extensions": null
+      },
+      "Extensions": null
     },
     "/user/class/cast/{spellId}": {
       "parameters": [
@@ -144,8 +154,10 @@
           "401": {
             "$ref": "#/components/responses/Error"
           }
-        }
-      }
+        },
+        "Extensions": null
+      },
+      "Extensions": null
     },
     "/user/buy-health-potion": {
       "parameters": [
@@ -165,8 +177,10 @@
           "200": {
             "$ref": "#/components/responses/BuyHealthPotion"
           }
-        }
-      }
+        },
+        "Extensions": null
+      },
+      "Extensions": null
     },
     "/cron": {
       "parameters": [
@@ -188,8 +202,10 @@
           "200": {
             "$ref": "#/components/responses/CronResponse"
           }
-        }
-      }
+        },
+        "Extensions": null
+      },
+      "Extensions": null
     }
   },
   "components": {
@@ -202,7 +218,8 @@
           },
           "perfect": {
             "type": "integer",
-            "example": 93
+            "example": 93,
+            "Extensions": null
           },
           "quests": {
             "$ref": "#/components/schemas/AchievementsQuests"
@@ -211,92 +228,115 @@
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "partyUp": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "partyOn": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "habitBirthdays": {
             "type": "integer",
-            "example": 9
+            "example": 9,
+            "Extensions": null
           },
           "streak": {
             "type": "integer",
-            "example": 197
+            "example": 197,
+            "Extensions": null
           },
           "joinedGuild": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "joinedChallenge": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "habiticaDays": {
             "type": "integer",
-            "example": 9
+            "example": 9,
+            "Extensions": null
           },
           "invitedFriend": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "backToBasics": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "dustDevil": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "monsterMagus": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "completedTask": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "createdTask": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "fedPet": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "hatchedPet": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "purchasedEquipment": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "seeingRed": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shadyCustomer": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "royallyLoyal": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "allYourBase": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "pearlyPro": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -325,54 +365,66 @@
           "royallyLoyal",
           "allYourBase",
           "pearlyPro"
-        ]
+        ],
+        "Extensions": null
       },
       "AchievementsQuests": {
         "type": "object",
         "properties": {
           "dustbunnies": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "basilist": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "moon1": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "moon2": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "dysheartener": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "moon3": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "vice1": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "vice2": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "vice3": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "atom1": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "atom2": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           }
         },
         "required": [
@@ -387,29 +439,34 @@
           "vice3",
           "atom1",
           "atom2"
-        ]
+        ],
+        "Extensions": null
       },
       "Approval": {
         "type": "object",
         "properties": {
           "required": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "approved": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "requested": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
           "required",
           "approved",
           "requested"
-        ]
+        ],
+        "Extensions": null
       },
       "Auth": {
         "type": "object",
@@ -424,10 +481,12 @@
             "$ref": "#/components/schemas/AuthGoogle"
           },
           "apple": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "facebook": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           }
         },
         "required": [
@@ -436,14 +495,16 @@
           "google",
           "apple",
           "facebook"
-        ]
+        ],
+        "Extensions": null
       },
       "AuthGoogle": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "example": "117454340579493668837"
+            "example": "117454340579493668837",
+            "Extensions": null
           },
           "emails": {
             "$ref": "#/components/schemas/AuthGoogleEmails"
@@ -452,13 +513,15 @@
         "required": [
           "id",
           "emails"
-        ]
+        ],
+        "Extensions": null
       },
       "AuthGoogleEmails": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/AuthGoogleEmailsItem"
-        }
+        },
+        "Extensions": null
       },
       "AuthGoogleEmailsItem": {
         "type": "object",
@@ -466,37 +529,44 @@
           "value": {
             "type": "string",
             "format": "email",
-            "example": "marcodroesler@gmail.com"
+            "example": "marcodroesler@gmail.com",
+            "Extensions": null
           },
           "verified": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
           "value",
           "verified"
-        ]
+        ],
+        "Extensions": null
       },
       "AuthLocal": {
         "type": "object",
         "properties": {
           "username": {
             "type": "string",
-            "example": "markrosemaker"
+            "example": "markrosemaker",
+            "Extensions": null
           },
           "lowerCaseUsername": {
             "type": "string",
-            "example": "markrosemaker"
+            "example": "markrosemaker",
+            "Extensions": null
           },
           "email": {
             "type": "string",
             "format": "email",
-            "example": "marcodroesler@gmail.com"
+            "example": "marcodroesler@gmail.com",
+            "Extensions": null
           },
           "has_password": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -504,7 +574,8 @@
           "lowerCaseUsername",
           "email",
           "has_password"
-        ]
+        ],
+        "Extensions": null
       },
       "AuthTimestamps": {
         "type": "object",
@@ -512,67 +583,81 @@
           "loggedin": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-07-05T11:40:25.172Z"
+            "example": "2026-07-05T11:40:25.172Z",
+            "Extensions": null
           },
           "created": {
             "type": "string",
             "format": "date-time",
-            "example": "2017-01-26T18:12:42.188Z"
+            "example": "2017-01-26T18:12:42.188Z",
+            "Extensions": null
           },
           "updated": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-07-05T22:07:05.119Z"
+            "example": "2026-07-05T22:07:05.119Z",
+            "Extensions": null
           }
         },
         "required": [
           "loggedin",
           "created",
           "updated"
-        ]
+        ],
+        "Extensions": null
       },
       "Buffs": {
         "type": "object",
         "properties": {
           "str": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "int": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "per": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "con": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "stealth": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "streaks": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "snowball": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "spookySparkles": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "shinySeed": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "seafoam": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
@@ -586,32 +671,37 @@
           "spookySparkles",
           "shinySeed",
           "seafoam"
-        ]
+        ],
+        "Extensions": null
       },
       "BuyHealthPotionResponse": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "data": {
             "$ref": "#/components/schemas/Stats"
           },
           "message": {
             "type": "string",
-            "example": "Bought Health Potion"
+            "example": "Bought Health Potion",
+            "Extensions": null
           },
           "notifications": {
             "$ref": "#/components/schemas/Notifications"
           },
           "userV": {
             "type": "integer",
-            "example": 16060
+            "example": 16060,
+            "Extensions": null
           },
           "appVersion": {
             "type": "string",
-            "example": "5.48.7"
+            "example": "5.48.7",
+            "Extensions": null
           }
         },
         "required": [
@@ -621,14 +711,16 @@
           "notifications",
           "userV",
           "appVersion"
-        ]
+        ],
+        "Extensions": null
       },
       "CastResponse": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "data": {
             "$ref": "#/components/schemas/CastResponseData"
@@ -638,11 +730,13 @@
           },
           "userV": {
             "type": "integer",
-            "example": 16038
+            "example": 16038,
+            "Extensions": null
           },
           "appVersion": {
             "type": "string",
-            "example": "5.48.7"
+            "example": "5.48.7",
+            "Extensions": null
           }
         },
         "required": [
@@ -651,7 +745,8 @@
           "notifications",
           "userV",
           "appVersion"
-        ]
+        ],
+        "Extensions": null
       },
       "CastResponseData": {
         "type": "object",
@@ -666,7 +761,8 @@
         "required": [
           "user",
           "task"
-        ]
+        ],
+        "Extensions": null
       },
       "Challenge": {
         "type": "object",
@@ -674,39 +770,46 @@
           "taskId": {
             "type": "string",
             "format": "uuid",
-            "example": "5f12bfba-da30-4733-ad01-9c42f9817975"
+            "example": "5f12bfba-da30-4733-ad01-9c42f9817975",
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "f23c12f2-5830-4f15-9c36-e17fd729a812"
+            "example": "f23c12f2-5830-4f15-9c36-e17fd729a812",
+            "Extensions": null
           }
         },
         "required": [
           "taskId",
           "id"
-        ]
+        ],
+        "Extensions": null
       },
       "CronResponse": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "data": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "notifications": {
             "$ref": "#/components/schemas/Notifications"
           },
           "userV": {
             "type": "integer",
-            "example": 16098
+            "example": 16098,
+            "Extensions": null
           },
           "appVersion": {
             "type": "string",
-            "example": "5.49.0"
+            "example": "5.49.0",
+            "Extensions": null
           }
         },
         "required": [
@@ -715,55 +818,67 @@
           "notifications",
           "userV",
           "appVersion"
-        ]
+        ],
+        "Extensions": null
       },
       "DateAsStringOrInt": {
         "oneOf": [
           {
             "type": "string",
             "format": "date-time",
-            "example": "2026-05-06T02:26:43.371Z"
+            "example": "2026-05-06T02:26:43.371Z",
+            "Extensions": null
           },
           {
             "type": "integer",
-            "example": 1485487350827
+            "example": 1485487350827,
+            "Extensions": null
           }
-        ]
+        ],
+        "Extensions": null
       },
       "Drop": {
         "type": "object",
         "properties": {
           "target": {
             "type": "string",
-            "example": "Zombie"
+            "example": "Zombie",
+            "Extensions": null
           },
           "canDrop": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "value": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "key": {
             "type": "string",
-            "example": "RottenMeat"
+            "example": "RottenMeat",
+            "Extensions": null
           },
           "type": {
             "type": "string",
-            "example": "Food"
+            "example": "Food",
+            "Extensions": null
           },
           "dialog": {
             "type": "string",
-            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed."
+            "example": "You've found Rotten Meat! Feed this to a pet and it may grow into a sturdy steed.",
+            "Extensions": null
           },
           "premium": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "limited": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
@@ -773,29 +888,34 @@
           "key",
           "type",
           "dialog"
-        ]
+        ],
+        "Extensions": null
       },
       "Error": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "error": {
             "type": "string",
-            "example": "NotAuthorized"
+            "example": "NotAuthorized",
+            "Extensions": null
           },
           "message": {
             "type": "string",
-            "example": "Not enough mana."
+            "example": "Not enough mana.",
+            "Extensions": null
           }
         },
         "required": [
           "success",
           "error",
           "message"
-        ]
+        ],
+        "Extensions": null
       },
       "Flags": {
         "type": "object",
@@ -808,80 +928,99 @@
           },
           "customizationsNotification": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "showTour": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "dropsEnabled": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "itemsEnabled": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "lastNewStuffRead": {
             "type": "string",
             "format": "uuid",
-            "example": "e456638e-2fa9-44f8-b986-5ec053ef64f2"
+            "example": "e456638e-2fa9-44f8-b986-5ec053ef64f2",
+            "Extensions": null
           },
           "rewrite": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "classSelected": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "rebirthEnabled": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "recaptureEmailsPhase": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "weeklyRecapEmailsPhase": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "communityGuidelinesAccepted": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "cronCount": {
             "type": "integer",
-            "example": 1508
+            "example": 1508,
+            "Extensions": null
           },
           "welcomed": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armoireEnabled": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armoireOpened": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armoireEmpty": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "cardReceived": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "warnedLowHealth": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "verifiedUsername": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "levelDrops": {
             "$ref": "#/components/schemas/FlagsLevelDrops"
@@ -889,20 +1028,24 @@
           "lastWeeklyRecap": {
             "type": "string",
             "format": "date-time",
-            "example": "2017-01-26T18:12:42.189Z"
+            "example": "2017-01-26T18:12:42.189Z",
+            "Extensions": null
           },
           "initializedUserHistory": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "thirdPartyTools": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-08-01T21:13:24.390Z"
+            "example": "2026-08-01T21:13:24.390Z",
+            "Extensions": null
           },
           "newStuff": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
@@ -932,26 +1075,31 @@
           "initializedUserHistory",
           "thirdPartyTools",
           "newStuff"
-        ]
+        ],
+        "Extensions": null
       },
       "FlagsLevelDrops": {
         "type": "object",
         "properties": {
           "atom1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "vice1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "goldenknight1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "moonstone1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -959,62 +1107,76 @@
           "vice1",
           "goldenknight1",
           "moonstone1"
-        ]
+        ],
+        "Extensions": null
       },
       "FlagsTour": {
         "type": "object",
         "properties": {
           "intro": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "classes": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "stats": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "tavern": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "party": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "guilds": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "challenges": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "market": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "pets": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "mounts": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "hall": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "equipment": {
             "type": "integer",
-            "example": -2
+            "example": -2,
+            "Extensions": null
           },
           "groupPlans": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           }
         },
         "required": [
@@ -1031,7 +1193,8 @@
           "hall",
           "equipment",
           "groupPlans"
-        ]
+        ],
+        "Extensions": null
       },
       "FlagsTutorial": {
         "type": "object",
@@ -1046,70 +1209,86 @@
         "required": [
           "common",
           "ios"
-        ]
+        ],
+        "Extensions": null
       },
       "FlagsTutorialCommon": {
         "type": "object",
         "properties": {
           "habits": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "dailies": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "todos": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "rewards": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "party": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "pets": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "gems": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "skills": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "classes": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "tavern": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "equipment": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "items": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "mounts": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "inbox": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "stats": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -1128,38 +1307,46 @@
           "mounts",
           "inbox",
           "stats"
-        ]
+        ],
+        "Extensions": null
       },
       "FlagsTutorialIos": {
         "type": "object",
         "properties": {
           "addTask": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "editTask": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "deleteTask": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "filterTask": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "groupPets": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "inviteParty": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "reorderTask": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
@@ -1170,7 +1357,8 @@
           "groupPets",
           "inviteParty",
           "reorderTask"
-        ]
+        ],
+        "Extensions": null
       },
       "Group": {
         "type": "object",
@@ -1182,29 +1370,35 @@
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "sharedCompletion": {
             "type": "string",
-            "example": "singleCompletion"
+            "example": "singleCompletion",
+            "Extensions": null
           },
           "completedBy": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           }
         },
         "required": [
           "approval",
           "assignedUsers",
           "sharedCompletion"
-        ]
+        ],
+        "Extensions": null
       },
       "Inbox": {
         "type": "object",
         "properties": {
           "optOut": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "messages": {
             "$ref": "#/components/schemas/Messages"
@@ -1213,12 +1407,15 @@
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "newMessages": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           }
         },
         "required": [
@@ -1226,13 +1423,15 @@
           "messages",
           "blocks",
           "newMessages"
-        ]
+        ],
+        "Extensions": null
       },
       "ListUserDataHistoryExp": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/ListUserDataHistoryExpItem"
-        }
+        },
+        "Extensions": null
       },
       "ListUserDataHistoryExpItem": {
         "type": "object",
@@ -1243,13 +1442,15 @@
           "value": {
             "type": "number",
             "format": "double",
-            "example": 4831.31241363118
+            "example": 4831.31241363118,
+            "Extensions": null
           }
         },
         "required": [
           "date",
           "value"
-        ]
+        ],
+        "Extensions": null
       },
       "Message": {
         "type": "object",
@@ -1257,55 +1458,68 @@
           "_id": {
             "type": "string",
             "format": "uuid",
-            "example": "068fe676-8854-43ff-a0cd-673d7b766f01"
+            "example": "068fe676-8854-43ff-a0cd-673d7b766f01",
+            "Extensions": null
           },
           "sent": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "flagCount": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "user": {
             "type": "string",
-            "example": "Marco Rösler"
+            "example": "Marco Rösler",
+            "Extensions": null
           },
           "backer": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "contributor": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "uuid": {
             "type": "string",
             "format": "uuid",
-            "example": "b0413351-405f-416f-8787-947ec1c85199"
+            "example": "b0413351-405f-416f-8787-947ec1c85199",
+            "Extensions": null
           },
           "flags": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "likes": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "timestamp": {
             "type": "string",
             "format": "date-time",
-            "example": "2017-01-30T16:57:58.245Z"
+            "example": "2017-01-30T16:57:58.245Z",
+            "Extensions": null
           },
           "text": {
             "type": "string",
-            "example": "Hi"
+            "example": "Hi",
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "068fe676-8854-43ff-a0cd-673d7b766f01"
+            "example": "068fe676-8854-43ff-a0cd-673d7b766f01",
+            "Extensions": null
           },
           "ownerId": {
             "type": "string",
             "format": "uuid",
-            "example": "b0413351-405f-416f-8787-947ec1c85199"
+            "example": "b0413351-405f-416f-8787-947ec1c85199",
+            "Extensions": null
           }
         },
         "required": [
@@ -1322,7 +1536,8 @@
           "text",
           "id",
           "ownerId"
-        ]
+        ],
+        "Extensions": null
       },
       "Message2": {
         "type": "object",
@@ -1330,55 +1545,68 @@
           "_id": {
             "type": "string",
             "format": "uuid",
-            "example": "83be6b88-4fd2-494c-8f9b-0bb22d2ff6cf"
+            "example": "83be6b88-4fd2-494c-8f9b-0bb22d2ff6cf",
+            "Extensions": null
           },
           "sent": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "flagCount": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "83be6b88-4fd2-494c-8f9b-0bb22d2ff6cf"
+            "example": "83be6b88-4fd2-494c-8f9b-0bb22d2ff6cf",
+            "Extensions": null
           },
           "text": {
             "type": "string",
-            "example": "It's a monster. I guess it's a play on the words basilisk and todo-list."
+            "example": "It's a monster. I guess it's a play on the words basilisk and todo-list.",
+            "Extensions": null
           },
           "timestamp": {
             "type": "string",
             "format": "date-time",
-            "example": "2017-02-20T22:54:36.242Z"
+            "example": "2017-02-20T22:54:36.242Z",
+            "Extensions": null
           },
           "likes": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "flags": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "uuid": {
             "type": "string",
             "format": "uuid",
-            "example": "0d95ece5-ec87-423c-84c5-6720f918f67e"
+            "example": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+            "Extensions": null
           },
           "contributor": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "backer": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "user": {
             "type": "string",
-            "example": "Frans Duijts"
+            "example": "Frans Duijts",
+            "Extensions": null
           },
           "ownerId": {
             "type": "string",
             "format": "uuid",
-            "example": "b0413351-405f-416f-8787-947ec1c85199"
+            "example": "b0413351-405f-416f-8787-947ec1c85199",
+            "Extensions": null
           }
         },
         "required": [
@@ -1395,7 +1623,8 @@
           "backer",
           "user",
           "ownerId"
-        ]
+        ],
+        "Extensions": null
       },
       "Messages": {
         "type": "object",
@@ -1422,48 +1651,57 @@
           "da886215-c4f4-4649-8be8-da7535a5e3dc",
           "a891481d-84e6-4bb5-9728-3948867ad46e",
           "068fe676-8854-43ff-a0cd-673d7b766f01"
-        ]
+        ],
+        "Extensions": null
       },
       "Notification": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
-            "example": "ITEM_RECEIVED"
+            "example": "ITEM_RECEIVED",
+            "Extensions": null
           },
           "data": {
             "$ref": "#/components/schemas/NotificationData"
           },
           "seen": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "c6333f37-308d-4a56-bf5f-a700ecb268c1"
+            "example": "c6333f37-308d-4a56-bf5f-a700ecb268c1",
+            "Extensions": null
           }
         },
-        "example": null
+        "example": null,
+        "Extensions": null
       },
       "NotificationData": {
         "type": "object",
         "properties": {
           "icon": {
             "type": "string",
-            "example": "notif_cake_naming_day"
+            "example": "notif_cake_naming_day",
+            "Extensions": null
           },
           "title": {
             "type": "string",
-            "example": "Happy Naming Day!"
+            "example": "Happy Naming Day!",
+            "Extensions": null
           },
           "text": {
             "type": "string",
-            "example": "To celebrate the day we became Habitica, we’ve awarded you some cake!"
+            "example": "To celebrate the day we became Habitica, we’ve awarded you some cake!",
+            "Extensions": null
           },
           "destination": {
             "type": "string",
-            "example": "/inventory/items"
+            "example": "/inventory/items",
+            "Extensions": null
           }
         },
         "required": [
@@ -1471,13 +1709,15 @@
           "title",
           "text",
           "destination"
-        ]
+        ],
+        "Extensions": null
       },
       "Notifications": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Notification"
-        }
+        },
+        "Extensions": null
       },
       "Party": {
         "type": "object",
@@ -1488,15 +1728,18 @@
           "_id": {
             "type": "string",
             "format": "uuid",
-            "example": "df72f208-0697-4e94-8973-7665a62f680f"
+            "example": "df72f208-0697-4e94-8973-7665a62f680f",
+            "Extensions": null
           },
           "order": {
             "type": "string",
-            "example": "level"
+            "example": "level",
+            "Extensions": null
           },
           "orderAscending": {
             "type": "string",
-            "example": "ascending"
+            "example": "ascending",
+            "Extensions": null
           }
         },
         "required": [
@@ -1504,7 +1747,8 @@
           "_id",
           "order",
           "orderAscending"
-        ]
+        ],
+        "Extensions": null
       },
       "PartyQuest": {
         "type": "object",
@@ -1514,13 +1758,15 @@
           },
           "RSVPNeeded": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
           "progress",
           "RSVPNeeded"
-        ]
+        ],
+        "Extensions": null
       },
       "PartyQuestProgress": {
         "type": "object",
@@ -1528,18 +1774,22 @@
           "up": {
             "type": "number",
             "format": "double",
-            "example": 36.68395499693019
+            "example": 36.68395499693019,
+            "Extensions": null
           },
           "down": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "collectedItems": {
             "type": "integer",
-            "example": 3
+            "example": 3,
+            "Extensions": null
           },
           "collect": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           }
         },
         "required": [
@@ -1547,30 +1797,35 @@
           "down",
           "collectedItems",
           "collect"
-        ]
+        ],
+        "Extensions": null
       },
       "PinnedItem": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
-            "example": "armoire"
+            "example": "armoire",
+            "Extensions": null
           },
           "path": {
             "type": "string",
-            "example": "armoire"
+            "example": "armoire",
+            "Extensions": null
           }
         },
         "required": [
           "type",
           "path"
-        ]
+        ],
+        "Extensions": null
       },
       "PinnedItems": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/PinnedItem"
-        }
+        },
+        "Extensions": null
       },
       "Purchased": {
         "type": "object",
@@ -1580,23 +1835,28 @@
           },
           "txnCount": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "background": {
             "$ref": "#/components/schemas/PurchasedBackground"
           },
           "shirt": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "hair": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "skin": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "ads": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
@@ -1607,38 +1867,46 @@
           "hair",
           "skin",
           "ads"
-        ]
+        ],
+        "Extensions": null
       },
       "PurchasedBackground": {
         "type": "object",
         "properties": {
           "yellow": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "red": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "purple": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "green": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "blue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "violet": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "on_a_strange_planet": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -1649,7 +1917,8 @@
           "blue",
           "violet",
           "on_a_strange_planet"
-        ]
+        ],
+        "Extensions": null
       },
       "PurchasedPlan": {
         "type": "object",
@@ -1661,33 +1930,41 @@
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "gemsBought": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "extraMonths": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "quantity": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "dateUpdated": {
             "type": "string",
             "format": "date-time",
-            "example": "2017-09-25T07:33:49.386Z"
+            "example": "2017-09-25T07:33:49.386Z",
+            "Extensions": null
           },
           "perkMonthCount": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "cumulativeCount": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           }
         },
         "required": [
@@ -1699,26 +1976,31 @@
           "dateUpdated",
           "perkMonthCount",
           "cumulativeCount"
-        ]
+        ],
+        "Extensions": null
       },
       "PurchasedPlanConsecutive": {
         "type": "object",
         "properties": {
           "trinkets": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "gemCapExtra": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "offset": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "count": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           }
         },
         "required": [
@@ -1726,28 +2008,33 @@
           "gemCapExtra",
           "offset",
           "count"
-        ]
+        ],
+        "Extensions": null
       },
       "PushDevice": {
         "type": "object",
         "properties": {
           "regId": {
             "type": "string",
-            "example": "ez5UbHEvoYc:APA91bFX1axNEhmBMdkLL948Om_zxO2uEcPJ9UcuIC9yAxmXvnjII3q9aE0Vupmnw8Bz8VhsCs93ewV6TuWVBjcBMXgRY1pjKRdgPy_zds_ovi1eiXuFm7sqxXq1ilG4jGtC5TjKD214"
+            "example": "ez5UbHEvoYc:APA91bFX1axNEhmBMdkLL948Om_zxO2uEcPJ9UcuIC9yAxmXvnjII3q9aE0Vupmnw8Bz8VhsCs93ewV6TuWVBjcBMXgRY1pjKRdgPy_zds_ovi1eiXuFm7sqxXq1ilG4jGtC5TjKD214",
+            "Extensions": null
           },
           "type": {
             "type": "string",
-            "example": "android"
+            "example": "android",
+            "Extensions": null
           },
           "updatedAt": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-07-05T12:10:06.709Z"
+            "example": "2026-07-05T12:10:06.709Z",
+            "Extensions": null
           },
           "createdAt": {
             "type": "string",
             "format": "date-time",
-            "example": "2017-01-30T08:20:39.251Z"
+            "example": "2017-01-30T08:20:39.251Z",
+            "Extensions": null
           }
         },
         "required": [
@@ -1755,13 +2042,15 @@
           "type",
           "updatedAt",
           "createdAt"
-        ]
+        ],
+        "Extensions": null
       },
       "PushDevices": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/PushDevice"
-        }
+        },
+        "Extensions": null
       },
       "Quest": {
         "type": "object",
@@ -1769,17 +2058,20 @@
           "progressDelta": {
             "type": "number",
             "format": "double",
-            "example": 1.2362778290756147
+            "example": 1.2362778290756147,
+            "Extensions": null
           },
           "collection": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           }
         },
         "required": [
           "progressDelta",
           "collection"
-        ]
+        ],
+        "Extensions": null
       },
       "Reminder": {
         "type": "object",
@@ -1787,57 +2079,69 @@
           "time": {
             "type": "string",
             "format": "date-time",
-            "example": "2017-01-13T16:21:00.074Z"
+            "example": "2017-01-13T16:21:00.074Z",
+            "Extensions": null
           },
           "startDate": {
             "type": "string",
             "format": "date-time",
-            "example": "2017-01-13T16:20:00.074Z"
+            "example": "2017-01-13T16:20:00.074Z",
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "b8b549c4-8d56-4e49-9b38-b4dcde9763b9"
+            "example": "b8b549c4-8d56-4e49-9b38-b4dcde9763b9",
+            "Extensions": null
           }
         },
-        "example": null
+        "example": null,
+        "Extensions": null
       },
       "Reminders": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Reminder"
-        }
+        },
+        "Extensions": null
       },
       "RepeatWeekly": {
         "type": "object",
         "properties": {
           "m": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "t": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "w": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "th": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "f": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "s": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "su": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -1848,14 +2152,16 @@
           "f",
           "s",
           "su"
-        ]
+        ],
+        "Extensions": null
       },
       "ScoreTaskResponse": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "data": {
             "$ref": "#/components/schemas/ScoreTaskResponseData"
@@ -1865,18 +2171,21 @@
           },
           "userV": {
             "type": "integer",
-            "example": 15919
+            "example": 15919,
+            "Extensions": null
           },
           "appVersion": {
             "type": "string",
-            "example": "5.48.6"
+            "example": "5.48.6",
+            "Extensions": null
           }
         },
         "required": [
           "success",
           "data",
           "notifications"
-        ]
+        ],
+        "Extensions": null
       },
       "ScoreTaskResponseData": {
         "type": "object",
@@ -1884,7 +2193,8 @@
           "delta": {
             "type": "number",
             "format": "double",
-            "example": 1.0259567046270648
+            "example": 1.0259567046270648,
+            "Extensions": null
           },
           "_tmp": {
             "$ref": "#/components/schemas/Tmp"
@@ -1892,50 +2202,61 @@
           "hp": {
             "type": "number",
             "format": "double",
-            "example": 44.49999999999995
+            "example": 44.49999999999995,
+            "Extensions": null
           },
           "mp": {
             "type": "number",
             "format": "double",
-            "example": 66.2390716654227
+            "example": 66.2390716654227,
+            "Extensions": null
           },
           "exp": {
             "type": "number",
             "format": "double",
-            "example": 143.93810026267545
+            "example": 143.93810026267545,
+            "Extensions": null
           },
           "gp": {
             "type": "number",
             "format": "double",
-            "example": 135.12889840462591
+            "example": 135.12889840462591,
+            "Extensions": null
           },
           "lvl": {
             "type": "integer",
-            "example": 20
+            "example": 20,
+            "Extensions": null
           },
           "class": {
             "type": "string",
-            "example": "rogue"
+            "example": "rogue",
+            "Extensions": null
           },
           "points": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "str": {
             "type": "integer",
-            "example": 6
+            "example": 6,
+            "Extensions": null
           },
           "con": {
             "type": "integer",
-            "example": 3
+            "example": 3,
+            "Extensions": null
           },
           "int": {
             "type": "integer",
-            "example": 3
+            "example": 3,
+            "Extensions": null
           },
           "per": {
             "type": "integer",
-            "example": 8
+            "example": 8,
+            "Extensions": null
           },
           "buffs": {
             "$ref": "#/components/schemas/Buffs"
@@ -1960,7 +2281,8 @@
           "per",
           "buffs",
           "training"
-        ]
+        ],
+        "Extensions": null
       },
       "Stats": {
         "type": "object",
@@ -1973,62 +2295,76 @@
           },
           "per": {
             "type": "integer",
-            "example": 11
+            "example": 11,
+            "Extensions": null
           },
           "int": {
             "type": "integer",
-            "example": 11
+            "example": 11,
+            "Extensions": null
           },
           "con": {
             "type": "integer",
-            "example": 22
+            "example": 22,
+            "Extensions": null
           },
           "str": {
             "type": "integer",
-            "example": 32
+            "example": 32,
+            "Extensions": null
           },
           "points": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "class": {
             "type": "string",
-            "example": "warrior"
+            "example": "warrior",
+            "Extensions": null
           },
           "lvl": {
             "type": "integer",
-            "example": 76
+            "example": 76,
+            "Extensions": null
           },
           "gp": {
             "type": "number",
             "format": "double",
-            "example": 8192.49676456646
+            "example": 8192.49676456646,
+            "Extensions": null
           },
           "exp": {
             "type": "integer",
-            "example": 1215
+            "example": 1215,
+            "Extensions": null
           },
           "mp": {
             "type": "number",
             "format": "double",
-            "example": 113.38473780814007
+            "example": 113.38473780814007,
+            "Extensions": null
           },
           "hp": {
             "type": "number",
             "format": "double",
-            "example": 45.59999999999991
+            "example": 45.59999999999991,
+            "Extensions": null
           },
           "toNextLevel": {
             "type": "integer",
-            "example": 2340
+            "example": 2340,
+            "Extensions": null
           },
           "maxHealth": {
             "type": "integer",
-            "example": 50
+            "example": 50,
+            "Extensions": null
           },
           "maxMP": {
             "type": "integer",
-            "example": 128
+            "example": 128,
+            "Extensions": null
           }
         },
         "required": [
@@ -2048,7 +2384,8 @@
           "toNextLevel",
           "maxHealth",
           "maxMP"
-        ]
+        ],
+        "Extensions": null
       },
       "Task": {
         "type": "object",
@@ -2057,51 +2394,62 @@
             "description": "The ID of the task.",
             "type": "string",
             "format": "uuid",
-            "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
+            "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0",
+            "Extensions": null
           },
           "userId": {
             "description": "The ID of the user who owns the tasks.",
             "type": "string",
             "format": "uuid",
-            "example": "b0413351-405f-416f-8787-947ec1c85199"
+            "example": "b0413351-405f-416f-8787-947ec1c85199",
+            "Extensions": null
           },
           "text": {
             "type": "string",
-            "example": "Eating Healthy"
+            "example": "Eating Healthy",
+            "Extensions": null
           },
           "alias": {
             "type": "string",
-            "example": "prac31"
+            "example": "prac31",
+            "Extensions": null
           },
           "type": {
             "type": "string",
-            "example": "habit"
+            "example": "habit",
+            "Extensions": null
           },
           "notes": {
             "type": "string",
-            "example": ""
+            "example": "",
+            "Extensions": null
           },
           "tags": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "47db4ec6-0985-48a5-9311-175d170c2798"
-            }
+              "example": "47db4ec6-0985-48a5-9311-175d170c2798",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "value": {
             "type": "number",
             "format": "double",
-            "example": 29.599561531838347
+            "example": 29.599561531838347,
+            "Extensions": null
           },
           "priority": {
             "type": "number",
             "format": "double",
-            "example": 1.5
+            "example": 1.5,
+            "Extensions": null
           },
           "attribute": {
             "type": "string",
-            "example": "str"
+            "example": "str",
+            "Extensions": null
           },
           "challenge": {
             "$ref": "#/components/schemas/Challenge"
@@ -2115,165 +2463,202 @@
           "createdAt": {
             "type": "string",
             "format": "date-time",
-            "example": "2021-07-18T23:26:04.322Z"
+            "example": "2021-07-18T23:26:04.322Z",
+            "Extensions": null
           },
           "updatedAt": {
             "type": "string",
             "format": "date-time",
-            "example": "2023-07-11T21:51:02.911Z"
+            "example": "2023-07-11T21:51:02.911Z",
+            "Extensions": null
           },
           "history": {
             "$ref": "#/components/schemas/TaskHistory"
           },
           "down": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "up": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0"
+            "example": "a237ab25-c7f8-4ebb-9205-5d17154d08a0",
+            "Extensions": null
           },
           "counterUp": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "counterDown": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "frequency": {
             "type": "string",
-            "example": "daily"
+            "example": "daily",
+            "Extensions": null
           },
           "byHabitica": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "repeat": {
             "$ref": "#/components/schemas/RepeatWeekly"
           },
           "everyX": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "streak": {
             "type": "integer",
-            "example": 1194
+            "example": 1194,
+            "Extensions": null
           },
           "nextDue": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "date-time",
-              "example": "2026-05-14T22:00:00.000Z"
-            }
+              "example": "2026-05-14T22:00:00.000Z",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "yesterDaily": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "completed": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "collapseChecklist": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "startDate": {
             "type": "string",
             "format": "date-time",
-            "example": "2021-07-17T22:00:00.000Z"
+            "example": "2021-07-17T22:00:00.000Z",
+            "Extensions": null
           },
           "daysOfMonth": {
             "type": "array",
             "items": {
               "type": "integer",
-              "example": 1
-            }
+              "example": 1,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "weeksOfMonth": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "checklist": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "isDue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "date": {
             "type": "string",
             "format": "date-time",
-            "example": "2021-09-26T00:13:00.000Z"
+            "example": "2021-09-26T00:13:00.000Z",
+            "Extensions": null
           },
           "delta": {
             "type": "number",
             "format": "double",
-            "example": 1.0259567046270648
+            "example": 1.0259567046270648,
+            "Extensions": null
           },
           "_tmp": {
             "$ref": "#/components/schemas/Tmp"
           },
           "hp": {
             "type": "integer",
-            "example": 50
+            "example": 50,
+            "Extensions": null
           },
           "mp": {
             "type": "number",
             "format": "double",
-            "example": 66.2390716654227
+            "example": 66.2390716654227,
+            "Extensions": null
           },
           "exp": {
             "type": "number",
             "format": "double",
-            "example": 143.93810026267545
+            "example": 143.93810026267545,
+            "Extensions": null
           },
           "gp": {
             "type": "number",
             "format": "double",
-            "example": 135.12889840462591
+            "example": 135.12889840462591,
+            "Extensions": null
           },
           "lvl": {
             "type": "integer",
-            "example": 20
+            "example": 20,
+            "Extensions": null
           },
           "class": {
             "type": "string",
-            "example": "rogue"
+            "example": "rogue",
+            "Extensions": null
           },
           "points": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "str": {
             "type": "integer",
-            "example": 6
+            "example": 6,
+            "Extensions": null
           },
           "con": {
             "type": "integer",
-            "example": 3
+            "example": 3,
+            "Extensions": null
           },
           "int": {
             "type": "integer",
-            "example": 3
+            "example": 3,
+            "Extensions": null
           },
           "per": {
             "type": "integer",
-            "example": 8
+            "example": 8,
+            "Extensions": null
           },
           "buffs": {
             "$ref": "#/components/schemas/Buffs"
@@ -2305,35 +2690,42 @@
           "updatedAt",
           "userId",
           "id"
-        ]
+        ],
+        "Extensions": null
       },
       "TaskActivity": {
         "type": "object",
         "properties": {
           "date": {
             "type": "integer",
-            "example": 1626804748216
+            "example": 1626804748216,
+            "Extensions": null
           },
           "value": {
             "type": "number",
             "format": "double",
-            "example": 1.9747
+            "example": 1.9747,
+            "Extensions": null
           },
           "scoredUp": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "scoredDown": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "isDue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "completed": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -2342,20 +2734,23 @@
           "scoredUp",
           "scoredDown"
         ],
-        "example": null
+        "example": null,
+        "Extensions": null
       },
       "TaskHistory": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/TaskActivity"
-        }
+        },
+        "Extensions": null
       },
       "TaskResponse": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "data": {
             "$ref": "#/components/schemas/Task"
@@ -2368,13 +2763,15 @@
           "success",
           "data",
           "notifications"
-        ]
+        ],
+        "Extensions": null
       },
       "Tasks": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Task"
-        }
+        },
+        "Extensions": null
       },
       "TasksOrder": {
         "type": "object",
@@ -2384,32 +2781,40 @@
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "c67ba660-5aaa-4cb5-88e1-00b4beeae775"
-            }
+              "example": "c67ba660-5aaa-4cb5-88e1-00b4beeae775",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "todos": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "9b2cf3d7-dd77-4444-93c6-6af45448acff"
-            }
+              "example": "9b2cf3d7-dd77-4444-93c6-6af45448acff",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "dailys": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "91cf329e-0d0a-4c15-92a0-2e6748a470c9"
-            }
+              "example": "91cf329e-0d0a-4c15-92a0-2e6748a470c9",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "habits": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "15fef52f-ce1b-4c54-b3f0-58b5047f4a47"
-            }
+              "example": "15fef52f-ce1b-4c54-b3f0-58b5047f4a47",
+              "Extensions": null
+            },
+            "Extensions": null
           }
         },
         "required": [
@@ -2417,14 +2822,16 @@
           "todos",
           "dailys",
           "habits"
-        ]
+        ],
+        "Extensions": null
       },
       "TasksResponse": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "data": {
             "$ref": "#/components/schemas/Tasks"
@@ -2434,11 +2841,13 @@
           },
           "userV": {
             "type": "integer",
-            "example": 15599
+            "example": 15599,
+            "Extensions": null
           },
           "appVersion": {
             "type": "string",
-            "example": "5.47.9"
+            "example": "5.47.9",
+            "Extensions": null
           }
         },
         "required": [
@@ -2447,7 +2856,8 @@
           "notifications",
           "userV",
           "appVersion"
-        ]
+        ],
+        "Extensions": null
       },
       "Tmp": {
         "type": "object",
@@ -2461,38 +2871,45 @@
           "streakBonus": {
             "type": "number",
             "format": "double",
-            "example": 0.129413516556518
+            "example": 0.129413516556518,
+            "Extensions": null
           },
           "crit": {
             "type": "number",
             "format": "double",
-            "example": 2.992163009404389
+            "example": 2.992163009404389,
+            "Extensions": null
           }
         },
         "required": [
           "quest",
           "drop"
-        ]
+        ],
+        "Extensions": null
       },
       "Training": {
         "type": "object",
         "properties": {
           "int": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "per": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "str": {
             "type": "number",
             "format": "double",
-            "example": 29.414499390190787
+            "example": 29.414499390190787,
+            "Extensions": null
           },
           "con": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           }
         },
         "required": [
@@ -2500,26 +2917,31 @@
           "per",
           "str",
           "con"
-        ]
+        ],
+        "Extensions": null
       },
       "UltimateGearSets": {
         "type": "object",
         "properties": {
           "warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "rogue": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "wizard": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "healer": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
@@ -2527,14 +2949,16 @@
           "rogue",
           "wizard",
           "healer"
-        ]
+        ],
+        "Extensions": null
       },
       "User": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "data": {
             "$ref": "#/components/schemas/UserData"
@@ -2544,11 +2968,13 @@
           },
           "userV": {
             "type": "integer",
-            "example": 15885
+            "example": 15885,
+            "Extensions": null
           },
           "appVersion": {
             "type": "string",
-            "example": "5.48.6"
+            "example": "5.48.6",
+            "Extensions": null
           },
           "auth": {
             "$ref": "#/components/schemas/Auth"
@@ -2557,13 +2983,16 @@
             "$ref": "#/components/schemas/Achievements"
           },
           "backer": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "contributor": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "permissions": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "purchased": {
             "$ref": "#/components/schemas/Purchased"
@@ -2601,28 +3030,34 @@
           "_id": {
             "type": "string",
             "format": "uuid",
-            "example": "8027d396-e2bb-4389-b002-782025424e75"
+            "example": "8027d396-e2bb-4389-b002-782025424e75",
+            "Extensions": null
           },
           "_ABtest": {
             "type": "string",
-            "example": ""
+            "example": "",
+            "Extensions": null
           },
           "loginIncentives": {
             "type": "integer",
-            "example": 1560
+            "example": 1560,
+            "Extensions": null
           },
           "webhooks": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "pushDevices": {
             "$ref": "#/components/schemas/PushDevices"
           },
           "extra": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "tags": {
             "$ref": "#/components/schemas/UserDataTags"
@@ -2632,41 +3067,51 @@
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "cf0a9cb8-606e-4bf0-bcad-f9b1715b8819"
-            }
+              "example": "cf0a9cb8-606e-4bf0-bcad-f9b1715b8819",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "challenges": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "3cb189ef-3a5d-4177-8bc6-fad7f4c055bf"
-            }
+              "example": "3cb189ef-3a5d-4177-8bc6-fad7f4c055bf",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "newMessages": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "lastCron": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-08-01T03:16:28.361Z"
+            "example": "2026-08-01T03:16:28.361Z",
+            "Extensions": null
           },
           "balance": {
             "type": "integer",
-            "example": 26
+            "example": 26,
+            "Extensions": null
           },
           "_v": {
             "type": "integer",
-            "example": 16038
+            "example": 16038,
+            "Extensions": null
           },
           "apiToken": {
             "type": "string",
             "format": "uuid",
-            "example": "b65ecff6-60dd-4947-a904-c6678b9c6e81"
+            "example": "b65ecff6-60dd-4947-a904-c6678b9c6e81",
+            "Extensions": null
           },
           "migration": {
             "type": "string",
-            "example": "20267namingday"
+            "example": "20267namingday",
+            "Extensions": null
           },
           "pinnedItems": {
             "$ref": "#/components/schemas/PinnedItems"
@@ -2675,28 +3120,35 @@
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "invitesSent": {
             "type": "integer",
-            "example": 4
+            "example": 4,
+            "Extensions": null
           },
           "pinnedItemsOrder": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "_subSignature": {
             "type": "string",
-            "example": "NOT_RUNNING"
+            "example": "NOT_RUNNING",
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "8027d396-e2bb-4389-b002-782025424e75"
+            "example": "8027d396-e2bb-4389-b002-782025424e75",
+            "Extensions": null
           }
         },
         "required": [
@@ -2705,7 +3157,8 @@
           "notifications",
           "userV",
           "appVersion"
-        ]
+        ],
+        "Extensions": null
       },
       "UserData": {
         "type": "object",
@@ -2717,13 +3170,16 @@
             "$ref": "#/components/schemas/Achievements"
           },
           "backer": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "contributor": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "permissions": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "purchased": {
             "$ref": "#/components/schemas/Purchased"
@@ -2761,28 +3217,34 @@
           "_id": {
             "type": "string",
             "format": "uuid",
-            "example": "b0413351-405f-416f-8787-947ec1c85199"
+            "example": "b0413351-405f-416f-8787-947ec1c85199",
+            "Extensions": null
           },
           "_ABtest": {
             "type": "string",
-            "example": ""
+            "example": "",
+            "Extensions": null
           },
           "loginIncentives": {
             "type": "integer",
-            "example": 1538
+            "example": 1538,
+            "Extensions": null
           },
           "webhooks": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "pushDevices": {
             "$ref": "#/components/schemas/PushDevices"
           },
           "extra": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "tags": {
             "$ref": "#/components/schemas/UserDataTags"
@@ -2795,36 +3257,45 @@
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "cf0a9cb8-606e-4bf0-bcad-f9b1715b8819"
-            }
+              "example": "cf0a9cb8-606e-4bf0-bcad-f9b1715b8819",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "challenges": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid",
-              "example": "3cb189ef-3a5d-4177-8bc6-fad7f4c055bf"
-            }
+              "example": "3cb189ef-3a5d-4177-8bc6-fad7f4c055bf",
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "newMessages": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "lastCron": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-07-05T11:40:25.172Z"
+            "example": "2026-07-05T11:40:25.172Z",
+            "Extensions": null
           },
           "balance": {
             "type": "integer",
-            "example": 21
+            "example": 21,
+            "Extensions": null
           },
           "_v": {
             "type": "integer",
-            "example": 15885
+            "example": 15885,
+            "Extensions": null
           },
           "migration": {
             "type": "string",
-            "example": "20264april-fools-2026"
+            "example": "20264april-fools-2026",
+            "Extensions": null
           },
           "pinnedItems": {
             "$ref": "#/components/schemas/PinnedItems"
@@ -2833,32 +3304,40 @@
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "invitesSent": {
             "type": "integer",
-            "example": 4
+            "example": 4,
+            "Extensions": null
           },
           "pinnedItemsOrder": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "_subSignature": {
             "type": "string",
-            "example": "NOT_RUNNING"
+            "example": "NOT_RUNNING",
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "b0413351-405f-416f-8787-947ec1c85199"
+            "example": "b0413351-405f-416f-8787-947ec1c85199",
+            "Extensions": null
           },
           "needsCron": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
@@ -2900,7 +3379,8 @@
           "_subSignature",
           "id",
           "needsCron"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataHistory": {
         "type": "object",
@@ -2915,34 +3395,41 @@
         "required": [
           "todos",
           "exp"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataInvitations": {
         "type": "object",
         "properties": {
           "party": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "guilds": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "parties": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           }
         },
         "required": [
           "party",
           "guilds",
           "parties"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItems": {
         "type": "object",
@@ -2976,11 +3463,13 @@
           },
           "currentPet": {
             "type": "string",
-            "example": ""
+            "example": "",
+            "Extensions": null
           },
           "currentMount": {
             "type": "string",
-            "example": "Dragon-Red"
+            "example": "Dragon-Red",
+            "Extensions": null
           }
         },
         "required": [
@@ -2995,46 +3484,56 @@
           "pets",
           "currentPet",
           "currentMount"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsEggs": {
         "type": "object",
         "properties": {
           "Wolf": {
             "type": "integer",
-            "example": 105
+            "example": 105,
+            "Extensions": null
           },
           "Cactus": {
             "type": "integer",
-            "example": 135
+            "example": 135,
+            "Extensions": null
           },
           "PandaCub": {
             "type": "integer",
-            "example": 119
+            "example": 119,
+            "Extensions": null
           },
           "Fox": {
             "type": "integer",
-            "example": 101
+            "example": 101,
+            "Extensions": null
           },
           "BearCub": {
             "type": "integer",
-            "example": 109
+            "example": 109,
+            "Extensions": null
           },
           "Dragon": {
             "type": "integer",
-            "example": 119
+            "example": 119,
+            "Extensions": null
           },
           "LionCub": {
             "type": "integer",
-            "example": 113
+            "example": 113,
+            "Extensions": null
           },
           "FlyingPig": {
             "type": "integer",
-            "example": 110
+            "example": 110,
+            "Extensions": null
           },
           "TigerCub": {
             "type": "integer",
-            "example": 123
+            "example": 123,
+            "Extensions": null
           }
         },
         "required": [
@@ -3047,174 +3546,216 @@
           "LionCub",
           "FlyingPig",
           "TigerCub"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsFood": {
         "type": "object",
         "properties": {
           "Potatoe": {
             "type": "integer",
-            "example": 94
+            "example": 94,
+            "Extensions": null
           },
           "Chocolate": {
             "type": "integer",
-            "example": 113
+            "example": 113,
+            "Extensions": null
           },
           "CottonCandyPink": {
             "type": "integer",
-            "example": 107
+            "example": 107,
+            "Extensions": null
           },
           "Meat": {
             "type": "integer",
-            "example": 87
+            "example": 87,
+            "Extensions": null
           },
           "CottonCandyBlue": {
             "type": "integer",
-            "example": 97
+            "example": 97,
+            "Extensions": null
           },
           "RottenMeat": {
             "type": "integer",
-            "example": 110
+            "example": 110,
+            "Extensions": null
           },
           "Cake_Skeleton": {
             "type": "integer",
-            "example": 16
+            "example": 16,
+            "Extensions": null
           },
           "Cake_Base": {
             "type": "integer",
-            "example": 18
+            "example": 18,
+            "Extensions": null
           },
           "Cake_CottonCandyBlue": {
             "type": "integer",
-            "example": 15
+            "example": 15,
+            "Extensions": null
           },
           "Cake_CottonCandyPink": {
             "type": "integer",
-            "example": 16
+            "example": 16,
+            "Extensions": null
           },
           "Cake_Shade": {
             "type": "integer",
-            "example": 15
+            "example": 15,
+            "Extensions": null
           },
           "Cake_White": {
             "type": "integer",
-            "example": 16
+            "example": 16,
+            "Extensions": null
           },
           "Cake_Golden": {
             "type": "integer",
-            "example": 16
+            "example": 16,
+            "Extensions": null
           },
           "Cake_Zombie": {
             "type": "integer",
-            "example": 18
+            "example": 18,
+            "Extensions": null
           },
           "Cake_Desert": {
             "type": "integer",
-            "example": 15
+            "example": 15,
+            "Extensions": null
           },
           "Cake_Red": {
             "type": "integer",
-            "example": 17
+            "example": 17,
+            "Extensions": null
           },
           "Honey": {
             "type": "integer",
-            "example": 126
+            "example": 126,
+            "Extensions": null
           },
           "Strawberry": {
             "type": "integer",
-            "example": 111
+            "example": 111,
+            "Extensions": null
           },
           "Milk": {
             "type": "integer",
-            "example": 81
+            "example": 81,
+            "Extensions": null
           },
           "Fish": {
             "type": "integer",
-            "example": 102
+            "example": 102,
+            "Extensions": null
           },
           "Saddle": {
             "type": "integer",
-            "example": 8
+            "example": 8,
+            "Extensions": null
           },
           "Candy_Skeleton": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "Candy_Base": {
             "type": "integer",
-            "example": 9
+            "example": 9,
+            "Extensions": null
           },
           "Candy_CottonCandyBlue": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "Candy_CottonCandyPink": {
             "type": "integer",
-            "example": 9
+            "example": 9,
+            "Extensions": null
           },
           "Candy_Shade": {
             "type": "integer",
-            "example": 9
+            "example": 9,
+            "Extensions": null
           },
           "Candy_White": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "Candy_Golden": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "Candy_Zombie": {
             "type": "integer",
-            "example": 11
+            "example": 11,
+            "Extensions": null
           },
           "Candy_Desert": {
             "type": "integer",
-            "example": 10
+            "example": 10,
+            "Extensions": null
           },
           "Candy_Red": {
             "type": "integer",
-            "example": 12
+            "example": 12,
+            "Extensions": null
           },
           "Pie_Skeleton": {
             "type": "integer",
-            "example": 13
+            "example": 13,
+            "Extensions": null
           },
           "Pie_Base": {
             "type": "integer",
-            "example": 13
+            "example": 13,
+            "Extensions": null
           },
           "Pie_CottonCandyBlue": {
             "type": "integer",
-            "example": 14
+            "example": 14,
+            "Extensions": null
           },
           "Pie_CottonCandyPink": {
             "type": "integer",
-            "example": 13
+            "example": 13,
+            "Extensions": null
           },
           "Pie_Shade": {
             "type": "integer",
-            "example": 15
+            "example": 15,
+            "Extensions": null
           },
           "Pie_White": {
             "type": "integer",
-            "example": 14
+            "example": 14,
+            "Extensions": null
           },
           "Pie_Golden": {
             "type": "integer",
-            "example": 18
+            "example": 18,
+            "Extensions": null
           },
           "Pie_Zombie": {
             "type": "integer",
-            "example": 12
+            "example": 12,
+            "Extensions": null
           },
           "Pie_Desert": {
             "type": "integer",
-            "example": 11
+            "example": 11,
+            "Extensions": null
           },
           "Pie_Red": {
             "type": "integer",
-            "example": 17
+            "example": 17,
+            "Extensions": null
           }
         },
         "required": [
@@ -3259,7 +3800,8 @@
           "Pie_Zombie",
           "Pie_Desert",
           "Pie_Red"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsGear": {
         "type": "object",
@@ -3278,60 +3820,72 @@
           "equipped",
           "costume",
           "owned"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsGearCostume": {
         "type": "object",
         "properties": {
           "shield": {
             "type": "string",
-            "example": "shield_base_0"
+            "example": "shield_base_0",
+            "Extensions": null
           },
           "head": {
             "type": "string",
-            "example": "head_base_0"
+            "example": "head_base_0",
+            "Extensions": null
           },
           "armor": {
             "type": "string",
-            "example": "armor_base_0"
+            "example": "armor_base_0",
+            "Extensions": null
           }
         },
         "required": [
           "shield",
           "head",
           "armor"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsGearEquipped": {
         "type": "object",
         "properties": {
           "weapon": {
             "type": "string",
-            "example": "weapon_special_2"
+            "example": "weapon_special_2",
+            "Extensions": null
           },
           "armor": {
             "type": "string",
-            "example": "armor_special_nomadsCuirass"
+            "example": "armor_special_nomadsCuirass",
+            "Extensions": null
           },
           "head": {
             "type": "string",
-            "example": "head_warrior_5"
+            "example": "head_warrior_5",
+            "Extensions": null
           },
           "shield": {
             "type": "string",
-            "example": "shield_special_wakizashi"
+            "example": "shield_special_wakizashi",
+            "Extensions": null
           },
           "back": {
             "type": "string",
-            "example": "back_special_namingDay2020"
+            "example": "back_special_namingDay2020",
+            "Extensions": null
           },
           "eyewear": {
             "type": "string",
-            "example": "eyewear_base_0"
+            "example": "eyewear_base_0",
+            "Extensions": null
           },
           "body": {
             "type": "string",
-            "example": "body_special_namingDay2018"
+            "example": "body_special_namingDay2018",
+            "Extensions": null
           }
         },
         "required": [
@@ -3342,518 +3896,646 @@
           "back",
           "eyewear",
           "body"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsGearOwned": {
         "type": "object",
         "properties": {
           "eyewear_special_yellowTopFrame": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_whiteTopFrame": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_redTopFrame": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_pinkTopFrame": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_greenTopFrame": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_blueTopFrame": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_blackTopFrame": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_bardRobes": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_bardHat": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_warrior_1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_warrior_0": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_warrior_1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_warrior_1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_warrior_2": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_warrior_2": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_bardInstrument": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_warrior_1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_warrior_2": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_warrior_2": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_warrior_3": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_lunarWarriorHelm": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_spring2017Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_warrior_3": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_pageArmor": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_pageHelm": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_warrior_3": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_pageBanner": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_diamondStave": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_lunarWarriorArmor": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_armoire_basicLongbow": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_warrior_4": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_warrior_3": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_lootBag": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_skeletonKey": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_sneakthiefRobes": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_clandestineCowl": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_winter2018Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_snowSovereignRobes": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_snowSovereignCrown": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday2015": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "back_special_snowdriftVeil": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_wintryMirror": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "headAccessory_special_blackHeadband": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "headAccessory_special_blueHeadband": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "headAccessory_special_greenHeadband": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "headAccessory_special_pinkHeadband": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "headAccessory_special_redHeadband": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "headAccessory_special_whiteHeadband": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "headAccessory_special_yellowHeadband": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_warrior_4": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_warrior_5": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_warrior_4": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_warrior_5": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_warrior_4": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_lunarScythe": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye2014": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_nomadsCuirass": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_nomadsScimitar": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_armoire_bigWig": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday2016": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_spikedHelm": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_piDay": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_piDay": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_blackHalfMoon": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_blueHalfMoon": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_greenHalfMoon": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_pinkHalfMoon": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_redHalfMoon": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_whiteHalfMoon": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "eyewear_special_yellowHalfMoon": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_namingDay2017": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye2015": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday2017": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "body_special_namingDay2018": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye2016": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday2018": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "back_special_namingDay2020": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_dandyHat": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_fencingFoil": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_dandySuit": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_warrior_5": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_warrior_5": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_warrior_6": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_fall2021Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_turkeyArmorBase": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "back_special_turkeyTailBase": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_turkeyHelmBase": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye2017": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_armoire_jesterBaton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_tachi": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_samuraiArmor": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_winter2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_winter2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_winter2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday2019": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_kabuto": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_wakizashi": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_2": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_armoire_potionBase": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_armoire_potionSkeleton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_spring2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_spring2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_fall2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_fall2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_fall2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_fall2022Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_turkeyArmorGilded": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "back_special_turkeyTailGilded": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_turkeyHelmGilded": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye2018": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_summer2023Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_summer2023Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_summer2023Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_summer2023Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye2019": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday2020": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye2020": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday2021": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_spring2025Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "weapon_special_spring2025Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_spring2025Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_special_spring2025Warrior": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "shield_armoire_baseballGlove": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "head_special_nye2021": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "armor_special_birthday2022": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -3984,54 +4666,66 @@
           "shield_armoire_baseballGlove",
           "head_special_nye2021",
           "armor_special_birthday2022"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsHatchingPotions": {
         "type": "object",
         "properties": {
           "RoyalPurple": {
             "type": "integer",
-            "example": 8
+            "example": 8,
+            "Extensions": null
           },
           "Desert": {
             "type": "integer",
-            "example": 131
+            "example": 131,
+            "Extensions": null
           },
           "CottonCandyPink": {
             "type": "integer",
-            "example": 80
+            "example": 80,
+            "Extensions": null
           },
           "CottonCandyBlue": {
             "type": "integer",
-            "example": 66
+            "example": 66,
+            "Extensions": null
           },
           "Red": {
             "type": "integer",
-            "example": 101
+            "example": 101,
+            "Extensions": null
           },
           "Zombie": {
             "type": "integer",
-            "example": 85
+            "example": 85,
+            "Extensions": null
           },
           "Base": {
             "type": "integer",
-            "example": 149
+            "example": 149,
+            "Extensions": null
           },
           "White": {
             "type": "integer",
-            "example": 145
+            "example": 145,
+            "Extensions": null
           },
           "Shade": {
             "type": "integer",
-            "example": 105
+            "example": 105,
+            "Extensions": null
           },
           "Skeleton": {
             "type": "integer",
-            "example": 95
+            "example": 95,
+            "Extensions": null
           },
           "Golden": {
             "type": "integer",
-            "example": 59
+            "example": 59,
+            "Extensions": null
           }
         },
         "required": [
@@ -4046,348 +4740,432 @@
           "Shade",
           "Skeleton",
           "Golden"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsLastDrop": {
         "type": "object",
         "properties": {
           "count": {
             "type": "integer",
-            "example": 3
+            "example": 3,
+            "Extensions": null
           },
           "date": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-08-01T14:45:39.388Z"
+            "example": "2026-08-01T14:45:39.388Z",
+            "Extensions": null
           }
         },
         "required": [
           "count",
           "date"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsMounts": {
         "type": "object",
         "properties": {
           "Wolf-RoyalPurple": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-Desert": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Orca-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Gryphon-RoyalPurple": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Hippogriff-Hopeful": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "JackOLantern-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Turkey-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-Red": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-Red": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "FlyingPig-Desert": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-Shade": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-Skeleton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-Zombie": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-Zombie": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-Skeleton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-CottonCandyPink": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-CottonCandyPink": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-CottonCandyBlue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Cactus-CottonCandyBlue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-Golden": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-Golden": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Fox-CottonCandyBlue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-Shade": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-Golden": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Cactus-Desert": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-Red": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "JackOLantern-Ghost": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Turkey-Gilded": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "JackOLantern-Glow": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "JackOLantern-RoyalPurple": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-Desert": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-Shade": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Wolf-Zombie": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-Desert": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-CottonCandyPink": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-CottonCandyBlue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "TigerCub-Golden": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-Red": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-Skeleton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-CottonCandyPink": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-CottonCandyBlue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "PandaCub-Golden": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "LionCub-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "LionCub-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "LionCub-Shade": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "LionCub-Skeleton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "LionCub-Zombie": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "LionCub-CottonCandyPink": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "LionCub-CottonCandyBlue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Fox-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Cactus-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "FlyingPig-Base": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "FlyingPig-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Fox-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-Desert": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-Shade": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-Skeleton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-Zombie": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Dragon-CottonCandyBlue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-Desert": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-Red": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-Shade": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-Skeleton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-Zombie": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-CottonCandyPink": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "BearCub-CottonCandyBlue": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Cactus-White": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Cactus-Red": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Cactus-Shade": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "Cactus-Skeleton": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -4471,446 +5249,556 @@
           "Cactus-Red",
           "Cactus-Shade",
           "Cactus-Skeleton"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsPets": {
         "type": "object",
         "properties": {
           "Wolf-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "PandaCub-Desert": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-Desert": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Fox-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Wolf-CottonCandyBlue": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Dragon-CottonCandyPink": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Dragon-Red": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "FlyingPig-CottonCandyPink": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Dragon-Zombie": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "LionCub-Desert": {
             "type": "integer",
-            "example": 45
+            "example": 45,
+            "Extensions": null
           },
           "BearCub-Desert": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Fox-Red": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "FlyingPig-Red": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "PandaCub-Base": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "LionCub-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Dragon-Golden": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-Base": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-CottonCandyBlue": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-CottonCandyPink": {
             "type": "integer",
-            "example": 25
+            "example": 25,
+            "Extensions": null
           },
           "Dragon-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "FlyingPig-Desert": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "FlyingPig-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Fox-CottonCandyBlue": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "LionCub-CottonCandyBlue": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "LionCub-Red": {
             "type": "integer",
-            "example": 45
+            "example": 45,
+            "Extensions": null
           },
           "PandaCub-Red": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Wolf-Red": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Wolf-Skeleton": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Wolf-White": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "TigerCub-White": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "PandaCub-White": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "TigerCub-Zombie": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "PandaCub-Zombie": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "TigerCub-Shade": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "PandaCub-Shade": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "TigerCub-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "TigerCub-Skeleton": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "TigerCub-Red": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Wolf-Veteran": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "JackOLantern-Base": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Turkey-Base": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Hippogriff-Hopeful": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Orca-Base": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Gryphon-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Tiger-Veteran": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "PandaCub-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Wolf-Base": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Wolf-Desert": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Wolf-Shade": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Wolf-Zombie": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Wolf-CottonCandyPink": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Wolf-Golden": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "TigerCub-Base": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "BearCub-White": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-Golden": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "PandaCub-Skeleton": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "TigerCub-Desert": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "TigerCub-CottonCandyPink": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "TigerCub-CottonCandyBlue": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "TigerCub-Golden": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "LionCub-Base": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Fox-Desert": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "FlyingPig-Skeleton": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Dragon-Skeleton": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "FlyingPig-White": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Dragon-Desert": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Fox-Shade": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "LionCub-Zombie": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "FlyingPig-Zombie": {
             "type": "integer",
-            "example": 15
+            "example": 15,
+            "Extensions": null
           },
           "Cactus-White": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Fox-Base": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Fox-Zombie": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Dragon-CottonCandyBlue": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Fox-CottonCandyPink": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "FlyingPig-CottonCandyBlue": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "LionCub-CottonCandyPink": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Fox-Skeleton": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "LionCub-Skeleton": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "LionCub-Shade": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Fox-White": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "LionCub-White": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "PandaCub-CottonCandyPink": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "FlyingPig-Shade": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "FlyingPig-Base": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Dragon-Base": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Dragon-White": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Dragon-Shade": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "PandaCub-CottonCandyBlue": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "Cactus-Base": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-Zombie": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-Shade": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-Skeleton": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-Zombie": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-CottonCandyPink": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-Red": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-Skeleton": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-Shade": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-Red": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "BearCub-CottonCandyBlue": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "PandaCub-Golden": {
             "type": "integer",
-            "example": -1
+            "example": -1,
+            "Extensions": null
           },
           "JackOLantern-Ghost": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Turkey-Gilded": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "JackOLantern-Glow": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "JackOLantern-RoyalPurple": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Lion-Veteran": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Bear-Veteran": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           },
           "Cactus-Golden": {
             "type": "integer",
-            "example": 5
+            "example": 5,
+            "Extensions": null
           }
         },
         "required": [
@@ -5023,66 +5911,81 @@
           "Lion-Veteran",
           "Bear-Veteran",
           "Cactus-Golden"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsQuests": {
         "type": "object",
         "properties": {
           "dustbunnies": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "moon1": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "basilist": {
             "type": "integer",
-            "example": 3
+            "example": 3,
+            "Extensions": null
           },
           "moon2": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "moon3": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "atom1": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "dilatoryDistress1": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "vice1": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "vice2": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "goldenknight1": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "vice3": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "atom2": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "atom3": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "moonstone1": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           }
         },
         "required": [
@@ -5100,7 +6003,8 @@
           "atom2",
           "atom3",
           "moonstone1"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataItemsSpecial": {
         "type": "object",
@@ -5109,105 +6013,133 @@
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "birthday": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "thankyouReceived": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "thankyou": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "greetingReceived": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "greeting": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "nyeReceived": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "nye": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "valentineReceived": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "valentine": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "seafoam": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "shinySeed": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "spookySparkles": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "snowball": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "congratsReceived": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "getwellReceived": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "goodluckReceived": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "congrats": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "getwell": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "goodluck": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           }
         },
         "required": [
@@ -5231,7 +6163,8 @@
           "congrats",
           "getwell",
           "goodluck"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataPreferences": {
         "type": "object",
@@ -5253,121 +6186,151 @@
           },
           "dayStart": {
             "type": "integer",
-            "example": 2
+            "example": 2,
+            "Extensions": null
           },
           "size": {
             "type": "string",
-            "example": "broad"
+            "example": "broad",
+            "Extensions": null
           },
           "hideHeader": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "skin": {
             "type": "string",
-            "example": "f5a76e"
+            "example": "f5a76e",
+            "Extensions": null
           },
           "shirt": {
             "type": "string",
-            "example": "green"
+            "example": "green",
+            "Extensions": null
           },
           "timezoneOffset": {
             "type": "integer",
-            "example": -120
+            "example": -120,
+            "Extensions": null
           },
           "sound": {
             "type": "string",
-            "example": "gokulTheme"
+            "example": "gokulTheme",
+            "Extensions": null
           },
           "chair": {
             "type": "string",
-            "example": "none"
+            "example": "none",
+            "Extensions": null
           },
           "allocationMode": {
             "type": "string",
-            "example": "classbased"
+            "example": "classbased",
+            "Extensions": null
           },
           "autoEquip": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "costume": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "dateFormat": {
             "type": "string",
-            "example": "dd/MM/yyyy"
+            "example": "dd/MM/yyyy",
+            "Extensions": null
           },
           "sleep": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "stickyHeader": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "disableClasses": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "newTaskEdit": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "dailyDueDefaultView": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "advancedCollapsed": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "toolbarCollapsed": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "reverseChatOrder": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "developerMode": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "displayInviteToPartyWhenPartyIs1": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "improvementCategories": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           },
           "automaticAllocation": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "timezoneOffsetAtLastCron": {
             "type": "integer",
-            "example": -120
+            "example": -120,
+            "Extensions": null
           },
           "language": {
             "type": "string",
-            "example": "en"
+            "example": "en",
+            "Extensions": null
           },
           "webhooks": {
-            "type": "object"
+            "type": "object",
+            "Extensions": null
           },
           "analyticsConsent": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "background": {
             "type": "string",
-            "example": "on_a_strange_planet"
+            "example": "on_a_strange_planet",
+            "Extensions": null
           }
         },
         "required": [
@@ -5405,74 +6368,91 @@
           "webhooks",
           "analyticsConsent",
           "background"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataPreferencesEmailNotifications": {
         "type": "object",
         "properties": {
           "unsubscribeFromAll": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "newPM": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "kickedGroup": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "wonChallenge": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "giftedGems": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "giftedSubscription": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "invitedParty": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "invitedGuild": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "questStarted": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "invitedQuest": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "importantAnnouncements": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "weeklyRecaps": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "onboarding": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "majorUpdates": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "subscriptionReminders": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "contentRelease": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -5492,34 +6472,41 @@
           "majorUpdates",
           "subscriptionReminders",
           "contentRelease"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataPreferencesHair": {
         "type": "object",
         "properties": {
           "color": {
             "type": "string",
-            "example": "red"
+            "example": "red",
+            "Extensions": null
           },
           "base": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "bangs": {
             "type": "integer",
-            "example": 1
+            "example": 1,
+            "Extensions": null
           },
           "beard": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "mustache": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           },
           "flower": {
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "Extensions": null
           }
         },
         "required": [
@@ -5529,70 +6516,86 @@
           "beard",
           "mustache",
           "flower"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataPreferencesPushNotifications": {
         "type": "object",
         "properties": {
           "unsubscribeFromAll": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "newPM": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "wonChallenge": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "giftedGems": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "giftedSubscription": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "invitedParty": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "invitedGuild": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "questStarted": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "invitedQuest": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "majorUpdates": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "mentionParty": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "mentionJoinedGuild": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "mentionUnjoinedGuild": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "partyActivity": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           },
           "contentRelease": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
@@ -5611,26 +6614,31 @@
           "mentionUnjoinedGuild",
           "partyActivity",
           "contentRelease"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataPreferencesSuppressModals": {
         "type": "object",
         "properties": {
           "levelUp": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "hatchPet": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "raisePet": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "streak": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           }
         },
         "required": [
@@ -5638,7 +6646,8 @@
           "hatchPet",
           "raisePet",
           "streak"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataPreferencesTasks": {
         "type": "object",
@@ -5648,18 +6657,22 @@
           },
           "groupByChallenge": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "confirmScoreNotes": {
             "type": "boolean",
-            "example": false
+            "example": false,
+            "Extensions": null
           },
           "mirrorGroupTasks": {
             "type": "array",
             "items": {
               "type": "object",
-              "example": null
-            }
+              "example": null,
+              "Extensions": null
+            },
+            "Extensions": null
           }
         },
         "required": [
@@ -5667,26 +6680,31 @@
           "groupByChallenge",
           "confirmScoreNotes",
           "mirrorGroupTasks"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataPreferencesTasksActiveFilter": {
         "type": "object",
         "properties": {
           "habit": {
             "type": "string",
-            "example": "all"
+            "example": "all",
+            "Extensions": null
           },
           "daily": {
             "type": "string",
-            "example": "due"
+            "example": "due",
+            "Extensions": null
           },
           "todo": {
             "type": "string",
-            "example": "remaining"
+            "example": "remaining",
+            "Extensions": null
           },
           "reward": {
             "type": "string",
-            "example": "all"
+            "example": "all",
+            "Extensions": null
           }
         },
         "required": [
@@ -5694,47 +6712,55 @@
           "daily",
           "todo",
           "reward"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataProfile": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "example": "Mark Rösler"
+            "example": "Mark Rösler",
+            "Extensions": null
           }
         },
         "required": [
           "name"
-        ]
+        ],
+        "Extensions": null
       },
       "UserDataTags": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/UserDataTagsItem"
-        }
+        },
+        "Extensions": null
       },
       "UserDataTagsItem": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "example": "Training"
+            "example": "Training",
+            "Extensions": null
           },
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "b11b6395-5189-4f76-bff4-b04a8801153c"
+            "example": "b11b6395-5189-4f76-bff4-b04a8801153c",
+            "Extensions": null
           },
           "challenge": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "Extensions": null
           }
         },
         "required": [
           "name",
           "id"
-        ]
+        ],
+        "Extensions": null
       }
     },
     "responses": {
@@ -5744,9 +6770,11 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/BuyHealthPotionResponse"
-            }
+            },
+            "Extensions": null
           }
-        }
+        },
+        "Extensions": null
       },
       "Cast": {
         "description": "OK",
@@ -5754,9 +6782,11 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/CastResponse"
-            }
+            },
+            "Extensions": null
           }
-        }
+        },
+        "Extensions": null
       },
       "CronResponse": {
         "description": "OK",
@@ -5764,9 +6794,11 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/CronResponse"
-            }
+            },
+            "Extensions": null
           }
-        }
+        },
+        "Extensions": null
       },
       "Error": {
         "description": "An error returned by the server, e.g. Not Found",
@@ -5774,9 +6806,11 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Error"
-            }
+            },
+            "Extensions": null
           }
-        }
+        },
+        "Extensions": null
       },
       "ScoreTask": {
         "description": "OK",
@@ -5784,9 +6818,11 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ScoreTaskResponse"
-            }
+            },
+            "Extensions": null
           }
-        }
+        },
+        "Extensions": null
       },
       "TaskResponse": {
         "description": "OK",
@@ -5794,9 +6830,11 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/TaskResponse"
-            }
+            },
+            "Extensions": null
           }
-        }
+        },
+        "Extensions": null
       },
       "TasksResponse": {
         "description": "OK",
@@ -5804,9 +6842,11 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/TasksResponse"
-            }
+            },
+            "Extensions": null
           }
-        }
+        },
+        "Extensions": null
       },
       "User": {
         "description": "OK",
@@ -5814,9 +6854,11 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/User"
-            }
+            },
+            "Extensions": null
           }
-        }
+        },
+        "Extensions": null
       }
     },
     "parameters": {
@@ -5827,8 +6869,10 @@
         "schema": {
           "type": "string",
           "format": "uuid",
-          "example": "00000000-0000-0000-0000-000000000000"
-        }
+          "example": "00000000-0000-0000-0000-000000000000",
+          "Extensions": null
+        },
+        "Extensions": null
       },
       "X-Api-User": {
         "name": "X-Api-User",
@@ -5837,8 +6881,10 @@
         "schema": {
           "type": "string",
           "format": "uuid",
-          "example": "b0413351-405f-416f-8787-947ec1c85199"
-        }
+          "example": "b0413351-405f-416f-8787-947ec1c85199",
+          "Extensions": null
+        },
+        "Extensions": null
       },
       "X-Client": {
         "name": "X-Client",
@@ -5846,8 +6892,10 @@
         "required": true,
         "schema": {
           "type": "string",
-          "example": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
-        }
+          "example": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica",
+          "Extensions": null
+        },
+        "Extensions": null
       },
       "direction": {
         "name": "direction",
@@ -5859,8 +6907,10 @@
           "enum": [
             "up",
             "down"
-          ]
-        }
+          ],
+          "Extensions": null
+        },
+        "Extensions": null
       },
       "spellId": {
         "name": "spellId",
@@ -5890,8 +6940,10 @@
             "spookySparkles",
             "seafoam",
             "shinySeed"
-          ]
-        }
+          ],
+          "Extensions": null
+        },
+        "Extensions": null
       },
       "targetId": {
         "name": "targetId",
@@ -5900,8 +6952,10 @@
         "schema": {
           "type": "string",
           "format": "uuid",
-          "example": "f7591dce-398a-4e12-ba23-18542f9f0bef"
-        }
+          "example": "f7591dce-398a-4e12-ba23-18542f9f0bef",
+          "Extensions": null
+        },
+        "Extensions": null
       },
       "taskId": {
         "name": "taskId",
@@ -5910,8 +6964,10 @@
         "required": true,
         "schema": {
           "type": "string",
-          "format": "uuid"
-        }
+          "format": "uuid",
+          "Extensions": null
+        },
+        "Extensions": null
       },
       "type": {
         "name": "type",
@@ -5925,13 +6981,18 @@
             "rewards",
             "completedTodos"
           ],
-          "example": "habits"
-        }
+          "example": "habits",
+          "Extensions": null
+        },
+        "Extensions": null
       }
-    }
+    },
+    "Extensions": null
   },
   "externalDocs": {
     "description": "Habitica V3 API Documentation",
-    "url": "https://apidoc.habitica.com/"
-  }
+    "url": "https://apidoc.habitica.com/",
+    "Extensions": null
+  },
+  "Extensions": null
 }
