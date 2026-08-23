@@ -126,7 +126,7 @@ func TestClient_Error(t *testing.T) {
 			if _, err := c.GetUser(t.Context(), GetUserParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
-				t.Fatalf("got: %T, want: *api.Error", err)
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
 			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
 				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
 			}
@@ -220,7 +220,7 @@ func TestClient_Error(t *testing.T) {
 			if _, err := c.ListTasks(t.Context(), ListTasksParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
-				t.Fatalf("got: %T, want: *api.Error", err)
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
 			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
 				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
 			}
@@ -314,7 +314,7 @@ func TestClient_Error(t *testing.T) {
 			if _, err := c.GetTaskByID(t.Context(), uuid.Nil, GetTaskByIDParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
-				t.Fatalf("got: %T, want: *api.Error", err)
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
 			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
 				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
 			}
@@ -408,7 +408,7 @@ func TestClient_Error(t *testing.T) {
 			if _, err := c.ScoreTask(t.Context(), uuid.Nil, "", ScoreTaskParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
-				t.Fatalf("got: %T, want: *api.Error", err)
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
 			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
 				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
 			}
@@ -502,7 +502,7 @@ func TestClient_Error(t *testing.T) {
 			if _, err := c.Cast(t.Context(), "", CastParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
-				t.Fatalf("got: %T, want: *api.Error", err)
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
 			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
 				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
 			}
@@ -596,7 +596,7 @@ func TestClient_Error(t *testing.T) {
 			if _, err := c.BuyHealthPotion(t.Context(), BuyHealthPotionParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
-				t.Fatalf("got: %T, want: *api.Error", err)
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
 			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
 				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
 			}
@@ -690,7 +690,7 @@ func TestClient_Error(t *testing.T) {
 			if _, err := c.Cron(t.Context(), CronParams{}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
-				t.Fatalf("got: %T, want: *api.Error", err)
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
 			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
 				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
 			}
@@ -735,8 +735,10 @@ func replay(t *testing.T) http.RoundTripper {
 			ia.Request.Headers = http.Header{}
 		}
 
-		if ia.Request.Headers.Get("User-Agent") == "" {
-			ia.Request.Headers.Set("User-Agent", defaultUserAgent)
+		ia.Request.Headers.Set("User-Agent", defaultUserAgent)
+
+		if len(ia.Request.Body) == 0 {
+			ia.Request.Headers.Del("Content-Type")
 		}
 
 		if !maps.EqualFunc(r.Headers, ia.Request.Headers, slices.Equal) {
@@ -763,31 +765,31 @@ func TestClient_Interactions(t *testing.T) {
 	}
 
 	if _, err := c.ListTasks(ctx, ListTasksParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("ListTasks: %v", err)
 	}
 
 	if _, err := c.GetTaskByID(ctx, uuid.MustParse("2b774d70-ec8b-41c1-8967-eb6b13d962ba"), GetTaskByIDParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("GetTaskByID: %v", err)
 	}
 
 	if _, err := c.GetUser(ctx, GetUserParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("GetUser: %v", err)
 	}
 
 	if _, err := c.ScoreTask(ctx, uuid.MustParse("2b774d70-ec8b-41c1-8967-eb6b13d962ba"), "up", ScoreTaskParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("ScoreTask: %v", err)
 	}
 
 	if _, err := c.ScoreTask(ctx, uuid.MustParse("4f2d942d-67e8-4cc0-ac08-61962296660b"), "up", ScoreTaskParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err == nil {
 		t.Fatal("ScoreTask: expected error")
 	} else if _, ok := errors.AsType[*Error](err); !ok {
@@ -795,21 +797,21 @@ func TestClient_Interactions(t *testing.T) {
 	}
 
 	if _, err := c.ScoreTask(ctx, uuid.MustParse("488a92c0-164c-445a-be31-1bcb1b04ab04"), "up", ScoreTaskParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("ScoreTask: %v", err)
 	}
 
 	if _, err := c.Cast(ctx, "smash", CastParams{
 		TargetID: uuid.MustParse("f7591dce-398a-4e12-ba23-18542f9f0bef"),
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("Cast: %v", err)
 	}
 
 	if _, err := c.Cast(ctx, "smash", CastParams{
 		TargetID: uuid.MustParse("f7591dce-398a-4e12-ba23-18542f9f0bef"),
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err == nil {
 		t.Fatal("Cast: expected error")
 	} else if _, ok := errors.AsType[*Error](err); !ok {
@@ -817,25 +819,25 @@ func TestClient_Interactions(t *testing.T) {
 	}
 
 	if _, err := c.BuyHealthPotion(ctx, BuyHealthPotionParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("BuyHealthPotion: %v", err)
 	}
 
 	if _, err := c.Cron(ctx, CronParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("Cron: %v", err)
 	}
 
 	if _, err := c.ScoreTask(ctx, uuid.MustParse("91cf329e-0d0a-4c15-92a0-2e6748a470c9"), "up", ScoreTaskParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("ScoreTask: %v", err)
 	}
 
 	if _, err := c.ScoreTask(ctx, uuid.MustParse("0278da0a-6af9-47df-b0f6-79846adb3f36"), "up", ScoreTaskParams{
-		XAPIUser: uuid.MustParse("b0413351-405f-416f-8787-947ec1c85199"),
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
 	}); err != nil {
 		t.Fatalf("ScoreTask: %v", err)
 	}

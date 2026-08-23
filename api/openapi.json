@@ -5847,8 +5847,8 @@
         "schema": {
           "description": "We require all third-party API requests to include an \"X-Client\" HTTP header with every API request. This header should contain the tool creator's Habitica UserID and name of the tool in the format \"UserID-appname\". X-Client headers help our team identify tools that may be causing server issues. If your tool is found to be causing problems, you may be rate limited or blocked from making more calls. The team will attempt to contact you if this happens.",
           "type": "string",
-          "example": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica",
-          "pattern": "^[a-f0-9-]{36}-.+"
+          "pattern": "^[a-f0-9-]{36}-.+",
+          "example": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
         }
       },
       "direction": {

@@ -97,14 +97,14 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 //
 //	GET /user
 func (c *Client) GetUser(ctx context.Context, params GetUserParams) (*User, error) {
-	return GetUser[User](ctx, c, params)
+	return c.GetUserWithResult[User](ctx, params)
 }
 
 // The user profile contains data related to the authenticated user including (but not limited to): Achievements; Authentications (including types and timestamps); Challenges memberships (Challenge IDs); Flags (including armoire, tutorial, tour etc...); Guilds memberships (Guild IDs); History (including timestamps and values, only for Experience and summed To Do values); Inbox; Invitations (to parties/guilds); Items (character's full inventory); New Messages (flags for party/guilds that have new messages; also reported in Notifications); Notifications; Party (includes current quest information); Preferences (user selected prefs); Profile (name, photo url, blurb); Purchased (includes subscription data and some gem-purchased items); PushDevices (identifiers for mobile devices authorized); Stats (standard RPG stats, class, buffs, xp, etc..); Tags; TasksOrder (list of all IDs for Dailys, Habits, Rewards and To Do's).
 // You can define a custom result to unmarshal the response into.
 //
 //	GET /user
-func GetUser[R any](ctx context.Context, c *Client, params GetUserParams) (*R, error) {
+func (c *Client) GetUserWithResult[R any](ctx context.Context, params GetUserParams) (*R, error) {
 	u := c.baseURL.JoinPath("user")
 	req := (&http.Request{
 		Header: http.Header{
@@ -148,11 +148,11 @@ func GetUser[R any](ctx context.Context, c *Client, params GetUserParams) (*R, e
 
 // GET /tasks/user
 func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TasksResponse, error) {
-	return ListTasks[TasksResponse](ctx, c, params)
+	return c.ListTasksWithResult[TasksResponse](ctx, params)
 }
 
 // GET /tasks/user
-func ListTasks[R any](ctx context.Context, c *Client, params ListTasksParams) (*R, error) {
+func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTasksParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", "user")
 
 	q := make(url.Values, 1)
@@ -220,14 +220,14 @@ func ListTasks[R any](ctx context.Context, c *Client, params ListTasksParams) (*
 //
 //	GET /tasks/{taskId}
 func (c *Client) GetTaskByID(ctx context.Context, taskID uuid.UUID, params GetTaskByIDParams) (*TaskResponse, error) {
-	return GetTaskByID[TaskResponse](ctx, c, taskID, params)
+	return c.GetTaskByIDWithResult[TaskResponse](ctx, taskID, params)
 }
 
 // Get a task
 // You can define a custom result to unmarshal the response into.
 //
 //	GET /tasks/{taskId}
-func GetTaskByID[R any](ctx context.Context, c *Client, taskID uuid.UUID, params GetTaskByIDParams) (*R, error) {
+func (c *Client) GetTaskByIDWithResult[R any](ctx context.Context, taskID uuid.UUID, params GetTaskByIDParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", taskID.String())
 	req := (&http.Request{
 		Header: http.Header{
@@ -273,14 +273,14 @@ func GetTaskByID[R any](ctx context.Context, c *Client, taskID uuid.UUID, params
 //
 //	POST /tasks/{taskId}/score/{direction}
 func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction string, params ScoreTaskParams) (*ScoreTaskResponse, error) {
-	return ScoreTask[ScoreTaskResponse](ctx, c, taskID, direction, params)
+	return c.ScoreTaskWithResult[ScoreTaskResponse](ctx, taskID, direction, params)
 }
 
 // Score a task
 // You can define a custom result to unmarshal the response into.
 //
 //	POST /tasks/{taskId}/score/{direction}
-func ScoreTask[R any](ctx context.Context, c *Client, taskID uuid.UUID, direction string, params ScoreTaskParams) (*R, error) {
+func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUID, direction string, params ScoreTaskParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", direction)
 	req := (&http.Request{
 		Header: http.Header{
@@ -339,14 +339,14 @@ func ScoreTask[R any](ctx context.Context, c *Client, taskID uuid.UUID, directio
 //
 //	POST /user/class/cast/{spellId}
 func (c *Client) Cast(ctx context.Context, spellID string, params CastParams) (*CastResponse, error) {
-	return Cast[CastResponse](ctx, c, spellID, params)
+	return c.CastWithResult[CastResponse](ctx, spellID, params)
 }
 
 // Cast a skill (spell) on a target
 // You can define a custom result to unmarshal the response into.
 //
 //	POST /user/class/cast/{spellId}
-func Cast[R any](ctx context.Context, c *Client, spellID string, params CastParams) (*R, error) {
+func (c *Client) CastWithResult[R any](ctx context.Context, spellID string, params CastParams) (*R, error) {
 	u := c.baseURL.JoinPath("user", "class", "cast", spellID)
 
 	q := make(url.Values, 1)
@@ -412,11 +412,11 @@ func Cast[R any](ctx context.Context, c *Client, spellID string, params CastPara
 
 // POST /user/buy-health-potion
 func (c *Client) BuyHealthPotion(ctx context.Context, params BuyHealthPotionParams) (*BuyHealthPotionResponse, error) {
-	return BuyHealthPotion[BuyHealthPotionResponse](ctx, c, params)
+	return c.BuyHealthPotionWithResult[BuyHealthPotionResponse](ctx, params)
 }
 
 // POST /user/buy-health-potion
-func BuyHealthPotion[R any](ctx context.Context, c *Client, params BuyHealthPotionParams) (*R, error) {
+func (c *Client) BuyHealthPotionWithResult[R any](ctx context.Context, params BuyHealthPotionParams) (*R, error) {
 	u := c.baseURL.JoinPath("user", "buy-health-potion")
 	req := (&http.Request{
 		Header: http.Header{
@@ -462,14 +462,14 @@ func BuyHealthPotion[R any](ctx context.Context, c *Client, params BuyHealthPoti
 //
 //	POST /cron
 func (c *Client) Cron(ctx context.Context, params CronParams) (*CronResponse, error) {
-	return Cron[CronResponse](ctx, c, params)
+	return c.CronWithResult[CronResponse](ctx, params)
 }
 
 // This causes cron to run. It assumes that the user has already been shown the Record Yesterday's Activity ("Check off any Dailies you did yesterday") screen and so it will immediately apply damage for incomplete due Dailies.
 // You can define a custom result to unmarshal the response into.
 //
 //	POST /cron
-func Cron[R any](ctx context.Context, c *Client, params CronParams) (*R, error) {
+func (c *Client) CronWithResult[R any](ctx context.Context, params CronParams) (*R, error) {
 	u := c.baseURL.JoinPath("cron")
 	req := (&http.Request{
 		Header: http.Header{
