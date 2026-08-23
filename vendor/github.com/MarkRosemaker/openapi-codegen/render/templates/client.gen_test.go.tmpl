@@ -92,7 +92,7 @@ func TestClient_Error(t *testing.T) {
 		t.Run("unknown content type", func(t *testing.T) {
 			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "foo")
-				w.WriteHeader(http.StatusOK)
+				w.WriteHeader({{ (index .Responses 0).GoConstant }})
 			}))
 			t.Cleanup(srv.Close)
 
@@ -115,10 +115,11 @@ func TestClient_Error(t *testing.T) {
 			}
 		})
 
+		{{ if not .RawBytesSuccess -}}
 		t.Run("decoding error", func(t *testing.T) {
 			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				w.WriteHeader(http.StatusOK)
+				w.WriteHeader({{ (index .Responses 0).GoConstant }})
 				_, _ = w.Write([]byte("invalid json"))
 			}))
 			t.Cleanup(srv.Close)
@@ -138,12 +139,12 @@ func TestClient_Error(t *testing.T) {
 			{{if .RequestBody}}, {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{}{{else}}nil{{end}}{{end}}); err == nil {
 				t.Fatal("expected error")
 			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
-				t.Fatalf("got: %T, want: *api.Error", err)
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
 			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
 				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
 			}
 		})
-		{{- end}}
+		{{- end }}{{ end }}
 	})
 {{end -}}
 }
@@ -186,8 +187,17 @@ func replay(t *testing.T) http.RoundTripper {
 			ia.Request.Headers = http.Header{}
 		}
 		
-		if ia.Request.Headers.Get("User-Agent") == "" {
-			ia.Request.Headers.Set("User-Agent", defaultUserAgent)
+		{{/* User-Agent identifies whoever made the call, so the recording carries
+			the tool that made it and this client necessarily sends its own. That
+			is not a difference worth failing on; every other header is compared
+			exactly. */}}
+		ia.Request.Headers.Set("User-Agent", defaultUserAgent)
+
+		{{/* A Content-Type describing a body that is not there says nothing about
+			the request, and the client sets one only when it sends a body. Some
+			recorders send it regardless. */}}
+		if len(ia.Request.Body) == 0 {
+			ia.Request.Headers.Del("Content-Type")
 		}
 
 		if !maps.EqualFunc(r.Headers, ia.Request.Headers, slices.Equal) {

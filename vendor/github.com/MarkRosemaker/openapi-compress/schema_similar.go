@@ -2,18 +2,20 @@ package compress
 
 import (
 	"github.com/MarkRosemaker/openapi"
+	"github.com/MarkRosemaker/openapi-compare/schema"
 )
 
 // schemasSimilarity returns the structural similarity of two schemas in [0, 1].
-// Returns 1.0 for equal schemas, 0.0 for incompatible schemas.
+// Returns 1.0 for same-shape schemas (see schema.SameShape), 0.0 for
+// incompatible schemas.
 //
 // For object schemas with properties the score is a weighted Jaccard index:
 //
 //	score = Σ weight(p) / |union of property names|
 //
-// where weight is 1.0 for properties with the same name and same ref,
-// and 0.5 for properties with the same name but a different ref.
-// All other schema types return 0.0 (they are either equal or incompatible).
+// where weight is 1.0 for properties with the same name and same shape,
+// and 0.5 for properties with the same name but a different shape.
+// All other schema types return 0.0 (they are either the same shape or incompatible).
 func schemasSimilarity(a, b *openapi.Schema) float64 {
 	if a == b {
 		return 1.0
@@ -21,7 +23,7 @@ func schemasSimilarity(a, b *openapi.Schema) float64 {
 	if a == nil || b == nil {
 		return 0.0
 	}
-	if schemasEqual(a, b) {
+	if schema.SameShape(a, b) {
 		return 1.0
 	}
 	if a.Type != b.Type {
@@ -41,16 +43,45 @@ func schemasSimilarity(a, b *openapi.Schema) float64 {
 		refA, okA := a.Properties[name]
 		refB, okB := b.Properties[name]
 		if okA && okB {
-			if schemaRefEqual(refA, refB) {
+			switch {
+			case schemaRefSameShape(refA, refB):
 				score += 1.0
-			} else {
-				score += 0.5 // same name, different ref — partial credit
+			case !reconcilable(refA, refB):
+				// No widening covers both, so no amount of agreement
+				// elsewhere makes these two schemas mergeable.
+				return 0.0
+			default:
+				score += 0.5 // same name, different shape — partial credit
 			}
 		}
 		// only in one schema → 0 credit
 	}
 
 	return score / float64(len(union))
+}
+
+// schemaRefSameShape reports whether a and b are the same schema, ignoring
+// documentation-only differences (see schema.SameShape). It dispatches
+// between a $ref (compared by identifier) and an inline schema (compared by
+// shape): openapi-compare/schema only compares *openapi.Schema values, not
+// SchemaRef wrappers, so this small amount of ref-vs-value dispatch logic
+// stays local rather than being extracted - this package is currently the
+// only consumer that needs it.
+func schemaRefSameShape(a, b *openapi.SchemaRef) bool {
+	if a == b {
+		return true
+	}
+	if a == nil || b == nil {
+		return false
+	}
+	switch {
+	case a.Ref != nil && b.Ref != nil:
+		return a.Ref.Identifier == b.Ref.Identifier
+	case a.Ref == nil && b.Ref == nil:
+		return schema.SameShape(a.Value, b.Value)
+	default:
+		return false
+	}
 }
 
 // mergeSchemas merges schema b into schema a (modifying a in-place).
@@ -62,7 +93,7 @@ func mergeSchemas(a, b *openapi.Schema) {
 	// Merge properties.
 	for name, refB := range b.Properties {
 		if refA, ok := a.Properties[name]; ok {
-			if !schemaRefEqual(refA, refB) {
+			if !schemaRefSameShape(refA, refB) {
 				a.Properties[name] = reconcileSchemaRef(refA, refB)
 			}
 		} else {
@@ -116,6 +147,36 @@ func reconcileInlineSchemas(a, b *openapi.Schema) *openapi.Schema {
 	// }
 
 	return &result
+}
+
+// reconcilable reports whether merging would produce a property that still
+// describes both sides.
+//
+// It almost never does. reconcileSchemaRef keeps a's reference and drops b's,
+// and for two inline schemas reconcileInlineSchemas widens integer to number
+// and otherwise returns a copy of a. So unless that one widening applies, the
+// merged schema quietly claims a shape b's data does not have -- and nothing
+// downstream re-checks it against the recording it came from.
+//
+// Properties present on only one side are a different matter: mergeSchemas
+// carries those across as optional, which does describe both.
+func reconcilable(a, b *openapi.SchemaRef) bool {
+	if a == nil || b == nil || a.Value == nil || b.Value == nil {
+		return true // nothing to judge it on
+	}
+
+	if a.Ref != nil || b.Ref != nil {
+		// The references disagree -- schemaRefSameShape has already said so --
+		// and merging keeps a's. If the schemas they point at are themselves
+		// mergeable, an earlier or later pass merges them and the references
+		// become equal, at which point this pair scores full credit instead.
+		return false
+	}
+
+	ta, tb := a.Value.Type, b.Value.Type
+
+	return (ta == openapi.TypeInteger && tb == openapi.TypeNumber) ||
+		(ta == openapi.TypeNumber && tb == openapi.TypeInteger)
 }
 
 // propertyNameUnion returns the union of property names from two SchemaRefs maps.

@@ -7,10 +7,12 @@ import (
 	"strings"
 
 	"github.com/MarkRosemaker/openapi"
+	"github.com/MarkRosemaker/openapi-compare/schema"
 )
 
 // Document compresses an OpenAPI document so it contains no duplicate schemas.
-// It does so by merging schemas that have the exact same definition.
+// It does so by merging schemas that have the same shape (see schema.SameShape) -
+// documentation-only differences like title or description don't prevent a merge.
 // Furthermore, schemas with significant overlap are merged according to cfg.
 // After compression, long names of merged schemas are shortened.
 func Document(d *openapi.Document, cfg Config) error {
@@ -78,8 +80,8 @@ func deduplicateSchemasAtThreshold(d *openapi.Document, threshold float64) (map[
 
 			var sim float64
 			if threshold >= 1.0 {
-				// Fast path: exact equality only.
-				if schemasEqual(schemaA, schemaB) {
+				// Fast path: same shape, ignoring documentation-only differences.
+				if schema.SameShape(schemaA, schemaB) {
 					sim = 1.0
 				}
 			} else {

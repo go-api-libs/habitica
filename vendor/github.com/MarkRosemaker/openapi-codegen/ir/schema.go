@@ -2,7 +2,10 @@ package ir
 
 import (
 	"cmp"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"fmt"
+	"strconv"
 	"strings"
 	"unicode"
 
@@ -15,8 +18,11 @@ import (
 // this function extracts the component name from the identifier or maps the inline type.
 func SchemaRefGoType(ref *openapi.SchemaRef) (*GoType, error) {
 	if ref.Ref != nil {
-		// A date-time-or-int oneOf collapses to time.Time even when reached via
-		// $ref, so no synthetic component type name leaks into the generated code.
+		// A date-time-or-int oneOf collapses to time.Time even when reached
+		// via $ref, so no synthetic component type name leaks into the
+		// generated code. A oneOf/anyOf union otherwise resolves to its own
+		// generated pointer-bag type (see fromUnionSchema), so the ordinary
+		// $ref-name resolution below already does the right thing for it.
 		if ref.Value != nil && isDateTimeOrIntegerOneOf(ref.Value) {
 			return &GoType{Name: "time.Time"}, nil
 		}
@@ -46,6 +52,14 @@ func SchemaGoType(s *openapi.Schema) (*GoType, error) {
 	case "":
 		if isDateTimeOrIntegerOneOf(s) {
 			return &GoType{Name: "time.Time"}, nil
+		}
+		// A oneOf/anyOf union normally goes through fromSchema as a named
+		// component and gets a real generated pointer-bag type (see
+		// fromUnionSchema). This is only reached for a union with no name to
+		// give it (e.g. inline within array items or additionalProperties),
+		// where there's nothing to generate a struct for.
+		if isAnyOfOnly(s) || isOneOfOnly(s) {
+			return &GoType{Name: "any"}, nil
 		}
 		return nil, fmt.Errorf("unsupported schema type: %q", s.Type)
 	default:
@@ -78,6 +92,20 @@ func isDateTimeOrIntegerOneOf(s *openapi.Schema) bool {
 		}
 	}
 	return hasDateTime && hasInteger
+}
+
+// isAnyOfOnly reports whether s is an untagged union expressed purely via
+// anyOf (no type, allOf, or oneOf of its own).
+func isAnyOfOnly(s *openapi.Schema) bool {
+	return s.Type == "" && len(s.AnyOf) > 0 && len(s.AllOf) == 0 && len(s.OneOf) == 0
+}
+
+// isOneOfOnly reports whether s is an untagged union expressed purely via
+// oneOf (no type, allOf, or anyOf of its own), and is not the
+// date-time-or-integer pattern that collapses to time.Time.
+func isOneOfOnly(s *openapi.Schema) bool {
+	return s.Type == "" && len(s.OneOf) > 0 && len(s.AllOf) == 0 && len(s.AnyOf) == 0 &&
+		!isDateTimeOrIntegerOneOf(s)
 }
 
 func integerGoType(f openapi.Format) (*GoType, error) {
@@ -138,14 +166,18 @@ func arrayGoType(s *openapi.Schema) (*GoType, error) {
 		return &GoType{Name: "[]any"}, nil
 	}
 
-	itemType, err := SchemaRefGoType(s.Items)
+	tp, err := SchemaRefGoType(s.Items)
 	if err != nil {
 		return nil, fmt.Errorf("items: %w", err)
 	}
 
-	itemType.Name = "[]" + itemType.Name
+	if s.MinItems > 0 && s.MaxItems != nil && s.MinItems == *s.MaxItems {
+		tp.IsArrayOfSize = int(s.MinItems)
+	} else {
+		tp.IsSlice = true
+	}
 
-	return itemType, nil
+	return tp, nil
 }
 
 func objectGoType(s *openapi.Schema) (*GoType, error) {
@@ -187,10 +219,9 @@ func fromSchema(name string, s *openapi.Schema) (*Schema, error) {
 				return nil, err
 			}
 
-			if mapValueType.Name == "string" {
-				return nil, nil
-			}
-
+			// A map of strings gets a named type like any other map: a
+			// property referencing this component resolves to the component's
+			// name, so declining to declare it leaves that name undefined.
 			return &Schema{
 				Name:        name,
 				Description: getDescription(s, name),
@@ -201,21 +232,85 @@ func fromSchema(name string, s *openapi.Schema) (*Schema, error) {
 		}
 
 		return fromObjectSchema(name, s)
-	case openapi.TypeString:
+	case openapi.TypeString, openapi.TypeInteger, openapi.TypeNumber, openapi.TypeBoolean:
 		if len(s.Enum) > 0 {
 			return fromEnumSchema(name, s)
 		}
-		return nil, nil // plain strings don't produce named schemas
+
+		return fromScalarSchema(name, s)
 	case openapi.TypeArray:
 		return fromArraySchema(name, s)
 	case "":
+		if isDateTimeOrIntegerOneOf(s) {
+			return nil, nil // handled specially: SchemaRefGoType resolves the $ref straight to time.Time
+		}
 		if len(s.AllOf) > 0 {
 			return fromAllOfSchema(name, s)
+		}
+		if len(s.OneOf) > 0 {
+			return fromUnionSchema(name, s, true)
+		}
+		if len(s.AnyOf) > 0 {
+			return fromUnionSchema(name, s, false)
 		}
 		return nil, nil
 	default:
 		return nil, nil // scalar types are used inline
 	}
+}
+
+// fromUnionSchema builds a pointer-bag union type from an untagged oneOf or
+// anyOf composition: one nilable field per variant, with no discriminator.
+// The caller distinguishes which variant matched by checking which field is
+// non-nil after unmarshaling.
+func fromUnionSchema(name string, s *openapi.Schema, isOneOf bool) (*Schema, error) {
+	variants := s.AnyOf
+	if isOneOf {
+		variants = s.OneOf
+	}
+
+	counts := make(map[string]int, len(variants))
+	unionVariants := make([]UnionVariant, len(variants))
+	for i, v := range variants {
+		tp, err := SchemaRefGoType(v)
+		if err != nil {
+			return nil, fmt.Errorf("variant %d: %w", i, err)
+		}
+
+		base := unionVariantFieldName(tp, i)
+		counts[base]++
+		fieldName := base
+		if n := counts[base]; n > 1 {
+			fieldName = fmt.Sprintf("%s%d", base, n)
+		}
+
+		unionVariants[i] = UnionVariant{
+			FieldName: fieldName,
+			Type:      tp.String(),
+		}
+	}
+
+	return &Schema{
+		Name:          name,
+		Description:   getDescription(s, name),
+		Kind:          SchemaKindUnion,
+		UnionVariants: unionVariants,
+		IsOneOf:       isOneOf,
+	}, nil
+}
+
+// unionVariantFieldName derives an exported Go field name from a union
+// variant's resolved type, e.g. "Card" for *Card, "UUID" for uuid.UUID.
+func unionVariantFieldName(t *GoType, index int) string {
+	name := t.Name
+	if i := strings.LastIndex(name, "."); i >= 0 {
+		name = name[i+1:] // strip package qualifier, e.g. "uuid.UUID" -> "UUID"
+	}
+	name = strcase.ToGoPascal(name)
+	if name == "" {
+		name = fmt.Sprintf("Variant%d", index+1)
+	}
+	return name
 }
 
 func getDescription(s *openapi.Schema, name string) string {
@@ -333,16 +428,22 @@ func fromObjectSchema(name string, s *openapi.Schema) (*Schema, error) {
 }
 
 func fromEnumSchema(name string, s *openapi.Schema) (*Schema, error) {
-	tp, err := stringGoType(s.Format)
+	tp, err := enumBaseGoType(s.Type, s.Format)
 	if err != nil {
 		return nil, err
 	}
 
 	values := make([]EnumValue, len(s.Enum))
 	for i, v := range s.Enum {
+		display, literal, err := formatEnumValue(v, s.Type)
+		if err != nil {
+			return nil, fmt.Errorf("enum[%d]: %w", i, err)
+		}
+
 		values[i] = EnumValue{
-			GoName: enumConstName(name, v),
-			Value:  v,
+			GoName:  enumConstName(name, display),
+			Value:   display,
+			Literal: literal,
 		}
 	}
 
@@ -355,6 +456,63 @@ func fromEnumSchema(name string, s *openapi.Schema) (*Schema, error) {
 	}, nil
 }
 
+// enumBaseGoType returns the underlying Go type for an enum's declared schema type.
+func enumBaseGoType(t openapi.DataType, f openapi.Format) (*GoType, error) {
+	switch t {
+	case openapi.TypeString:
+		return stringGoType(f)
+	case openapi.TypeInteger:
+		return integerGoType(f)
+	case openapi.TypeNumber:
+		return numberGoType(f)
+	case openapi.TypeBoolean:
+		return &GoType{Name: "bool"}, nil
+	default:
+		return nil, fmt.Errorf("unsupported enum type: %q", t)
+	}
+}
+
+// formatEnumValue converts a raw enum member (decoded from JSON as string,
+// float64, or bool per the schema's declared type) into its human-readable
+// display form and its Go source literal.
+func formatEnumValue(v jsontext.Value, t openapi.DataType) (display, literal string, err error) {
+	switch t {
+	case openapi.TypeString:
+		var s string
+		if err := json.Unmarshal(v, &s); err != nil {
+			return "", "", fmt.Errorf("unmarshalling %q into a string: %w", v, err)
+		}
+
+		return s, strconv.Quote(s), nil
+	case openapi.TypeInteger:
+		var i int64
+		if err := json.Unmarshal(v, &i); err != nil {
+			return "", "", fmt.Errorf("unmarshalling %q into a int64: %w", v, err)
+		}
+
+		s := strconv.FormatInt(i, 10)
+		return s, s, nil
+	case openapi.TypeNumber:
+		var f float64
+		if err := json.Unmarshal(v, &f); err != nil {
+			return "", "", fmt.Errorf("unmarshalling %q into a float64: %w", v, err)
+		}
+
+		s := strconv.FormatFloat(f, 'g', -1, 64)
+		return s, s, nil
+	case openapi.TypeBoolean:
+		var b bool
+		if err := json.Unmarshal(v, &b); err != nil {
+			return "", "", fmt.Errorf("unmarshalling %q into a bool: %w", v, err)
+		}
+
+		s := strconv.FormatBool(b)
+		return s, s, nil
+	default:
+		return "", "", fmt.Errorf("unsupported enum type: %q", t)
+	}
+}
+
 func fromArraySchema(name string, s *openapi.Schema) (*Schema, error) {
 	aliasType, err := arrayGoType(s)
 	if err != nil {
@@ -364,7 +522,26 @@ func fromArraySchema(name string, s *openapi.Schema) (*Schema, error) {
 	return &Schema{
 		Name:        name,
 		Description: getDescription(s, name),
-		Kind:        SchemaKindArrayAlias,
+		Kind:        SchemaKindAlias,
+		Type:        aliasType.String(),
+	}, nil
+}
+
+// fromScalarSchema declares a named component that is a plain scalar.
+//
+// The declaration is what makes the name usable: a $ref to this component
+// resolves to its name, and a response body decoded into it can carry an Error
+// method, which a bare string or int cannot.
+func fromScalarSchema(name string, s *openapi.Schema) (*Schema, error) {
+	aliasType, err := SchemaGoType(s)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Schema{
+		Name:        name,
+		Description: getDescription(s, name),
+		Kind:        SchemaKindAlias,
 		Type:        aliasType.String(),
 	}, nil
 }
@@ -406,17 +583,19 @@ func fieldGoName(jsonName string) string {
 	return name
 }
 
+var replInvalidChars = strings.NewReplacer(
+	"#", " Sharp ",
+	"/", " ",
+	"+", " Plus ",
+	".", " Dot ",
+	"(", "",
+	")", "",
+	":", "",
+)
+
 // enumConstName builds the Go constant name for an enum value, e.g. MyEnum + "foo_bar" → MyEnumFooBar.
 func enumConstName(typeName, value string) string {
-	r := strings.NewReplacer(
-		"#", " Sharp ",
-		"/", " ",
-		"+", " Plus ",
-		".", " Dot ",
-		"(", "",
-		")", "",
-	)
-	sanitized := r.Replace(value)
+	sanitized := replInvalidChars.Replace(value)
 	sanitized = replaceLeadingDigits(sanitized)
 
 	if len(sanitized) <= 3 && sanitized == strings.ToUpper(sanitized) {

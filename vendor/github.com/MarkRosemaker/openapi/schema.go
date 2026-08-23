@@ -1,10 +1,12 @@
 package openapi
 
 import (
+	"bytes"
 	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"fmt"
 	"regexp"
-	"slices"
+	"strconv"
 	"strings"
 
 	"github.com/MarkRosemaker/errpath"
@@ -58,8 +60,8 @@ type Schema struct {
 	// This string SHOULD be a valid regular expression, according to the Ecma-262 Edition 5.1 regular expression dialect.
 	// NOTE: We simply use text unmarshalling for this field. This guarantees that the regular expression is valid or we can't unmarshal.
 	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
-	// A list of possible values.
-	Enum []string `json:"enum,omitempty" yaml:"enum,omitempty"`
+	// A list of possible values. Per JSON Schema 2020-12, enum may contain any JSON type.
+	Enum []jsontext.Value `json:"enum,omitempty" yaml:"enum,omitempty"`
 
 	// Array
 
@@ -76,20 +78,20 @@ type Schema struct {
 	// For object types, defines the properties of the object
 	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitempty"`
 	// Which properties are required.
-	Required             []string   `json:"required,omitempty" yaml:"required,omitempty"`
+	Required             []string   `json:"required,omitempty"             yaml:"required,omitempty"`
 	AdditionalProperties *SchemaRef `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
 
 	// special encoding for binary data
 	ContentMediaType string `json:"contentMediaType,omitempty" yaml:"contentMediaType,omitempty"`
-	ContentEncoding  string `json:"contentEncoding,omitempty" yaml:"contentEncoding,omitempty"`
+	ContentEncoding  string `json:"contentEncoding,omitempty"  yaml:"contentEncoding,omitempty"`
 
 	// Specifies the default value of the property if no value is provided.
-	Default any `json:"default,omitempty" yaml:"default,omitempty"`
+	Default jsontext.Value `json:"default,omitempty" yaml:"default,omitempty"`
 
 	Example jsontext.Value `json:"example,omitzero" yaml:"example,omitzero"`
 
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 
 	// an index to the original location of this object
 	idx int
@@ -238,12 +240,18 @@ func (s *Schema) Validate() error {
 		}}
 	}
 
-	// String
+	// String / Enum
 
-	if s.Type != TypeString && s.Enum != nil {
-		return &errpath.ErrField{Field: "enum", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
-		}}
+	// Per JSON Schema 2020-12, enum can hold any JSON type; validate each value's kind matches the schema type.
+	if s.Type != "" {
+		for i, ev := range s.Enum {
+			if !enumKindMatchesType(ev, s.Type) {
+				return &errpath.ErrField{Field: "enum", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[any]{
+					Value:   jsonDisplayValue(ev),
+					Message: fmt.Sprintf("must be a %s value", s.Type),
+				}}}
+			}
+		}
 	}
 
 	// Array
@@ -320,68 +328,118 @@ func (s *Schema) Validate() error {
 	}
 
 	// validate default
-	switch dflt := s.Default.(type) {
-	case nil: // empty
-	case string:
-		if s.Type != TypeString {
-			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[string]{
-				Value:   dflt,
+	if len(s.Default) > 0 {
+		defaultTypeErr := func() error {
+			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
+				Value:   jsonDisplayValue(s.Default),
 				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
 			}}
 		}
 
-		if s.Enum != nil {
-			if !slices.Contains(s.Enum, dflt) {
-				return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[string]{
-					Value:   dflt,
-					Message: fmt.Sprintf("is not one of the enums (%q)", s.Enum),
-				}}
-			}
-		}
-	case float64:
 		switch s.Type {
-		case TypeNumber: // fits
+		case TypeString:
+			if s.Default.Kind() != jsontext.KindString {
+				return defaultTypeErr()
+			}
+		case TypeNumber:
+			if s.Default.Kind() != jsontext.KindNumber {
+				return defaultTypeErr()
+			}
 		case TypeInteger:
-			if asInt := int(dflt); dflt != float64(asInt) {
-				return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[float64]{
-					Value:   dflt,
-					Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
-				}}
-			} else {
-				s.Default = asInt // set to int version
+			if s.Default.Kind() != jsontext.KindNumber || !isJSONInteger(s.Default) {
+				return defaultTypeErr()
 			}
-		default:
-			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[float64]{
-				Value:   dflt,
-				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
-			}}
+		case TypeBoolean:
+			if s.Default.Kind() != jsontext.KindTrue && s.Default.Kind() != jsontext.KindFalse {
+				return defaultTypeErr()
+			}
+		case TypeArray:
+			if s.Default.Kind() != jsontext.KindBeginArray {
+				return defaultTypeErr()
+			}
+		case TypeObject:
+			if s.Default.Kind() != jsontext.KindBeginObject {
+				return defaultTypeErr()
+			}
+		case TypeNull:
+			if s.Default.Kind() != jsontext.KindNull {
+				return defaultTypeErr()
+			}
 		}
-	case int:
-		switch s.Type {
-		case TypeNumber, TypeInteger: // fits
-		default:
-			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[int]{
-				Value:   dflt,
-				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
-			}}
+
+		if len(s.Enum) > 0 {
+			found := false
+			for _, ev := range s.Enum {
+				if bytes.Equal(ev, s.Default) {
+					found = true
+					break
+				}
+			}
+			if !found {
+				parts := make([]string, len(s.Enum))
+				for i, ev := range s.Enum {
+					parts[i] = ev.String()
+				}
+				return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
+					Value:   jsonDisplayValue(s.Default),
+					Message: fmt.Sprintf("is not one of the enums ([%s])", strings.Join(parts, " ")),
+				}}
+			}
 		}
-	case bool:
-		switch s.Type {
-		case TypeBoolean: // fits
-		default:
-			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[bool]{
-				Value:   dflt,
-				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
-			}}
-		}
-	default:
-		return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
-			Value:   s.Default,
-			Message: fmt.Sprintf("unknown type %T", s.Default),
-		}}
 	}
 
 	return nil
+}
+
+// enumKindMatchesType reports whether a JSON value's kind is compatible with the given DataType.
+// For TypeInteger it additionally requires the number to be a whole number.
+func enumKindMatchesType(v jsontext.Value, t DataType) bool {
+	switch t {
+	case TypeString:
+		return v.Kind() == jsontext.KindString
+	case TypeNumber:
+		return v.Kind() == jsontext.KindNumber
+	case TypeInteger:
+		return v.Kind() == jsontext.KindNumber && isJSONInteger(v)
+	case TypeBoolean:
+		return v.Kind() == jsontext.KindTrue || v.Kind() == jsontext.KindFalse
+	case TypeNull:
+		return v.Kind() == jsontext.KindNull
+	case TypeArray:
+		return v.Kind() == jsontext.KindBeginArray
+	case TypeObject:
+		return v.Kind() == jsontext.KindBeginObject
+	default:
+		return true
+	}
+}
+
+// isJSONInteger reports whether a JSON number value represents a whole number.
+func isJSONInteger(v jsontext.Value) bool {
+	f, err := strconv.ParseFloat(string(v), 64)
+	return err == nil && f == float64(int64(f))
+}
+
+// jsonDisplayValue converts a jsontext.Value to a typed Go value suitable for
+// errpath.ErrInvalid display formatting.
+func jsonDisplayValue(v jsontext.Value) any {
+	switch v.Kind() {
+	case jsontext.KindString:
+		var s string
+		if err := json.Unmarshal(v, &s); err == nil {
+			return s
+		}
+	case jsontext.KindNumber:
+		var f float64
+		if err := json.Unmarshal(v, &f); err == nil {
+			return f
+		}
+	case jsontext.KindTrue:
+		return true
+	case jsontext.KindFalse:
+		return false
+	}
+	return string(v)
 }
 
 func (l *loader) collectSchema(s *Schema, ref ref) {

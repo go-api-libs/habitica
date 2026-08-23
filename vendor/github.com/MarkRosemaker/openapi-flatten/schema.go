@@ -28,7 +28,7 @@ func schemaRef(d *openapi.Document, s *openapi.SchemaRef, name string, mode mode
 	}
 
 	switch s.Value.Type {
-	case openapi.TypeInteger, openapi.TypeNumber, openapi.TypeBoolean: // no need to move to components
+	case openapi.TypeInteger, openapi.TypeNumber, openapi.TypeBoolean, openapi.TypeNull: // no need to move to components
 	case openapi.TypeString:
 		if s.Value.Enum != nil && mode != neverMove {
 			moveSchemaToComponents(d, name, s)
@@ -46,7 +46,10 @@ func schemaRef(d *openapi.Document, s *openapi.SchemaRef, name string, mode mode
 			if len(items.Properties) > 0 && mode != neverMove {
 				moveSchemaToComponents(d, name, s)
 			}
+		case openapi.TypeBoolean: // do nothing, just []bool
+		case openapi.TypeNull: // do nothing, just []null
 		case openapi.TypeArray: // TODO: later
+		case "": // no explicit type — items uses anyOf / oneOf / allOf (e.g. nullable union)
 		default:
 			return fmt.Errorf("unimplemented item type %q", items.Type)
 		}
@@ -73,7 +76,8 @@ func schema(d *openapi.Document, s *openapi.Schema, name string) error {
 	case openapi.TypeString,
 		openapi.TypeInteger,
 		openapi.TypeNumber,
-		openapi.TypeBoolean: // no need to do anything
+		openapi.TypeBoolean,
+		openapi.TypeNull: // no need to do anything
 		return nil
 	case openapi.TypeArray, openapi.TypeObject: // do below
 	case "": // is valid if schema contains oneOf, anyOf, allOf, or properties

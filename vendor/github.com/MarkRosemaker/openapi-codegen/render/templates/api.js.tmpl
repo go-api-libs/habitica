@@ -77,9 +77,23 @@ function matchesRequest(mockRequest, method, path) {
     }
 }
 
+// reportApiError broadcasts a failed API call as a "{{.PackageName}}:ws-message"
+// CustomEvent, the same channel server-pushed notifications use, so a single
+// listener can surface both origins uniformly.
+function reportApiError(operationId, status, message) {
+    window.dispatchEvent(new CustomEvent("{{.PackageName}}:ws-message", {
+        detail: {
+            level: "error",
+            persistent: true,
+            title: `${operationId} failed`,
+            meta: [`Status ${status}`, message],
+        },
+    }));
+}
+
 async function apiFetch(path, options = {}) {
     const {
-        method = "GET"
+        method = "GET", operationId = "Request"
     } = options;
 
     // ====================== DEVELOPMENT MOCKING ======================
@@ -102,6 +116,8 @@ async function apiFetch(path, options = {}) {
 
             if (statusCode >= 400) {
                 console.warn(`[Mock] Error ${statusCode} for ${path}`);
+                const message = (body && (body.message || body.error)) || "Request failed";
+                reportApiError(operationId, statusCode, message);
                 return null;
             }
 
@@ -133,6 +149,12 @@ async function apiFetch(path, options = {}) {
 
         if (!res.ok) {
             console.warn(`API Error: ${res.status} ${path}`);
+            let message = res.statusText || "Request failed";
+            try {
+                const body = await res.clone().json();
+                message = body?.message || body?.error || message;
+            } catch {}
+            reportApiError(operationId, res.status, message);
             return null;
         }
 
@@ -141,8 +163,10 @@ async function apiFetch(path, options = {}) {
         clearTimeout(timeoutId);
         if (err.name === "AbortError") {
             console.error(`Request timeout: ${path}`);
+            reportApiError(operationId, "timeout", `${path} did not respond in time`);
         } else {
             console.error(`Request failed: ${path}`, err);
+            reportApiError(operationId, "network", err.message || "Network error");
         }
         return null;
     }
@@ -159,17 +183,23 @@ window.API = {
         {{- range .QueryParams}}
         if (params.{{.GoName}} != null) q.set({{printf "%q" .JSONName}}, String(params.{{.GoName}}));
         {{- end}}
-        return apiFetch(`{{.JSPathTemplate}}?${q}`{{if or .RequestBody (ne .Method "GET")}}, {
+        return apiFetch(`{{.JSPathTemplate}}?${q}`, {
+            {{- if ne .Method "GET"}}
             method: {{printf "%q" .Method}},
+            {{- end}}
             {{- if .RequestBody}}
             body: JSON.stringify(body),
             {{- end}}
-        }{{end}});
-    },{{else}} apiFetch({{if .PathParams}}`{{.JSPathTemplate}}`{{else}}"{{.PathTemplate}}"{{end}}{{if or .RequestBody (ne .Method "GET")}}, {
+            operationId: {{printf "%q" .Name}},
+        });
+    },{{else}} apiFetch({{if .PathParams}}`{{.JSPathTemplate}}`{{else}}"{{.PathTemplate}}"{{end}}, {
+        {{- if ne .Method "GET"}}
         method: {{printf "%q" .Method}},
+        {{- end}}
         {{- if .RequestBody}}
         body: JSON.stringify(body),
         {{- end}}
-    }{{end}}),{{end}}
+        operationId: {{printf "%q" .Name}},
+    }),{{end}}
 {{- end}}
 };

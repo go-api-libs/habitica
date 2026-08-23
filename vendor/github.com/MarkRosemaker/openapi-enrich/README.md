@@ -1,24 +1,74 @@
-# openapi-enrich
+<div align="center" id=badges>
 
-Enriches an OpenAPI 3.1 document from observed HTTP traffic.
+[![Go Reference](https://pkg.go.dev/badge/github.com/MarkRosemaker/openapi-enrich.svg)](https://pkg.go.dev/github.com/MarkRosemaker/openapi-enrich)
+[![Go Report Card](https://goreportcard.com/badge/github.com/MarkRosemaker/openapi-enrich)](https://goreportcard.com/report/github.com/MarkRosemaker/openapi-enrich)
+![Code Coverage](https://img.shields.io/badge/coverage-72.4%25-yellowgreen)
+[![License: Apache](https://img.shields.io/badge/License-Apache-yellow.svg)](./LICENSE)
 
-## Overview
+</div>
 
-`openapi-enrich` is a focused library with the main public function:
+<p align="center">
+  <img alt="A gopher watching envelopes fly past through binoculars while sketching in a notebook" src=openapi-enrich.jpg width=500>
+</p>
 
-```go
-func Enrich(doc *openapi.Document, interactions cassette.Interactions) error
-```
+<h3 align="center">
+  Build an API spec out of the traffic you already have.
+</h3>
 
-Feed it an OpenAPI document and a slice of observed HTTP interactions; it adds
-paths, operations, parameters, request bodies, and response schemas inferred
-from the traffic.  Schemas are left inline — the caller composes any
-post-processing (flatten, tidy, sort) as needed.
+`openapi-enrich` enriches an [OpenAPI 3.1](https://spec.openapis.org/oas/v3.1.0)
+document from observed HTTP traffic. Feed it a document and a set of recorded
+request/response pairs, and it adds the paths, operations, parameters, request
+bodies, and response schemas it can infer from them.
 
-## Install
+## Introduction
+
+Plenty of APIs have no specification, or one that stopped matching reality some time
+ago. What they do have is traffic. This module treats that traffic as the source of
+truth: record some real calls, and get a document describing what the API actually
+does.
+
+Enrichment is incremental by design. Every additional interaction refines the
+result rather than replacing it — a second observation of the same endpoint
+contributes any fields the first one didn't include, and widens a type where the two
+disagree. That merging is delegated to
+[`openapi-merge`](https://github.com/MarkRosemaker/openapi-merge), which exists
+precisely for the problem of reconciling schemas inferred from independent samples.
+
+## Features
+
+What it infers:
+
+- **Paths** — detected from request URLs, with ID-like segments replaced by
+  `{param}` path parameters.
+- **Operations** — one per unique method + path, with an inferred `operationId`
+  (e.g. `GET /users` → `ListUsers`, `GET /users/{id}` → `GetUserByID`).
+- **Query parameters** — schema inferred from values; comma-separated values
+  become non-exploded arrays.
+- **Request headers** — `Authorization` creates an HTTP security scheme;
+  `x-*` and other custom headers become header parameters.
+- **Request bodies** — JSON bodies produce inline object schemas.
+- **Responses** — JSON, text/plain, and text/html responses are modeled;
+  repeated observations are merged.
+- **Schema formats** — UUID, URI, email, date-time, IPv4, IPv6 are detected
+  automatically from string values.
+
+The module also ships the pieces needed to *obtain* that traffic:
+
+- `cassette` — self-contained HTTP interaction types, with JSON persistence,
+  bearer-token masking, and header trimming before anything is written to disk.
+- `recorder` — an `http.RoundTripper` that records live traffic into a cassette,
+  so you can capture interactions by pointing an existing client at it.
+
+## Installation
 
 ```bash
 go get -tool github.com/MarkRosemaker/openapi-enrich/cmd/openapi-enrich
+```
+
+or
+
+```bash
+go get github.com/MarkRosemaker/openapi-enrich
 ```
 
 ## Usage
@@ -52,21 +102,13 @@ if err := enrich.Enrich(doc, interactions); err != nil {
 }
 ```
 
-## What it infers
+The main public function is:
 
-- **Paths** — detected from request URLs, with ID-like segments replaced by
-  `{param}` path parameters.
-- **Operations** — one per unique method + path, with an inferred `operationId`
-  (e.g. `GET /users` → `ListUsers`, `GET /users/{id}` → `GetUserByID`).
-- **Query parameters** — schema inferred from values; comma-separated values
-  become non-exploded arrays.
-- **Request headers** — `Authorization` creates an HTTP security scheme;
-  `x-*` and other custom headers become header parameters.
-- **Request bodies** — JSON bodies produce inline object schemas.
-- **Responses** — JSON, text/plain, and text/html responses are modeled;
-  repeated observations are merged.
-- **Schema formats** — UUID, URI, email, date-time, IPv4, IPv6 are detected
-  automatically from string values.
+```go
+func Enrich(doc *openapi.Document, interactions cassette.Interactions) error
+```
+
+Schemas are left inline — the caller composes any post-processing as needed.
 
 ## Design
 
@@ -74,6 +116,40 @@ if err := enrich.Enrich(doc, interactions); err != nil {
 - **No flatten/tidy/sort** — use separate libraries for those.
 - **Own interaction types** — no dependency on a specific HTTP recording format.
 
-## Requirements
+The result of enrichment is deliberately raw: inline schemas, unsorted, unpolished.
+Turning that into something pleasant to read or generate from is the job of the
+modules below, applied in whatever order suits you.
 
-Requires Go 1.25 with `GOEXPERIMENT=jsonv2` (set via `go env -w GOEXPERIMENT=jsonv2`).
+## The openapi family
+
+| Module | Purpose |
+|---|---|
+| [openapi](https://github.com/MarkRosemaker/openapi) | Parse, validate, and write OpenAPI 3.x specifications |
+| [openapi-compare](https://github.com/MarkRosemaker/openapi-compare) | Compare specification objects — exact equality and shape equivalence |
+| [openapi-edit](https://github.com/MarkRosemaker/openapi-edit) | Safe structural edits, such as renaming a schema and rewriting every `$ref` to it |
+| [openapi-flatten](https://github.com/MarkRosemaker/openapi-flatten) | Promote inline definitions into named `components` entries |
+| [openapi-compress](https://github.com/MarkRosemaker/openapi-compress) | Deduplicate and merge equivalent component schemas |
+| [openapi-merge](https://github.com/MarkRosemaker/openapi-merge) | Merge schemas that were inferred independently from different samples |
+| **openapi-enrich** (this module) | Infer specification content from observed HTTP traffic |
+| [openapi-codegen](https://github.com/MarkRosemaker/openapi-codegen) | Generate Go types, clients, and servers from a specification |
+
+A common sequence is to enrich from traffic, flatten the inline schemas into named
+components, compress the duplicates that flattening produces, and then generate a
+client.
+
+## Additional Information
+
+- [**Go Reference**](https://pkg.go.dev/github.com/MarkRosemaker/openapi-enrich): The Go reference documentation for the openapi-enrich package.
+- [**Go Report Card**](https://goreportcard.com/report/github.com/MarkRosemaker/openapi-enrich): Check the code quality report.
+
+### Requirements
+
+Requires Go 1.26 with `GOEXPERIMENT=jsonv2` (set via `go env -w GOEXPERIMENT=jsonv2`).
+
+## Contributing
+
+If you have any contributions to make, please submit a pull request or open an issue on the [GitHub repository](https://github.com/MarkRosemaker/openapi-enrich).
+
+## License
+
+This project is licensed under the [Apache 2.0 License](./LICENSE).

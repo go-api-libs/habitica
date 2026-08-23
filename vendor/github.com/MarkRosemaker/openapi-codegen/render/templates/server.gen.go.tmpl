@@ -29,7 +29,7 @@ type Service interface {
 // RegisterService registers a [Service] with an [*http.ServeMux].
 // Optionally, a path prefix may be provided.
 func RegisterService(svc Service, mux *http.ServeMux, pathPrefix string) {
-{{range .Operations}}{{$op := .}}{{$successCode := "http.StatusOK"}}{{range .Responses}}{{if .IsSuccess}}{{$successCode = .GoConstant}}{{end}}{{end}}
+{{range .Operations}}{{$op := .}}{{$successCode := "http.StatusOK"}}{{$successContentType := "application/json"}}{{range .Responses}}{{if .IsSuccess}}{{$successCode = .GoConstant}}{{$successContentType = .ContentType}}{{end}}{{end}}
 	{
 	path := fmt.Sprintf("%s%s", pathPrefix, {{ .PathTemplate | printf "%q" }})
 	l := slog.Default().With(slog.String("method", "{{ .Method }}"), slog.String("path", path), slog.String("function", {{.Name | printf "%q" }}))
@@ -38,12 +38,18 @@ func RegisterService(svc Service, mux *http.ServeMux, pathPrefix string) {
 		ctx := r.Context()
 		l.DebugContext(ctx, "called")
 
+{{/* s and rawParam are shared temporaries: the parse expressions name s, and
+     a handler with two path parameters would otherwise redeclare both in the
+     same scope. Each is declared by the first parameter that needs it and
+     assigned by the rest. */}}
+{{- $sDeclared := false }}
+{{- $rawDeclared := false }}
 {{ range .PathParams}}
-		{{ if eq .ParseExpr "s"}}{{.GoName}}{{else}}s{{end}} := r.PathValue({{printf "%q" .JSONName}})
+		{{ if eq .ParseExpr "s"}}{{.GoName}} :={{else}}s {{ if $sDeclared }}={{ else }}:={{ end }}{{ $sDeclared = true }}{{end}} r.PathValue({{printf "%q" .JSONName}})
 {{- if .ParseErrFree}}{{ if ne .ParseExpr "s"}}
 		{{.GoName}} := {{.ParseExpr}}
 {{- end}}{{else}}
-		{{ if .ParseCast}}rawParam{{ else }}{{.GoName}}{{ end }}, err := {{.ParseExpr}}
+		{{ if .ParseCast}}rawParam, err {{ if $rawDeclared }}={{ else }}:={{ end }}{{ $rawDeclared = true }}{{ else }}{{.GoName}}, err :={{ end }} {{.ParseExpr}}
 		if err != nil {
 			msg := fmt.Sprintf("invalid {{.JSONName}}: %v", err)
 			l.DebugContext(ctx, "Bad Request", slog.String("msg", msg))
@@ -117,11 +123,16 @@ func RegisterService(svc Service, mux *http.ServeMux, pathPrefix string) {
 		}
 
 {{ if .SuccessReturn -}}
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", {{printf "%q" $successContentType}})
 {{- end }}
 		w.WriteHeader({{$successCode}})
 
-{{ if .SuccessReturn }}
+{{ if .RawBytesSuccess }}
+		if _, err := w.Write(res); err != nil {
+			l.ErrorContext(ctx, "write error", slog.String("error", err.Error()))
+			return
+		}
+{{- else if .SuccessReturn }}
 		if err := json.MarshalWrite(w, res, jsonOpts); err != nil {
 			l.ErrorContext(ctx, "marshal error", slog.String("error", err.Error()))
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)

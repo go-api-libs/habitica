@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/MarkRosemaker/openapi"
+	"github.com/MarkRosemaker/openapi-enrich/cassette"
 	merge "github.com/MarkRosemaker/openapi-merge"
 	apitypes "github.com/go-api-libs/types"
 	"github.com/google/uuid"
@@ -28,11 +29,20 @@ func decodeSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 
 	switch v.Kind() {
 	case '"': // string
-		return &openapi.Schema{
-			Type:    openapi.TypeString,
-			Format:  stringFormat(v.String()),
-			Example: jsontext.Value(fmt.Appendf(nil, "%q", v.String())),
-		}, nil
+		s := &openapi.Schema{
+			Type:   openapi.TypeString,
+			Format: stringFormat(v.String()),
+		}
+
+		// A redacted value makes a poor example: it says nothing the inferred
+		// format does not already say, and reads as though the API returns
+		// asterisks. Masking is shape-preserving, so the format survives without
+		// it.
+		if !cassette.IsMasked(v.String()) {
+			s.Example = jsontext.Value(fmt.Appendf(nil, "%q", v.String()))
+		}
+
+		return s, nil
 
 	case '0': // number
 		str := v.String()
@@ -42,10 +52,11 @@ func decodeSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 		return &openapi.Schema{Type: openapi.TypeNumber, Format: openapi.FormatDouble, Example: jsontext.Value(str)}, nil
 
 	case 't': // true
-		return &openapi.Schema{Type: openapi.TypeBoolean, Example: jsontext.Value(jsontext.True.String())}, nil
+		return &openapi.Schema{Type: openapi.TypeBoolean}, nil
 	case 'f': // false
-		return &openapi.Schema{Type: openapi.TypeBoolean, Example: jsontext.Value(jsontext.False.String())}, nil
+		return &openapi.Schema{Type: openapi.TypeBoolean}, nil
 	case 'n': // null → object placeholder; isGeneratedFromNull in openapi-merge checks Example=="null"
+		// TODO: perhaps it would be better to actually set TypeNull here
 		return &openapi.Schema{Type: openapi.TypeObject, Example: jsontext.Value("null")}, nil
 	case '{': // begin object
 		return decodeObjectSchema(dec)
@@ -78,6 +89,13 @@ func decodeObjectSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 		propSchema, err := decodeSchema(dec)
 		if err != nil {
 			return nil, fmt.Errorf("property %q: %w", key, err)
+		}
+
+		// A redacted number is indistinguishable from a real one by value, so
+		// drop the example by key instead. These keys hold credentials, which
+		// have no business appearing as examples either way.
+		if cassette.RedactsBodyKey(key) {
+			propSchema.Example = nil
 		}
 
 		pairs = append(pairs, kv{key, propSchema})

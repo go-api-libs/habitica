@@ -339,6 +339,10 @@ func processResponse(op *openapi.Operation, resp *cassette.Response) error {
 func findParam(piParams, opParams openapi.ParameterList, name string, in openapi.ParameterLocation) *openapi.Parameter {
 	for _, p := range append(opParams, piParams...) {
 		if p.Value != nil && p.Value.Name == name && p.Value.In == in {
+			if p.Value.Schema.Type == "" {
+				p.Value.Schema.Type = openapi.TypeString
+			}
+
 			return p.Value
 		}
 	}

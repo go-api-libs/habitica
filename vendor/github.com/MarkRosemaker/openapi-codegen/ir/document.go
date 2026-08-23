@@ -47,7 +47,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		return nil, fmt.Errorf("components.schemas: %w", err)
 	}
 
-	auth := fromSecurity(doc.Components.SecuritySchemes)
+	auth := fromSecurity(doc.Components.SecuritySchemes, doc.Info.Title)
 
 	globalParamsMap, err := getGlobalParams(doc.Paths, doc.Info.Title)
 	if err != nil {
@@ -91,6 +91,9 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 		HasDurationFields:      hasDuration,
 		HasDateFields:          hasDate,
 		HasDateTimeOrIntFields: hasDateTimeOrInt,
+		HasServerOverrides: slices.ContainsFunc(operations, func(op Operation) bool {
+			return op.BaseURL != nil
+		}),
 	}, nil
 }
 
@@ -99,10 +102,16 @@ func parseBaseURL(doc *openapi.Document) (URLParts, error) {
 	if len(doc.Servers) == 0 {
 		return URLParts{Scheme: "https"}, nil
 	}
-	u, err := url.Parse(doc.Servers[0].URL)
+
+	return parseServer(doc.Servers[0].URL)
+}
+
+func parseServer(raw string) (URLParts, error) {
+	u, err := url.Parse(raw)
 	if err != nil {
-		return URLParts{}, fmt.Errorf("parse %q: %w", doc.Servers[0].URL, err)
+		return URLParts{}, fmt.Errorf("parse %q: %w", raw, err)
 	}
+
 	return URLParts{
 		Scheme: u.Scheme,
 		Host:   u.Host,
@@ -114,27 +123,52 @@ func parseBaseURL(doc *openapi.Document) (URLParts, error) {
 func fromPaths(paths openapi.Paths, auth Auth, globalParams paramMap) ([]Operation, error) {
 	var ops []Operation
 	for path, item := range paths.ByIndex() {
+		// A path item may name its own server: SEC serves one path from
+		// www.sec.gov and the rest from data.sec.gov. Without this the client
+		// sends every request to the document's server.
+		var override *URLParts
+		if len(item.Servers) > 0 {
+			parts, err := parseServer(item.Servers[0].URL)
+			if err != nil {
+				return nil, fmt.Errorf("%s: %w", path, err)
+			}
+
+			override = &parts
+		}
+
 		for method, op := range item.Operations {
 			irOp, err := FromOperation(path, item.Parameters, method, op, globalParams)
 			if err != nil {
 				return nil, fmt.Errorf("%s %s: %w", method, path, err)
 			}
+
+			irOp.BaseURL = override
 			ops = append(ops, *irOp)
 		}
 	}
 	return ops, nil
 }
 
-func fromSecurity(schemes openapi.SecuritySchemes) Auth {
+// fromSecurity reads the security schemes. Bearer.Name is the environment
+// variable the generated client reads the token from, and everything the
+// client emits for bearer auth hangs off it being set.
+//
+// A scheme's name field only means anything for type apiKey, where it names
+// the header, so an http bearer scheme usually leaves it empty. Falling back
+// to the title matches how an API key parameter gets its own variable.
+func fromSecurity(schemes openapi.SecuritySchemes, apiTitle string) Auth {
 	s := Auth{}
 
 	for _, sec := range schemes {
 		v := sec.Value
 		switch v.Scheme {
 		case openapi.SecuritySchemeBearer:
-			s.Bearer = Bearer{
-				Name: v.Name,
+			name := v.Name
+			if name == "" && apiTitle != "" {
+				name = strcase.ToSNAKE(fmt.Sprintf("%s_TOKEN", apiTitle))
 			}
+
+			s.Bearer = Bearer{Name: name}
 		}
 	}
 

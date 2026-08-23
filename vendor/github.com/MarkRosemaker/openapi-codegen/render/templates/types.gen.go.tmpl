@@ -72,7 +72,7 @@ type {{.Name}} {{.Type}}
 
 const (
 {{- range .EnumValues}}
-	{{.GoName}} {{$typeName}} = "{{.Value}}"
+	{{.GoName}} {{$typeName}} = {{.Literal}}
 {{- end}}
 )
 
@@ -105,6 +105,59 @@ type {{.Name}} {{ .Type }}
 	}
 {{- else if eq .Kind 4}}{{/* SchemaKindMap */}}
 type {{ .Name }} map[{{ .MapKey }}]{{ .MapValue }}
+{{- else if eq .Kind 5}}{{/* SchemaKindUnion */}}
+{{- $typeName := .Name}}
+{{- $isOneOf := .IsOneOf}}
+// {{.Name}} is an untagged {{if .IsOneOf}}oneOf{{else}}anyOf{{end}} union: {{if .IsOneOf}}exactly one{{else}}at least one{{end}} field is set after unmarshaling.
+type {{.Name}} struct {
+	{{- range .UnionVariants}}
+	{{.FieldName}} *{{.Type}}
+	{{- end}}
+}
+
+// UnmarshalJSONFrom implements [json.UnmarshalerFrom].
+func (v *{{$typeName}}) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+
+	var matched int
+	{{- range .UnionVariants}}
+
+	{
+		var vv {{.Type}}
+		if err := json.Unmarshal(raw, &vv, jsonOpts); err == nil {
+			v.{{.FieldName}} = &vv
+			matched++
+		}
+	}
+	{{- end}}
+
+	{{ if $isOneOf -}}
+	if matched != 1 {
+		return fmt.Errorf("{{$typeName}}: expected exactly one matching variant, got %d", matched)
+	}
+	{{- else -}}
+	if matched == 0 {
+		return fmt.Errorf("{{$typeName}}: expected at least one matching variant, got 0")
+	}
+	{{- end }}
+
+	return nil
+}
+
+// MarshalJSONTo implements [json.MarshalerTo]. It emits the first non-nil variant.
+func (v *{{$typeName}}) MarshalJSONTo(enc *jsontext.Encoder) error {
+	switch {
+	{{- range .UnionVariants}}
+	case v.{{.FieldName}} != nil:
+		return json.MarshalEncode(enc, v.{{.FieldName}}, jsonOpts)
+	{{- end}}
+	}
+
+	return fmt.Errorf("{{$typeName}}: no variant set")
+}
 {{ else }}
 // TODO: unimplemented schema kind {{ .Kind }}
 {{- end }}

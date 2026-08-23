@@ -100,6 +100,19 @@ func WithClient({{ .VarName }} string) ClientOption {
 }
 {{ end }}
 
+{{ if .HasServerOverrides }}
+// serverURL returns the base URL for an operation whose path item names a
+// server of its own: that server, unless the caller overrode the client's base
+// URL, which has to win so the client can be pointed at a test server.
+func (c *Client) serverURL(server *url.URL) *url.URL {
+	if c.baseURL != defaultBaseURL {
+		return c.baseURL
+	}
+
+	return server
+}
+{{ end }}
+
 // NewClient creates a new Client{{ with .Auth.Bearer.Name }}, reading the bearer token from [os.Getenv]("{{ . }}"){{ end }}.
 func NewClient(opts ...ClientOption) (*Client, error) {
 	c := &Client{
@@ -151,7 +164,7 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 {{range .Operations}}
 {{$op := .}}
 
-{{ if .SuccessReturn }}
+{{ if and .SuccessReturn (not .RawBytesSuccess) }}
 {{ with .Description }}
 	{{- toGoComment . }}
 	//
@@ -166,7 +179,7 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 // Deprecated.
 {{- end}}
 func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .ParamsInStruct}}, params {{ if not .ParamsInStruct.Required }}*{{ end }}{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) ({{.SuccessReturn.Nilable}}, error) {
-	return {{.Name}}[{{.SuccessReturn}}](ctx, c{{range .PathParams}}, {{.GoName}}{{end}}{{if .ParamsInStruct}}, params{{end}}{{if .RequestBody}}, body{{end}})
+	return c.{{.Name}}WithResult[{{.SuccessReturn}}](ctx{{range .PathParams}}, {{.GoName}}{{end}}{{if .ParamsInStruct}}, params{{end}}{{if .RequestBody}}, body{{end}})
 }
 {{ end }}
 
@@ -186,10 +199,19 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 //
 // Deprecated.
 {{- end}}
-func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Client{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .ParamsInStruct}}, params {{ if not .ParamsInStruct.Required }}*{{ end }}{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) ({{if .SuccessReturn}}*R, {{end}}error) {
-{{- if .JoinPathArgs -}}
-	u := c.baseURL.JoinPath({{range $i, $a := .JoinPathArgs}}{{if $i}}, {{end}}{{$a}}{{end}})
-{{- end -}}
+{{ if .RawBytesSuccess -}}
+func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .ParamsInStruct}}, params {{ if not .ParamsInStruct.Required }}*{{ end }}{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) ({{.SuccessReturn}}, error) {
+{{- else if .SuccessReturn -}}
+func (c *Client) {{.Name}}WithResult[R any](ctx context.Context{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .ParamsInStruct}}, params {{ if not .ParamsInStruct.Required }}*{{ end }}{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) (*R, error) {
+{{- else -}}
+func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .ParamsInStruct}}, params {{ if not .ParamsInStruct.Required }}*{{ end }}{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) error {
+{{- end }}
+{{/* Always declared: the request below uses u whether or not the operation
+     adds path segments. JoinPath returns a copy, so assigning c.baseURL
+     directly would let a query string mutate the client's base URL. */}}
+{{- "" }}
+	u := {{ .BaseURLExpr }}.JoinPath({{range $i, $a := .JoinPathArgs}}{{if $i}}, {{end}}{{$a}}{{end}})
+{{- "" -}}
 {{ if .QueryParams}}
 	{{ if not .ParamsInStruct.Required -}}
 	if params != nil {
@@ -210,13 +232,9 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 	}
 	{{- end }}
 {{ end }}
-{{- if .RequestBody}}
-	var buf bytes.Buffer
-	if err := json.NewEncoder(&buf).Encode(body); err != nil {
-		return {{if .SuccessReturn}}{{.SuccessReturn.ZeroValue}}, {{end}}fmt.Errorf("encode body: %w", err)
-	}
-	req, err := http.NewRequestWithContext(ctx, http.Method{{titleCase .Method}}, u.String(), &buf)
-{{- else}}
+{{ if .RequestBody -}}
+	pr, pw := io.Pipe()
+{{ end -}}
 	req := (&http.Request{
 		Header: http.Header{
 			{{ if $.Auth.Bearer.Name -}}
@@ -229,6 +247,9 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 			"{{ .JSONName }}": []string{ {{- or .Value .FormatExpr -}} },
 			{{ end -}}
 			"User-Agent":     []string{c.userAgent},
+			{{ if .RequestBody -}}
+			"Content-Type": []string{ {{printf "%q" .RequestBody.ContentType}} },
+			{{ end -}}
 		},
 		Host:       u.Host,
 		Method:     http.Method{{titleCase .Method}},
@@ -236,10 +257,15 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 		ProtoMajor: 1,
 		ProtoMinor: 1,
 		URL:        u,
+		{{ if .RequestBody -}}
+		Body:          pr,
+		ContentLength: -1,
+		{{ end -}}
 	}).WithContext(ctx)
-{{- end}}
-{{- if .RequestBody}}
-	req.Header.Set("Content-Type", {{printf "%q" .RequestBody.ContentType}})
+
+{{ if .RequestBody }}
+	go func() { pw.CloseWithError(json.MarshalWrite(pw, body, jsonOpts)) }()
+	defer pr.Close()
 {{- end}}
 
 	rsp, err := c.cli.Do(req)
@@ -266,7 +292,23 @@ func {{.Name}}{{ if .SuccessReturn }}[R any]{{ end }}(ctx context.Context, c *Cl
 			{{ else -}}
 			return {{if $op.SuccessReturn}}nil, {{end}}api.NewErrCustom(rsp, &out)
 			{{ end -}}
-		{{- end -}}
+			{{- else if .IsRawBytes }}
+			out, err := io.ReadAll(rsp.Body)
+			if err != nil {
+				return {{if $op.SuccessReturn}}nil, {{end}}api.WrapDecodingError(rsp, err)
+			}
+
+			{{ if .IsSuccess -}}
+			return out, nil
+			{{ else -}}
+			return {{if $op.SuccessReturn}}nil, {{end}}api.NewErrBody(rsp, out)
+			{{ end -}}
+			{{- else }}
+			{{/* The response declares a content type with nothing to decode
+			     from it, so there is no body to hand back -- but the case
+			     still has to return, or the method falls out of the switch. */}}
+			return {{if $op.SuccessReturn}}nil, {{end}}nil
+			{{ end -}}
 		default:
 			return {{if $op.SuccessReturn}}nil, {{end}}api.NewErrUnknownContentType(rsp)
 		}

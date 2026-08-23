@@ -15,7 +15,13 @@ import (
 // Every interaction must match exactly one operation; an error is returned otherwise,
 // guaranteeing len(doc.InteractionCalls) == len(interactions) on success.
 func matchInteractions(doc *ir.Document, interactions cassette.Interactions) error {
+	fillGlobalParamExamples(doc, interactions)
+
 	for _, ia := range interactions {
+		if ia.Request.URL == "" {
+			continue // just a scaffold
+		}
+
 		u, err := url.Parse(ia.Request.URL)
 		if err != nil {
 			return err
@@ -63,7 +69,13 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 
 		if r := findResponse(op, ia.Response.StatusCode); r != nil {
 			call.IsSuccess = r.IsSuccess
-			if !r.IsSuccess && r.GoType != nil {
+			switch {
+			case r.IsSuccess:
+			case r.IsRawBytes:
+				// Nothing was decoded, so there is no generated type to match
+				// on: the client hands the body back as an api.ErrorBody.
+				call.ErrorType = "api.ErrorBody"
+			case r.GoType != nil:
 				call.ErrorType = r.GoType.String()
 			}
 		} else {
@@ -77,6 +89,29 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 	}
 
 	return nil
+}
+
+// fillGlobalParamExamples gives every global parameter the specification has no
+// example for the value that was recorded for it, so that the client default and
+// the test environment agree with the cassette they are replayed against.
+//
+// The specification is not a reliable source here: an example is only present
+// when the recorded value survived masking, so credentials tend to be exactly
+// the parameters missing one.
+func fillGlobalParamExamples(doc *ir.Document, interactions cassette.Interactions) {
+	for i := range doc.GlobalParams {
+		p := &doc.GlobalParams[i]
+		if p.Example != "" {
+			continue
+		}
+
+		for _, ia := range interactions {
+			if val := ia.Request.Headers.Get(p.JSONName); val != "" {
+				p.Example = strconv.Quote(val)
+				break
+			}
+		}
+	}
 }
 
 // findResponse returns the operation's declared response matching statusCode,

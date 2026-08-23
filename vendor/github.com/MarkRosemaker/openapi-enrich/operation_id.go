@@ -2,6 +2,7 @@ package enrich
 
 import (
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/ettle/strcase"
@@ -33,8 +34,8 @@ func inferOperationID(method string, path openapi.Path) string {
 	segments := strings.Split(strings.Trim(string(path), "/"), "/")
 
 	lastParamIdx := -1
-	for i := len(segments) - 1; i >= 0; i-- {
-		if isParamSegment(segments[i]) {
+	for i, segment := range slices.Backward(segments) {
+		if isParamSegment(segment) {
 			lastParamIdx = i
 			break
 		}

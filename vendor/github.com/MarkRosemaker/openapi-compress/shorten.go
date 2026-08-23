@@ -7,6 +7,7 @@ import (
 	"unicode"
 
 	"github.com/MarkRosemaker/openapi"
+	edit "github.com/MarkRosemaker/openapi-edit"
 )
 
 // noiseWords are removed when shortening path-derived schema names.
@@ -173,7 +174,7 @@ func shortenMergedSchemaNames(d *openapi.Document, targets map[string]bool) erro
 		if short == name {
 			continue
 		}
-		if err := RenameSchema(d, name, short); err != nil {
+		if err := edit.RenameSchema(d, name, short); err != nil {
 			return err
 		}
 	}

@@ -52,7 +52,7 @@ func run(ctx context.Context) error {
 	// Call requests that don't have a response yet
 	for _, ia := range prevIas {
 		if ia.Response.StatusCode > 0 {
-			continue
+			continue // we have a response
 		}
 
 		if ia.Request.URL == "" {
