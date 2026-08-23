@@ -5,8 +5,8 @@
 			"url": "https://habitica.com/api/v3/tasks/user",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -19,7 +19,7 @@
 				"data": [
 					{
 						"_id": "8a9d461b-f5eb-4a16-97d3-c03380c422a3",
-						"userId": "b0413351-405f-416f-8787-947ec1c85199",
+						"userId": "00000000-0000-0000-0000-000000000000",
 						"text": "15 minute break",
 						"type": "reward",
 						"notes": "",
@@ -43,7 +43,7 @@
 					},
 					{
 						"_id": "84c2e874-a8c9-4673-bd31-d97a1a42e9a3",
-						"userId": "b0413351-405f-416f-8787-947ec1c85199",
+						"userId": "00000000-0000-0000-0000-000000000000",
 						"alias": "prac31",
 						"text": "Practice Task 31",
 						"type": "daily",
@@ -100,8 +100,8 @@
 			"url": "https://habitica.com/api/v3/tasks/2b774d70-ec8b-41c1-8967-eb6b13d962ba",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -113,7 +113,7 @@
 				"success": true,
 				"data": {
 					"_id": "2b774d70-ec8b-41c1-8967-eb6b13d962ba",
-					"userId": "b0413351-405f-416f-8787-947ec1c85199",
+					"userId": "00000000-0000-0000-0000-000000000000",
 					"text": "API Trial",
 					"alias": "apiTrial",
 					"type": "habit",
@@ -181,8 +181,8 @@
 			"url": "https://habitica.com/api/v3/user",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -197,7 +197,7 @@
 						"local": {
 							"username": "markrosemaker",
 							"lowerCaseUsername": "markrosemaker",
-							"email": "marcodroesler@gmail.com",
+							"email": "john.doe@example.com",
 							"has_password": true
 						},
 						"timestamps": {
@@ -209,7 +209,7 @@
 							"id": "117454340579493668837",
 							"emails": [
 								{
-									"value": "marcodroesler@gmail.com",
+									"value": "john.doe@example.com",
 									"verified": true
 								}
 							]
@@ -1479,7 +1479,7 @@
 								"user": "Frans Duijts",
 								"backer": {},
 								"contributor": {},
-								"uuid": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+								"uuid": "00000000-0000-0000-0000-000000000000",
 								"flags": {},
 								"likes": {},
 								"timestamp": "2017-02-20T22:55:15.932Z",
@@ -1496,7 +1496,7 @@
 								"timestamp": "2017-02-20T22:54:36.242Z",
 								"likes": {},
 								"flags": {},
-								"uuid": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+								"uuid": "00000000-0000-0000-0000-000000000000",
 								"contributor": {},
 								"backer": {},
 								"user": "Frans Duijts",
@@ -1509,7 +1509,7 @@
 								"user": "Frans Duijts",
 								"backer": {},
 								"contributor": {},
-								"uuid": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+								"uuid": "00000000-0000-0000-0000-000000000000",
 								"flags": {},
 								"likes": {},
 								"timestamp": "2017-02-20T09:25:07.917Z",
@@ -1526,7 +1526,7 @@
 								"timestamp": "2017-02-20T08:05:35.454Z",
 								"likes": {},
 								"flags": {},
-								"uuid": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+								"uuid": "00000000-0000-0000-0000-000000000000",
 								"contributor": {},
 								"backer": {},
 								"user": "Frans Duijts",
@@ -1539,7 +1539,7 @@
 								"user": "Marco Rösler",
 								"backer": {},
 								"contributor": {},
-								"uuid": "b0413351-405f-416f-8787-947ec1c85199",
+								"uuid": "00000000-0000-0000-0000-000000000000",
 								"flags": {},
 								"likes": {},
 								"timestamp": "2017-01-30T16:57:58.245Z",
@@ -1759,8 +1759,8 @@
 			"url": "https://habitica.com/api/v3/tasks/2b774d70-ec8b-41c1-8967-eb6b13d962ba/score/up",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -1826,8 +1826,8 @@
 			"url": "https://habitica.com/api/v3/tasks/4f2d942d-67e8-4cc0-ac08-61962296660b/score/up",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -1848,8 +1848,8 @@
 			"url": "https://habitica.com/api/v3/tasks/488a92c0-164c-445a-be31-1bcb1b04ab04/score/up",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -1915,8 +1915,8 @@
 			"url": "https://habitica.com/api/v3/user/class/cast/smash?targetId=f7591dce-398a-4e12-ba23-18542f9f0bef",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -1932,7 +1932,7 @@
 							"local": {
 								"username": "markrosemaker",
 								"lowerCaseUsername": "markrosemaker",
-								"email": "marcodroesler@gmail.com",
+								"email": "john.doe@example.com",
 								"has_password": true
 							},
 							"timestamps": {
@@ -1944,7 +1944,7 @@
 								"id": "117454340579493668837",
 								"emails": [
 									{
-										"value": "marcodroesler@gmail.com",
+										"value": "john.doe@example.com",
 										"verified": true
 									}
 								]
@@ -3179,7 +3179,7 @@
 									"user": "Frans Duijts",
 									"backer": {},
 									"contributor": {},
-									"uuid": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+									"uuid": "00000000-0000-0000-0000-000000000000",
 									"flags": {},
 									"likes": {},
 									"timestamp": "2017-02-20T22:55:15.932Z",
@@ -3196,7 +3196,7 @@
 									"timestamp": "2017-02-20T22:54:36.242Z",
 									"likes": {},
 									"flags": {},
-									"uuid": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+									"uuid": "00000000-0000-0000-0000-000000000000",
 									"contributor": {},
 									"backer": {},
 									"user": "Frans Duijts",
@@ -3209,7 +3209,7 @@
 									"user": "Frans Duijts",
 									"backer": {},
 									"contributor": {},
-									"uuid": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+									"uuid": "00000000-0000-0000-0000-000000000000",
 									"flags": {},
 									"likes": {},
 									"timestamp": "2017-02-20T09:25:07.917Z",
@@ -3226,7 +3226,7 @@
 									"timestamp": "2017-02-20T08:05:35.454Z",
 									"likes": {},
 									"flags": {},
-									"uuid": "0d95ece5-ec87-423c-84c5-6720f918f67e",
+									"uuid": "00000000-0000-0000-0000-000000000000",
 									"contributor": {},
 									"backer": {},
 									"user": "Frans Duijts",
@@ -3239,7 +3239,7 @@
 									"user": "Marco Rösler",
 									"backer": {},
 									"contributor": {},
-									"uuid": "8027d396-e2bb-4389-b002-782025424e75",
+									"uuid": "00000000-0000-0000-0000-000000000000",
 									"flags": {},
 									"likes": {},
 									"timestamp": "2017-01-30T16:57:58.245Z",
@@ -3860,7 +3860,7 @@
 						"weeksOfMonth": [],
 						"createdAt": "2021-07-18T23:32:31.967Z",
 						"updatedAt": "2026-08-01T22:23:04.189Z",
-						"userId": "8027d396-e2bb-4389-b002-782025424e75",
+						"userId": "00000000-0000-0000-0000-000000000000",
 						"isDue": true,
 						"id": "f7591dce-398a-4e12-ba23-18542f9f0bef"
 					}
@@ -3889,8 +3889,8 @@
 			"url": "https://habitica.com/api/v3/user/class/cast/smash?targetId=f7591dce-398a-4e12-ba23-18542f9f0bef",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -3911,8 +3911,8 @@
 			"url": "https://habitica.com/api/v3/user/buy-health-potion",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -3966,8 +3966,8 @@
 			"url": "https://habitica.com/api/v3/cron",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -3990,8 +3990,8 @@
 			"url": "https://habitica.com/api/v3/tasks/91cf329e-0d0a-4c15-92a0-2e6748a470c9/score/up",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
@@ -4058,8 +4058,8 @@
 			"url": "https://habitica.com/api/v3/tasks/0278da0a-6af9-47df-b0f6-79846adb3f36/score/up",
 			"header": {
 				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
-				"X-Api-User": "b0413351-405f-416f-8787-947ec1c85199",
-				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "*********************************************************"
 			}
 		},
 		"response": {
