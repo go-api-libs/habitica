@@ -730,6 +730,13 @@
           }
         ]
       },
+      "Direction": {
+        "type": "string",
+        "enum": [
+          "up",
+          "down"
+        ]
+      },
       "Drop": {
         "type": "object",
         "properties": {
@@ -1962,6 +1969,31 @@
           "training"
         ]
       },
+      "SpellID": {
+        "type": "string",
+        "enum": [
+          "fireball",
+          "mpheal",
+          "earth",
+          "frost",
+          "smash",
+          "defensiveStance",
+          "valorousPresence",
+          "intimidate",
+          "pickPocket",
+          "backStab",
+          "toolsOfTrade",
+          "stealth",
+          "heal",
+          "protectAura",
+          "brightness",
+          "healAll",
+          "snowball",
+          "spookySparkles",
+          "seafoam",
+          "shinySeed"
+        ]
+      },
       "Stats": {
         "type": "object",
         "properties": {
@@ -2501,6 +2533,17 @@
           "str",
           "con"
         ]
+      },
+      "Type": {
+        "type": "string",
+        "enum": [
+          "habits",
+          "dailys",
+          "todos",
+          "rewards",
+          "completedTodos"
+        ],
+        "example": "habits"
       },
       "UltimateGearSets": {
         "type": "object",
@@ -5857,11 +5900,7 @@
         "description": "The direction for scoring the task",
         "required": true,
         "schema": {
-          "type": "string",
-          "enum": [
-            "up",
-            "down"
-          ]
+          "$ref": "#/components/schemas/Direction"
         }
       },
       "spellId": {
@@ -5870,29 +5909,7 @@
         "description": "The name of the spell or skill",
         "required": true,
         "schema": {
-          "type": "string",
-          "enum": [
-            "fireball",
-            "mpheal",
-            "earth",
-            "frost",
-            "smash",
-            "defensiveStance",
-            "valorousPresence",
-            "intimidate",
-            "pickPocket",
-            "backStab",
-            "toolsOfTrade",
-            "stealth",
-            "heal",
-            "protectAura",
-            "brightness",
-            "healAll",
-            "snowball",
-            "spookySparkles",
-            "seafoam",
-            "shinySeed"
-          ]
+          "$ref": "#/components/schemas/SpellID"
         }
       },
       "targetId": {
@@ -5919,15 +5936,7 @@
         "name": "type",
         "in": "query",
         "schema": {
-          "type": "string",
-          "enum": [
-            "habits",
-            "dailys",
-            "todos",
-            "rewards",
-            "completedTodos"
-          ],
-          "example": "habits"
+          "$ref": "#/components/schemas/Type"
         }
       }
     }
