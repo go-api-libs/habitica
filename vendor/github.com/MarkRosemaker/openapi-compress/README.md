@@ -152,8 +152,6 @@ collapses them again. Run flatten first.
 - [**Go Reference**](https://pkg.go.dev/github.com/MarkRosemaker/openapi-compress): The Go reference documentation for the openapi-compress package.
 - [**Go Report Card**](https://goreportcard.com/report/github.com/MarkRosemaker/openapi-compress): Check the code quality report.
 
-Requires Go 1.26 with `GOEXPERIMENT=jsonv2` (set via `go env -w GOEXPERIMENT=jsonv2`).
-
 ## Contributing
 
 If you have any contributions to make, please submit a pull request or open an issue on the [GitHub repository](https://github.com/MarkRosemaker/openapi-compress).

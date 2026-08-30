@@ -284,7 +284,7 @@ func replaceRefsInOperation(op *openapi.Operation, replacements map[string]strin
 func replaceRefsInParameterList(params openapi.ParameterList, replacements map[string]string) {
 	for _, p := range params {
 		if p != nil && p.Value != nil {
-			replaceRefsInSchema(p.Value.Schema, replacements)
+			replaceSchemaRef(p.Value.Schema, replacements)
 			replaceRefsInContent(p.Value.Content, replacements)
 		}
 	}
@@ -316,7 +316,7 @@ func replaceRefsInComponents(c *openapi.Components, replacements map[string]stri
 	}
 	for _, ref := range c.Parameters {
 		if ref != nil && ref.Value != nil {
-			replaceRefsInSchema(ref.Value.Schema, replacements)
+			replaceSchemaRef(ref.Value.Schema, replacements)
 			replaceRefsInContent(ref.Value.Content, replacements)
 		}
 	}

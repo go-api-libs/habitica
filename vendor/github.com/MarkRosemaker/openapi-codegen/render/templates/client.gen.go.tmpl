@@ -268,15 +268,34 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 	defer pr.Close()
 {{- end}}
 
+	{{ if $.Debug -}}
+	var (
+		ia  cassette.Interaction
+		err error
+	)
+	ia.Request, err = cassette.NewRequest(req)
+	if err != nil {
+		return {{if $op.SuccessReturn}}nil, {{end}}fmt.Errorf("recording request: %w", err)
+	}
+	{{ end -}}
+
 	rsp, err := c.cli.Do(req)
 	if err != nil {
 		return {{if .SuccessReturn}}nil, {{end}}err
 	}
 	defer rsp.Body.Close()
 
+	{{ if $.Debug -}}
+	ia.Response, err = cassette.NewResponse(rsp)
+	if err != nil {
+		return {{if $op.SuccessReturn}}nil, {{end}}fmt.Errorf("recording response: %w", err)
+	}
+	{{ end }}
+
 	switch rsp.StatusCode {
-{{- range .Responses}}
-	case {{.GoConstant}}:
+{{- range .Responses }}
+	{{ if ne .GoConstant "default" -}}
+		case {{ end }}{{ .GoConstant }}:
 		{{ with .Description }}{{ toGoComment . }}{{ end }}
 {{- if or .IsSuccess .GoType }}
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
@@ -284,6 +303,12 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 			{{- if eq .ContentType "application/json" }}
 			var out {{ if .IsSuccess }}R{{ else }}{{ .GoType }}{{ end }}
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				{{ if $.Debug -}}
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return {{if $op.SuccessReturn}}nil, {{end}}errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
+				{{ end -}}
 				return {{if $op.SuccessReturn}}nil, {{end}}api.WrapDecodingError(rsp, err)
 			}
 
@@ -316,8 +341,10 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 		return {{if $op.SuccessReturn}}nil, {{end}}fmt.Errorf("{{$op.Name}}: status %s", rsp.Status)
 {{- end}}
 {{- end}}
+	{{ if not .Responses.HasDefault -}}
 	default:
 		return {{if .SuccessReturn}}nil, {{end}}api.NewErrUnknownStatusCode(rsp)
+	{{ end -}}
 	}
 }
 {{end}}

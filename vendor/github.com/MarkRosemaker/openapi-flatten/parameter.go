@@ -23,7 +23,7 @@ func parameter(d *openapi.Document, p *openapi.Parameter) error {
 	paramName := strcase.ToGoPascal(p.Name)
 
 	if p.Schema != nil {
-		if err := schema(d, p.Schema, paramName); err != nil {
+		if err := schemaRef(d, p.Schema, paramName, moveIfNecessary); err != nil {
 			return &errpath.ErrField{Field: "schema", Err: err}
 		}
 	}

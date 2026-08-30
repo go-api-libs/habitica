@@ -161,7 +161,7 @@ func processQueryParams(doc *openapi.Document, pi *openapi.PathItem, op *openapi
 		incoming := &openapi.Parameter{
 			Name:   name,
 			In:     openapi.ParameterLocationQuery,
-			Schema: schema,
+			Schema: &openapi.SchemaRef{Value: schema},
 		}
 		if explodeFalse {
 			f := false
@@ -273,7 +273,7 @@ func processCustomHeader(piParams openapi.ParameterList, op *openapi.Operation, 
 		Name:     name,
 		In:       openapi.ParameterLocationHeader,
 		Required: true,
-		Schema:   schema,
+		Schema:   &openapi.SchemaRef{Value: schema},
 	}
 
 	if existing := findParam(piParams, op.Parameters, name, openapi.ParameterLocationHeader); existing != nil {
@@ -305,7 +305,11 @@ func processRequestBody(op *openapi.Operation, body []byte, contentType string) 
 	rb := op.RequestBody.Value
 	if existing, ok := rb.Content[mr]; ok {
 		if existing.Schema != nil {
-			return merge.Schema(existing.Schema.Value, schema, false)
+			if err := merge.Schema(existing.Schema.Value, schema, false); err != nil {
+				return err
+			}
+
+			return growEnums(existing.Schema.Value, body)
 		}
 		existing.Schema = &openapi.SchemaRef{Value: schema}
 		return nil
@@ -332,15 +336,29 @@ func processResponse(op *openapi.Operation, resp *cassette.Response) error {
 		return nil
 	}
 
-	return merge.Response(existing.Value, incoming)
+	if err := merge.Response(existing.Value, incoming); err != nil {
+		return err
+	}
+
+	for _, mt := range existing.Value.Content {
+		if mt.Schema == nil {
+			continue
+		}
+
+		if err := growEnums(mt.Schema.Value, resp.Body); err != nil {
+			return fmt.Errorf("content: %w", err)
+		}
+	}
+
+	return nil
 }
 
 // findParam finds a parameter by name and location in a ParameterList.
 func findParam(piParams, opParams openapi.ParameterList, name string, in openapi.ParameterLocation) *openapi.Parameter {
 	for _, p := range append(opParams, piParams...) {
 		if p.Value != nil && p.Value.Name == name && p.Value.In == in {
-			if p.Value.Schema.Type == "" {
-				p.Value.Schema.Type = openapi.TypeString
+			if p.Value.Schema.Value.Type == "" {
+				p.Value.Schema.Value.Type = openapi.TypeString
 			}
 
 			return p.Value
@@ -426,7 +444,7 @@ func addPathParams(pi *openapi.PathItem, p openapi.Path, reqSegments, paramNames
 				Name:     el.name,
 				In:       openapi.ParameterLocationPath,
 				Required: true,
-				Schema:   schema,
+				Schema:   &openapi.SchemaRef{Value: schema},
 			},
 		})
 	}

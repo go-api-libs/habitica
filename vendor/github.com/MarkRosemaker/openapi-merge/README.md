@@ -8,7 +8,7 @@
 </div>
 
 <p align="center">
-  <img alt="A gopher clicking two incomplete jigsaw pieces together into one complete piece" src=openapi-merge.jpg width=500>
+  <img alt="A gopher clicking two incomplete jigsaw pieces together into one complete piece" src="openapi-merge.jpg" width=500>
 </p>
 
 <h3 align="center">
@@ -119,8 +119,6 @@ Two neighbours are easy to confuse with this one:
 
 - [**Go Reference**](https://pkg.go.dev/github.com/MarkRosemaker/openapi-merge): The Go reference documentation for the openapi-merge package.
 - [**Go Report Card**](https://goreportcard.com/report/github.com/MarkRosemaker/openapi-merge): Check the code quality report.
-
-Requires Go 1.26 with `GOEXPERIMENT=jsonv2` (set via `go env -w GOEXPERIMENT=jsonv2`).
 
 ## Contributing
 

@@ -71,6 +71,7 @@ func Generate(cfg Config) error {
 	if err != nil {
 		return fmt.Errorf("build IR: %w", err)
 	}
+	irDoc.Debug = cfg.Debug
 
 	if len(cfg.Interactions) > 0 {
 		if err := matchInteractions(irDoc, cfg.Interactions); err != nil {

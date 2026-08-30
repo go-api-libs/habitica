@@ -204,9 +204,7 @@ func (w *refWriter) parameter(r *openapi.ParameterRef) {
 		return
 	}
 
-	// A parameter holds a schema directly rather than a reference to one, so
-	// there is nothing to rewrite at this level — only below it.
-	w.schema(r.Value.Schema)
+	w.schemaRef(r.Value.Schema)
 	w.content(r.Value.Content)
 }
 

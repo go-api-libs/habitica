@@ -144,8 +144,6 @@ client.
 
 ### Requirements
 
-Requires Go 1.26 with `GOEXPERIMENT=jsonv2` (set via `go env -w GOEXPERIMENT=jsonv2`).
-
 ## Contributing
 
 If you have any contributions to make, please submit a pull request or open an issue on the [GitHub repository](https://github.com/MarkRosemaker/openapi-enrich).

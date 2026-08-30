@@ -29,6 +29,7 @@ func main() {
 	flag.BoolVar(&cfg.Client, "client", false, "generate client.gen.go and client.gen_test.go")
 	flag.BoolVar(&cfg.Server, "server", false, "generate server.gen.go")
 	flag.BoolVar(&cfg.JS, "js", false, "generate api.js")
+	flag.BoolVar(&cfg.Debug, "debug", false, "generate client in debug mode")
 	flag.Parse()
 
 	if !cfg.Client && !cfg.Server && !cfg.JS {

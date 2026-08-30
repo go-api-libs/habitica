@@ -9,6 +9,7 @@ import (
 
 // Config holds the parameters for a single code-generation run.
 type Config struct {
+	Debug            bool                  // record responses that failed to unmarshal
 	SpecPath         string                // path to the OpenAPI spec file (JSON or YAML)
 	Spec             *openapi.Document     // OpenAPI spec, if already parsed
 	InteractionsPath string                // path to the HTTP interactions with the API
