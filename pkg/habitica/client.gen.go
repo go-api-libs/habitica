@@ -8,11 +8,13 @@ import (
 	"context"
 	"encoding/json/v2"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 
+	"github.com/MarkRosemaker/openapi-enrich/cassette"
 	"github.com/go-api-libs/api"
 	"github.com/google/uuid"
 )
@@ -121,11 +123,24 @@ func (c *Client) GetUserWithResult[R any](ctx context.Context, params GetUserPar
 		URL:        u,
 	}).WithContext(ctx)
 
+	var (
+		ia  cassette.Interaction
+		err error
+	)
+	ia.Request, err = cassette.NewRequest(req)
+	if err != nil {
+		return nil, fmt.Errorf("recording request: %w", err)
+	}
 	rsp, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer rsp.Body.Close()
+
+	ia.Response, err = cassette.NewResponse(rsp)
+	if err != nil {
+		return nil, fmt.Errorf("recording response: %w", err)
+	}
 
 	switch rsp.StatusCode {
 	case http.StatusOK:
@@ -134,6 +149,10 @@ func (c *Client) GetUserWithResult[R any](ctx context.Context, params GetUserPar
 		case "application/json":
 			var out R
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -178,11 +197,24 @@ func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTask
 		URL:        u,
 	}).WithContext(ctx)
 
+	var (
+		ia  cassette.Interaction
+		err error
+	)
+	ia.Request, err = cassette.NewRequest(req)
+	if err != nil {
+		return nil, fmt.Errorf("recording request: %w", err)
+	}
 	rsp, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer rsp.Body.Close()
+
+	ia.Response, err = cassette.NewResponse(rsp)
+	if err != nil {
+		return nil, fmt.Errorf("recording response: %w", err)
+	}
 
 	switch rsp.StatusCode {
 	case http.StatusOK:
@@ -191,6 +223,10 @@ func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTask
 		case "application/json":
 			var out R
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -204,6 +240,10 @@ func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTask
 		case "application/json":
 			var out Error
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -244,11 +284,24 @@ func (c *Client) GetTaskByIDWithResult[R any](ctx context.Context, taskID uuid.U
 		URL:        u,
 	}).WithContext(ctx)
 
+	var (
+		ia  cassette.Interaction
+		err error
+	)
+	ia.Request, err = cassette.NewRequest(req)
+	if err != nil {
+		return nil, fmt.Errorf("recording request: %w", err)
+	}
 	rsp, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer rsp.Body.Close()
+
+	ia.Response, err = cassette.NewResponse(rsp)
+	if err != nil {
+		return nil, fmt.Errorf("recording response: %w", err)
+	}
 
 	switch rsp.StatusCode {
 	case http.StatusOK:
@@ -257,6 +310,10 @@ func (c *Client) GetTaskByIDWithResult[R any](ctx context.Context, taskID uuid.U
 		case "application/json":
 			var out R
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -297,11 +354,24 @@ func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUI
 		URL:        u,
 	}).WithContext(ctx)
 
+	var (
+		ia  cassette.Interaction
+		err error
+	)
+	ia.Request, err = cassette.NewRequest(req)
+	if err != nil {
+		return nil, fmt.Errorf("recording request: %w", err)
+	}
 	rsp, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer rsp.Body.Close()
+
+	ia.Response, err = cassette.NewResponse(rsp)
+	if err != nil {
+		return nil, fmt.Errorf("recording response: %w", err)
+	}
 
 	switch rsp.StatusCode {
 	case http.StatusOK:
@@ -310,6 +380,10 @@ func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUI
 		case "application/json":
 			var out R
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -323,6 +397,10 @@ func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUI
 		case "application/json":
 			var out Error
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -372,11 +450,24 @@ func (c *Client) CastWithResult[R any](ctx context.Context, spellID string, para
 		URL:        u,
 	}).WithContext(ctx)
 
+	var (
+		ia  cassette.Interaction
+		err error
+	)
+	ia.Request, err = cassette.NewRequest(req)
+	if err != nil {
+		return nil, fmt.Errorf("recording request: %w", err)
+	}
 	rsp, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer rsp.Body.Close()
+
+	ia.Response, err = cassette.NewResponse(rsp)
+	if err != nil {
+		return nil, fmt.Errorf("recording response: %w", err)
+	}
 
 	switch rsp.StatusCode {
 	case http.StatusOK:
@@ -385,6 +476,10 @@ func (c *Client) CastWithResult[R any](ctx context.Context, spellID string, para
 		case "application/json":
 			var out R
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -398,6 +493,10 @@ func (c *Client) CastWithResult[R any](ctx context.Context, spellID string, para
 		case "application/json":
 			var out Error
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -433,11 +532,24 @@ func (c *Client) BuyHealthPotionWithResult[R any](ctx context.Context, params Bu
 		URL:        u,
 	}).WithContext(ctx)
 
+	var (
+		ia  cassette.Interaction
+		err error
+	)
+	ia.Request, err = cassette.NewRequest(req)
+	if err != nil {
+		return nil, fmt.Errorf("recording request: %w", err)
+	}
 	rsp, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer rsp.Body.Close()
+
+	ia.Response, err = cassette.NewResponse(rsp)
+	if err != nil {
+		return nil, fmt.Errorf("recording response: %w", err)
+	}
 
 	switch rsp.StatusCode {
 	case http.StatusOK:
@@ -446,6 +558,10 @@ func (c *Client) BuyHealthPotionWithResult[R any](ctx context.Context, params Bu
 		case "application/json":
 			var out R
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 
@@ -486,11 +602,24 @@ func (c *Client) CronWithResult[R any](ctx context.Context, params CronParams) (
 		URL:        u,
 	}).WithContext(ctx)
 
+	var (
+		ia  cassette.Interaction
+		err error
+	)
+	ia.Request, err = cassette.NewRequest(req)
+	if err != nil {
+		return nil, fmt.Errorf("recording request: %w", err)
+	}
 	rsp, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer rsp.Body.Close()
+
+	ia.Response, err = cassette.NewResponse(rsp)
+	if err != nil {
+		return nil, fmt.Errorf("recording response: %w", err)
+	}
 
 	switch rsp.StatusCode {
 	case http.StatusOK:
@@ -499,6 +628,10 @@ func (c *Client) CronWithResult[R any](ctx context.Context, params CronParams) (
 		case "application/json":
 			var out R
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+					return nil, errors.Join(api.WrapDecodingError(rsp, err), err2)
+				}
+
 				return nil, api.WrapDecodingError(rsp, err)
 			}
 

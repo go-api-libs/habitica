@@ -3,4 +3,4 @@ package habitica
 //go:generate go tool openapi-enrich
 //go:generate go tool openapi-flatten
 //go:generate go tool openapi-compress
-//go:generate go tool openapi-codegen -client -agent "Habitica API Library (github.com/go-api-libs/habitica)"
+//go:generate go tool openapi-codegen -client -agent "Habitica API Library (github.com/go-api-libs/habitica)" -debug
