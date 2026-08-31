@@ -1,0 +1,149 @@
+[
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:43629/user",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 17:52:31 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:42559/tasks/user",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 17:52:31 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:42411/tasks/00000000-0000-0000-0000-000000000000",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 17:52:31 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:40065/tasks/00000000-0000-0000-0000-000000000000/score",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 17:52:31 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:43457/user/class/cast",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 17:52:31 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:42247/user/buy-health-potion",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 17:52:31 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:44979/cron",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 17:52:31 GMT"
+			},
+			"body": "invalid json"
+		}
+	}
+]

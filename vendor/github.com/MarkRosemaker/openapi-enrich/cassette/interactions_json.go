@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/MarkRosemaker/jsonutil"
@@ -49,7 +51,11 @@ func AddInteraction(path string, ia Interaction) error {
 	defer mu.Unlock()
 
 	ias, err := InteractionsReadFile(path)
-	if err != nil && !errors.Is(err, fs.ErrNotExist) {
+	if errors.Is(err, fs.ErrNotExist) {
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			return fmt.Errorf("making dir for interactions file: %w", err)
+		}
+	} else if err != nil {
 		return fmt.Errorf("reading interactions file: %w", err)
 	}
 
