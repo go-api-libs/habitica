@@ -1,8 +1,10 @@
 package codegen
 
 import (
+	"encoding/json/v2"
 	"fmt"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -65,6 +67,22 @@ func matchInteractions(doc *ir.Document, interactions cassette.Interactions) err
 					Literal:   goLiteralForType(hp.Type, val),
 				})
 			}
+		}
+
+		if op.RequestBody != nil {
+			goType := op.RequestBody.TypeName
+			if !op.RequestBody.Required {
+				goType = "*" + goType
+			}
+
+			var raw any
+			if len(ia.Request.Body) > 0 {
+				if err := json.Unmarshal(ia.Request.Body, &raw); err != nil {
+					return fmt.Errorf("decoding request body for %s: %w", op.Name, err)
+				}
+			}
+
+			call.BodyLiteral = bodyLiteral(doc, goType, raw)
 		}
 
 		if r := findResponse(op, ia.Response.StatusCode); r != nil {
@@ -241,4 +259,198 @@ func goLiteralForType(goType, value string) string {
 	default:
 		return fmt.Sprintf("%q", value)
 	}
+}
+
+// bodyLiteral returns a Go expression of type goType for the JSON value v (as
+// decoded by json.Unmarshal into `any`: map[string]any, []any, string,
+// float64, bool, or nil).
+//
+// It reproduces v as a composite literal wherever it recognizes the shape --
+// a struct, an enum member, a slice, a pointer, or a plain scalar -- so the
+// generated test reads like a value a person wrote, not a blob to decode.
+// Anything it doesn't recognize (maps, unions, oneOf/anyOf, or a mismatch
+// between v and what goType expects) falls back to decoding v's own compact
+// JSON into goType at test time via mustDecodeBody, which is always correct
+// even where a literal is not worth hand-rolling.
+func bodyLiteral(doc *ir.Document, goType string, v any) string {
+	switch {
+	case v == nil:
+		if strings.HasPrefix(goType, "*") {
+			return "nil"
+		}
+		// A required value with nothing recorded for it: fall through to the
+		// zero-value composite literal below rather than emit invalid Go.
+
+	case strings.HasPrefix(goType, "*"):
+		return fmt.Sprintf("new(%s)", bodyLiteral(doc, goType[1:], v))
+
+	case strings.HasPrefix(goType, "[]"):
+		arr, ok := v.([]any)
+		if !ok {
+			break
+		}
+
+		elems := make([]string, len(arr))
+		for i, e := range arr {
+			elems[i] = bodyLiteral(doc, goType[2:], e)
+		}
+
+		return fmt.Sprintf("%s{%s}", goType, strings.Join(elems, ", "))
+	}
+
+	if s := findSchema(doc, goType); s != nil {
+		switch s.Kind {
+		case ir.SchemaKindStruct, ir.SchemaKindAllOf:
+			obj, isObj := v.(map[string]any)
+			hasEmbedded := slices.ContainsFunc(s.Fields, func(f ir.Field) bool { return f.Embedded })
+
+			// A non-object value where an object was expected, or a schema
+			// with an allOf-embedded field (Field.Name is empty there, so it
+			// has no JSON key of its own to look values up by): not worth
+			// hand-rolling, fall through to the fallback below instead.
+			if isObj && !hasEmbedded {
+				var fields []string
+				for _, f := range s.Fields {
+					val, ok := obj[f.JSONName]
+					if !ok {
+						continue // absent optional field: leave it at its zero value
+					}
+
+					fields = append(fields, fmt.Sprintf("%s: %s", f.Name, bodyLiteral(doc, f.Type, val)))
+				}
+
+				if len(fields) == 0 {
+					return goType + "{}"
+				}
+
+				return fmt.Sprintf("%s{\n%s,\n}", goType, strings.Join(fields, ",\n"))
+			}
+
+		case ir.SchemaKindEnum:
+			if lit, ok := enumLiteral(s, v); ok {
+				return lit
+			}
+		}
+
+		// SchemaKindAlias, SchemaKindMap, SchemaKindUnion, or an enum value
+		// that didn't match any declared member: not worth hand-rolling.
+	}
+
+	if lit, ok := scalarLiteral(goType, v); ok {
+		return lit
+	}
+
+	return fmt.Sprintf("mustDecodeBody[%s](t, %s)", goType, fallbackJSON(v))
+}
+
+// findSchema returns doc's named component schema for goType, or nil if
+// goType isn't the bare name of one (a built-in type, or a pointer/slice
+// expression already stripped by the caller).
+func findSchema(doc *ir.Document, goType string) *ir.Schema {
+	for i := range doc.Schemas {
+		if doc.Schemas[i].Name == goType {
+			return &doc.Schemas[i]
+		}
+	}
+
+	return nil
+}
+
+// enumLiteral returns the Go constant for the enum member of s matching v,
+// formatted the same way ir.formatEnumValue derived each member's display
+// form from the spec, so the comparison lines up exactly.
+func enumLiteral(s *ir.Schema, v any) (string, bool) {
+	var display string
+	switch s.Type {
+	case "string":
+		str, ok := v.(string)
+		if !ok {
+			return "", false
+		}
+		display = str
+	case "bool":
+		b, ok := v.(bool)
+		if !ok {
+			return "", false
+		}
+		display = strconv.FormatBool(b)
+	default: // int-family or float-family
+		f, ok := v.(float64)
+		if !ok {
+			return "", false
+		}
+		if strings.HasPrefix(s.Type, "float") {
+			display = strconv.FormatFloat(f, 'g', -1, 64)
+		} else {
+			display = strconv.FormatInt(int64(f), 10)
+		}
+	}
+
+	for _, ev := range s.EnumValues {
+		if ev.Value == display {
+			return ev.GoName, true
+		}
+	}
+
+	return "", false
+}
+
+// scalarLiteral returns a Go literal for v as a built-in or well-known
+// wrapper type, or ok=false when goType isn't one it knows how to express
+// directly.
+func scalarLiteral(goType string, v any) (string, bool) {
+	switch goType {
+	case "string":
+		s, ok := v.(string)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("%q", s), true
+
+	case "bool":
+		b, ok := v.(bool)
+		if !ok {
+			return "", false
+		}
+		return strconv.FormatBool(b), true
+
+	case "int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64":
+		f, ok := v.(float64)
+		if !ok {
+			return "", false
+		}
+		// An untyped integer constant assigns directly to any of these
+		// field types, so no conversion is needed regardless of goType.
+		return strconv.FormatInt(int64(f), 10), true
+
+	case "float32", "float64":
+		f, ok := v.(float64)
+		if !ok {
+			return "", false
+		}
+		return strconv.FormatFloat(f, 'g', -1, 64), true
+
+	case "uuid.UUID":
+		s, ok := v.(string)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("uuid.MustParse(%q)", s), true
+
+	default:
+		return "", false
+	}
+}
+
+// fallbackJSON returns v's compact JSON encoding as a quoted Go string
+// literal, for embedding in a mustDecodeBody call.
+func fallbackJSON(v any) string {
+	data, err := json.Marshal(v)
+	if err != nil {
+		// v was itself decoded from JSON moments ago, so re-encoding it
+		// cannot fail; this is unreachable in practice.
+		return fmt.Sprintf("%q", "null")
+	}
+
+	return fmt.Sprintf("%q", string(data))
 }

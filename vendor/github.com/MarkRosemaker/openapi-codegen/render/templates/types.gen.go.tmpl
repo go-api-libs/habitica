@@ -18,18 +18,26 @@ import (
 
 var jsonOpts = json.JoinOptions(
 		json.RejectUnknownMembers(true),
-		{{- if .HasURLFields }}
+		{{- if or .HasURLFields .HasDurationFields }}
 		json.WithMarshalers(json.JoinMarshalers(
+			{{- if .HasURLFields }}
 			json.MarshalToFunc(jsonutil.URLMarshal),
+			{{- end }}
+			{{- if .HasDurationFields }}
+			json.MarshalToFunc(jsonutil.DurationMarshalIntSeconds),
+			{{- end }}
 		)),
 		{{- end }}
-		{{- if or .HasURLFields .HasDateTimeOrIntFields }}
+		{{- if or .HasURLFields .HasDateTimeOrIntFields .HasDurationFields }}
 		json.WithUnmarshalers(json.JoinUnmarshalers(
 			{{- if .HasURLFields }}
 			json.UnmarshalFromFunc(jsonutil.URLUnmarshal),
 			{{- end }}
 			{{- if .HasDateTimeOrIntFields }}
 			json.UnmarshalFromFunc(jsonutil.TimeUnmarshalStringOrIntUnix),
+			{{- end }}
+			{{- if .HasDurationFields }}
+			json.UnmarshalFromFunc(jsonutil.DurationUnmarshalIntSeconds),
 			{{- end }}
 		)),
 		{{- end }}

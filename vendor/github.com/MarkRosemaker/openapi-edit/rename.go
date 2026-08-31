@@ -61,10 +61,6 @@ func (e *ErrInvalidSchemaName) Error() string {
 //     point every reference to whichever survived;
 //   - newName could not be referenced ([ErrInvalidSchemaName]).
 func RenameSchema(doc *openapi.Document, oldName, newName string) error {
-	if doc == nil {
-		return nil
-	}
-
 	schemas := doc.Components.Schemas
 
 	s, ok := schemas[oldName]

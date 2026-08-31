@@ -55,6 +55,10 @@ type Client struct {
 	baseURL   *url.URL
 	// The user agent
 	userAgent string
+	{{ if $.Debug -}}
+	// Enable debug mode
+	debug bool
+	{{ end -}}
 }
 
 // ClientOption configures a [Client].
@@ -99,6 +103,11 @@ func WithClient({{ .VarName }} string) ClientOption {
 	return func(c *Client) { {{ .FormatExpr }} = {{ .VarName }} }
 }
 {{ end }}
+
+{{ if $.Debug -}}
+// WithDebug is a [ClientOption] that sets the debug mode to true.
+func WithDebug(c *Client) { c.debug = true }
+{{ end -}}
 
 {{ if .HasServerOverrides }}
 // serverURL returns the base URL for an operation whose path item names a
@@ -273,9 +282,11 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 		ia  cassette.Interaction
 		err error
 	)
-	ia.Request, err = cassette.NewRequest(req)
-	if err != nil {
-		return {{if $op.SuccessReturn}}nil, {{end}}fmt.Errorf("recording request: %w", err)
+	if c.debug {	
+		ia.Request, err = cassette.NewRequest(req)
+		if err != nil {
+			return {{if $op.SuccessReturn}}nil, {{end}}fmt.Errorf("recording request: %w", err)
+		}
 	}
 	{{ end -}}
 
@@ -286,9 +297,11 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 	defer rsp.Body.Close()
 
 	{{ if $.Debug -}}
-	ia.Response, err = cassette.NewResponse(rsp)
-	if err != nil {
-		return {{if $op.SuccessReturn}}nil, {{end}}fmt.Errorf("recording response: %w", err)
+	if c.debug {
+		ia.Response, err = cassette.NewResponse(rsp)
+		if err != nil {
+			return {{if $op.SuccessReturn}}nil, {{end}}fmt.Errorf("recording response: %w", err)
+		}
 	}
 	{{ end }}
 
@@ -304,8 +317,10 @@ func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}}
 			var out {{ if .IsSuccess }}R{{ else }}{{ .GoType }}{{ end }}
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				{{ if $.Debug -}}
-				if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
-					return {{if $op.SuccessReturn}}nil, {{end}}errors.Join(api.WrapDecodingError(rsp, err), err2)
+				if c.debug {
+					if err2 := cassette.AddInteraction("api/interactions.json", ia); err2 != nil {
+						return {{if $op.SuccessReturn}}nil, {{end}}errors.Join(api.WrapDecodingError(rsp, err), err2)
+					}
 				}
 
 				{{ end -}}

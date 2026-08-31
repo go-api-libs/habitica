@@ -31,7 +31,23 @@ type Document struct {
 
 	// InteractionCalls holds one entry per matched interaction.
 	// Populated at code-gen time; not serialized to ir.json (too noisy).
-	InteractionCalls []InteractionCall `json:"-"`
+	InteractionCalls InteractionCalls `json:"-"`
+}
+
+func (d Document) NeedMustDecodeBody() bool {
+	return d.InteractionCalls.UseMustDecodeBody()
+}
+
+type InteractionCalls []InteractionCall
+
+func (ics InteractionCalls) UseMustDecodeBody() bool {
+	for _, ic := range ics {
+		if ic.UsesMustDecodeBody() {
+			return true
+		}
+	}
+
+	return false
 }
 
 // InteractionCall is one operation call extracted from a recorded interaction.
@@ -46,6 +62,18 @@ type InteractionCall struct {
 	// StatusCode, empty when the operation has no schema for that status (the
 	// client falls back to a generic status-string error in that case).
 	ErrorType string
+	// BodyLiteral is a Go expression for the recorded request body, set
+	// whenever Op.RequestBody is non-nil: a composite literal of the
+	// request body's type when every field could be expressed that way,
+	// falling back to a runtime JSON decode (mustDecodeBody) for values a
+	// literal can't cleanly represent. Either way the replayed request
+	// carries the same body the interaction was recorded with, instead of
+	// a zero value.
+	BodyLiteral string
+}
+
+func (ic InteractionCall) UsesMustDecodeBody() bool {
+	return strings.HasPrefix(ic.BodyLiteral, "mustDecodeBody")
 }
 
 // InteractionParam is one query param with its Go literal value.

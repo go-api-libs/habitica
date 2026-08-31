@@ -650,7 +650,8 @@ func digitWord(r rune) string {
 //   - plain string, required:     json:"name"
 //   - plain string, optional:     json:"name"       (empty strings are valid values)
 //   - array:                      json:"name,omitempty"
-//   - other, required:            json:"name,omitzero"
+//   - other, required:            json:"name"        (a required field must always be sent,
+//     zero value included -- omitzero would silently drop e.g. a required "false" or "0")
 //   - other, optional:            json:"name,omitempty"
 func buildJSONTag(jsonName string, tp openapi.DataType, format openapi.Format, required bool) string {
 	// NOTE: JSON tags need to be rethought;
@@ -680,10 +681,10 @@ func buildJSONTag(jsonName string, tp openapi.DataType, format openapi.Format, r
 			opts = ",omitzero"
 		}
 	case openapi.TypeBoolean, openapi.TypeInteger:
-		// NOTE: copied from legacy code, might not make sense
-		if required {
-			opts = ",omitzero"
-		} else {
+		// A required field must always be sent, zero value included: a
+		// required boolean that happens to be false, or a required count of
+		// 0, is a real value, not an absence to omit.
+		if !required {
 			opts = ",omitempty"
 		}
 	default:
