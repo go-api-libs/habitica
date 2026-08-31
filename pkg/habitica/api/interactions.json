@@ -733,5 +733,299 @@
 			},
 			"body": "invalid json"
 		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:36283/user",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:12 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:32943/tasks/user",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:12 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:46277/tasks/00000000-0000-0000-0000-000000000000",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:12 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:35655/tasks/00000000-0000-0000-0000-000000000000/score",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:12 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:37541/user/class/cast",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:12 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:41659/user/buy-health-potion",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:12 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:41475/cron",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:12 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:38017/user",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:15 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:34331/tasks/user",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:15 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "http://127.0.0.1:46711/tasks/00000000-0000-0000-0000-000000000000",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:15 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:38693/tasks/00000000-0000-0000-0000-000000000000/score",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:15 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:37181/user/class/cast",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:15 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:34713/user/buy-health-potion",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:15 GMT"
+			},
+			"body": "invalid json"
+		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "http://127.0.0.1:40459/cron",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Length": "12",
+				"Content-Type": "application/json",
+				"Date": "Mon, 31 Aug 2026 20:58:15 GMT"
+			},
+			"body": "invalid json"
+		}
 	}
 ]
