@@ -727,8 +727,14 @@ func replay(t *testing.T) http.RoundTripper {
 			return nil, fmt.Errorf("interaction #%d: got method %s, want %s", idx, r.Method, ia.Request.Method)
 		}
 
-		if !bytes.Equal(r.Body, ia.Request.Body) {
-			return nil, fmt.Errorf("interaction #%d: got body %s, want %s", idx, string(r.Body), string(ia.Request.Method))
+		gotBody := jsontext.Value(r.Body)
+		gotBody.Canonicalize()
+
+		wantBody := jsontext.Value(ia.Request.Body)
+		wantBody.Canonicalize()
+
+		if !bytes.Equal(gotBody, wantBody) {
+			return nil, fmt.Errorf("interaction #%d: got body %s, want %s", idx, string(gotBody), string(wantBody))
 		}
 
 		if ia.Request.Headers == nil {
