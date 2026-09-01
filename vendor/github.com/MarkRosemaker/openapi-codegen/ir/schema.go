@@ -124,6 +124,8 @@ func integerGoType(f openapi.Format) (*GoType, error) {
 		return &GoType{Name: "uint64"}, nil
 	case openapi.FormatDuration:
 		return &GoType{Name: "time.Duration"}, nil
+	case openapi.FormatDateTime:
+		return &GoType{Name: "time.Time"}, nil
 	default:
 		return nil, fmt.Errorf("unsupported integer format: %q", f)
 	}
