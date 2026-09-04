@@ -14,7 +14,9 @@ func nameMediaType(rspOrReqBodyName, nameMediaRange string,
 	tp string,
 ) string {
 	return strcase.ToGoPascal(strings.Join([]string{
-		strings.TrimSuffix(rspOrReqBodyName, tp), nameMediaRange, tp,
+		strings.TrimSuffix(rspOrReqBodyName, tp),
+		// NOTE: We used to add nameMediaRange and tp in this []string
+		// We need to find a way to include it if and only if there is ambiguity
 	}, " "))
 }
 
