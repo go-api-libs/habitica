@@ -5,9 +5,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/ettle/strcase"
-
 	"github.com/MarkRosemaker/openapi"
+	"github.com/ettle/strcase"
 )
 
 // inferOperationID returns an operation ID for the given HTTP method and path.
