@@ -13,10 +13,10 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"uuid"
 
 	"github.com/MarkRosemaker/openapi-enrich/cassette"
 	"github.com/go-api-libs/api"
-	"github.com/google/uuid"
 )
 
 const defaultUserAgent = "Habitica API Library (github.com/go-api-libs/habitica)"
@@ -462,7 +462,7 @@ func (c *Client) CastWithResult[R any](ctx context.Context, spellID string, para
 
 	q := make(url.Values, 1)
 
-	if params.TargetID != uuid.Nil {
+	if params.TargetID != uuid.Nil() {
 		q["targetId"] = []string{params.TargetID.String()}
 	}
 
