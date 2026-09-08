@@ -297,7 +297,7 @@ func (p Param) NotZero() string {
 	case "bool":
 		return p.VarName
 	case "uuid.UUID":
-		return p.VarName + " != uuid.Nil"
+		return p.VarName + " != uuid.Nil()"
 	case "net.IP":
 		return p.VarName + " != nil"
 	case "url.URL":

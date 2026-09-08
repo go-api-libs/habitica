@@ -315,7 +315,7 @@ func (t GoType) ZeroValue() string {
 	case "int", "int32", "int64", "uint", "uint32", "uint64", "float32", "float64":
 		return "0"
 	case "uuid.UUID":
-		return "uuid.Nil"
+		return "uuid.Nil()"
 	default:
 		return t.Name + "{}"
 	}

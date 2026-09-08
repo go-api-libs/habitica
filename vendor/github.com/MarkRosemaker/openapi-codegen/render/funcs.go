@@ -74,7 +74,7 @@ func typeZeroVal(goType string) string {
 	case "int", "int32", "int64", "uint", "uint32", "uint64", "float32", "float64", "time.Duration":
 		return "0"
 	case "uuid.UUID":
-		return "uuid.Nil"
+		return "uuid.Nil()"
 	case "url.URL":
 		return "url.URL{}"
 	case "time.Time":
