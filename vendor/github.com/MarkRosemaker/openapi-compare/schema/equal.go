@@ -20,6 +20,7 @@ func Equal(a, b *openapi.Schema) bool {
 	if a == b {
 		return true
 	}
+
 	if a == nil || b == nil {
 		return false
 	}
@@ -40,6 +41,7 @@ func SameShape(a, b *openapi.Schema) bool {
 	if a == b {
 		return true
 	}
+
 	if a == nil || b == nil {
 		return false
 	}
@@ -80,6 +82,7 @@ func schemaRefEqual(a, b *openapi.SchemaRef) bool {
 	if a == b {
 		return true
 	}
+
 	if a == nil || b == nil {
 		return false
 	}
@@ -104,6 +107,7 @@ func schemaRefSameShape(a, b *openapi.SchemaRef) bool {
 	if a == b {
 		return true
 	}
+
 	if a == nil || b == nil {
 		return false
 	}
@@ -126,12 +130,14 @@ func schemaRefsMatch(a, b openapi.SchemaRefs, match func(a, b *openapi.SchemaRef
 	if len(a) != len(b) {
 		return false
 	}
+
 	for k, va := range a {
 		vb, ok := b[k]
 		if !ok || !match(va, vb) {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -139,9 +145,11 @@ func ptrsEqual[T comparable](a, b *T) bool {
 	if a == b {
 		return true
 	}
+
 	if a == nil || b == nil {
 		return false
 	}
+
 	return *a == *b
 }
 
@@ -149,8 +157,10 @@ func regexpsEqual(a, b *regexp.Regexp) bool {
 	if a == b {
 		return true
 	}
+
 	if a == nil || b == nil {
 		return false
 	}
+
 	return a.String() == b.String()
 }

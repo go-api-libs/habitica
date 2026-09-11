@@ -33,6 +33,7 @@ func FromOperation(
 
 	// Resolve each parameter and index by name for path arg computation.
 	var pathParams, queryParams, headerParams []Param
+
 	paramByName := make(map[string]Param, len(merged))
 
 	for _, pRef := range merged {
@@ -45,6 +46,7 @@ func FromOperation(
 		if err != nil {
 			return nil, fmt.Errorf("param %q: %w", p.Name, err)
 		}
+
 		paramByName[p.Name] = param
 
 		switch p.In {
@@ -60,6 +62,7 @@ func FromOperation(
 	joinArgs := buildJoinPathArgs(parsedPath, paramByName)
 
 	hasParams := len(pathParams)+len(queryParams)+len(headerParams) > 0
+
 	var paramStructName string
 	if len(queryParams)+len(headerParams) > 0 {
 		paramStructName = name + "Params"
@@ -68,6 +71,7 @@ func FromOperation(
 	var reqBody *ReqBody
 	if op.RequestBody != nil && op.RequestBody.Value != nil {
 		var err error
+
 		reqBody, err = fromRequestBody(op.RequestBody.Value)
 		if err != nil {
 			return nil, fmt.Errorf("requestBody: %w", err)
@@ -116,6 +120,7 @@ func mergeParams(pathItem, operation openapi.ParameterList) openapi.ParameterLis
 			result = append(result, pRef)
 		}
 	}
+
 	return append(result, operation...)
 }
 
@@ -135,6 +140,7 @@ func fromParam(p *openapi.Parameter, apiTitle string) (Param, error) {
 	if err != nil {
 		return param, err
 	}
+
 	param.Type = tp.String()
 
 	param.GoName = strcase.ToGoCamel(p.Name)
@@ -264,6 +270,7 @@ func segmentExpr(seg string, params map[string]Param) string {
 		if close < 0 {
 			break
 		}
+
 		close += open
 
 		if open > 0 {
@@ -365,23 +372,28 @@ func fromRequestBody(rb *openapi.RequestBody) (*ReqBody, error) {
 		if mt.Schema == nil {
 			continue
 		}
+
 		tp, err := SchemaRefGoType(mt.Schema)
 		if err != nil {
 			return nil, err
 		}
+
 		return &ReqBody{
 			TypeName:    tp.String(),
 			ContentType: string(mr),
 			Required:    rb.Required,
 		}, nil
 	}
+
 	return nil, nil
 }
 
 func fromResponses(responses openapi.OperationResponses) (Responses, *GoType, bool, error) {
-	var result Responses
-	var successReturn *GoType
-	var rawBytesSuccess bool
+	var (
+		result          Responses
+		successReturn   *GoType
+		rawBytesSuccess bool
+	)
 
 	for code, rRef := range responses.ByIndex() {
 		r := rRef.Value
@@ -392,13 +404,16 @@ func fromResponses(responses openapi.OperationResponses) (Responses, *GoType, bo
 		// Prefer a JSON media type; if the response declares content but none
 		// of it is JSON (e.g. text/plain), fall back to the first declared
 		// media type and treat the body as an opaque byte stream.
-		var jsonContentType string
-		var jsonSchema *openapi.SchemaRef
-		var firstContentType string
+		var (
+			jsonContentType  string
+			jsonSchema       *openapi.SchemaRef
+			firstContentType string
+		)
 		for mr, mt := range r.Content.ByIndex() {
 			if firstContentType == "" {
 				firstContentType = string(mr)
 			}
+
 			if strings.Contains(string(mr), "json") {
 				jsonContentType = string(mr)
 				jsonSchema = mt.Schema
@@ -406,15 +421,19 @@ func fromResponses(responses openapi.OperationResponses) (Responses, *GoType, bo
 			}
 		}
 
-		var goType *GoType
-		var contentType string
-		var isRawBytes bool
+		var (
+			goType      *GoType
+			contentType string
+			isRawBytes  bool
+		)
 
 		switch {
 		case jsonContentType != "":
 			contentType = jsonContentType
+
 			if jsonSchema != nil {
 				var err error
+
 				goType, err = SchemaRefGoType(jsonSchema)
 				if err != nil {
 					return nil, nil, false, fmt.Errorf("response %s: %w", code, err)
@@ -455,6 +474,7 @@ func statusCodeToConst(code openapi.StatusCode) string {
 	if err != nil {
 		return string(code)
 	}
+
 	text := http.StatusText(n)
 	if text == "" {
 		return string(code)

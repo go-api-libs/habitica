@@ -48,6 +48,7 @@ func run(ctx context.Context) error {
 			op.Responses.Sort()
 		}
 	}
+
 	doc.Components.SortMaps()
 
 	if wasValid {

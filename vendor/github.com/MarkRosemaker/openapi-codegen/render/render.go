@@ -24,6 +24,7 @@ var templateSub fs.FS
 
 func init() {
 	var err error
+
 	templateSub, err = fs.Sub(templateFS, "templates")
 	if err != nil {
 		panic("openapi-codegen: templates directory missing from embedded FS: " + err.Error())
@@ -68,6 +69,7 @@ func FilesFromFS(fsys fs.FS, doc *ir.Document, g config.Generate) ([]File, error
 		} else {
 			rendered, err = renderText(name, string(data), doc)
 		}
+
 		if err != nil {
 			return nil, fmt.Errorf("template %s: %w", name, err)
 		}

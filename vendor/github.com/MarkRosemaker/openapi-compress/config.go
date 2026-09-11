@@ -24,6 +24,7 @@ func (c *Config) setDefaults() {
 	if c.MinSimilarity == 0 {
 		c.MinSimilarity = 1.0
 	}
+
 	if c.SimilarityStep == 0 {
 		c.SimilarityStep = 0.05
 	}
@@ -33,8 +34,10 @@ func (c Config) validate() error {
 	if c.MinSimilarity < 0 || c.MinSimilarity > 1 {
 		return fmt.Errorf("MinSimilarity must be in [0, 1], got %v", c.MinSimilarity)
 	}
+
 	if c.SimilarityStep <= 0 {
 		return fmt.Errorf("SimilarityStep must be > 0, got %v", c.SimilarityStep)
 	}
+
 	return nil
 }

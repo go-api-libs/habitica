@@ -141,6 +141,7 @@ func findResponse(op *ir.Operation, statusCode int) *ir.Response {
 			return r
 		}
 	}
+
 	return nil
 }
 
@@ -149,8 +150,10 @@ func findResponse(op *ir.Operation, statusCode int) *ir.Response {
 // so that e.g. /tasks/{taskId}/score/up wins over /tasks/{taskId} for a URL
 // like /tasks/abc/score/up.
 func pickOperation(ops []ir.Operation, method, relPath string) (*ir.Operation, map[string]string) {
-	var wildcardOp *ir.Operation
-	var wildcardVals map[string]string
+	var (
+		wildcardOp   *ir.Operation
+		wildcardVals map[string]string
+	)
 	for i := range ops {
 		op := &ops[i]
 		if op.Method != method {
@@ -210,6 +213,7 @@ func matchPathTemplate(template, path string) (params map[string]string, matched
 	}
 
 	sameLen := len(tParts) == len(pParts)
+
 	return params, sameLen, sameLen
 }
 
@@ -245,7 +249,9 @@ func extractSegmentParam(tmpl, value string, out map[string]string) bool {
 	if len(suffix) > 0 {
 		extracted = extracted[:len(extracted)-len(suffix)]
 	}
+
 	out[name] = extracted
+
 	return true
 }
 
@@ -367,18 +373,21 @@ func enumLiteral(s *ir.Schema, v any) (string, bool) {
 		if !ok {
 			return "", false
 		}
+
 		display = str
 	case "bool":
 		b, ok := v.(bool)
 		if !ok {
 			return "", false
 		}
+
 		display = strconv.FormatBool(b)
 	default: // int-family or float-family
 		f, ok := v.(float64)
 		if !ok {
 			return "", false
 		}
+
 		if strings.HasPrefix(s.Type, "float") {
 			display = strconv.FormatFloat(f, 'g', -1, 64)
 		} else {
@@ -405,6 +414,7 @@ func scalarLiteral(goType string, v any) (string, bool) {
 		if !ok {
 			return "", false
 		}
+
 		return fmt.Sprintf("%q", s), true
 
 	case "bool":
@@ -412,6 +422,7 @@ func scalarLiteral(goType string, v any) (string, bool) {
 		if !ok {
 			return "", false
 		}
+
 		return strconv.FormatBool(b), true
 
 	case "int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64":
@@ -428,6 +439,7 @@ func scalarLiteral(goType string, v any) (string, bool) {
 		if !ok {
 			return "", false
 		}
+
 		return strconv.FormatFloat(f, 'g', -1, 64), true
 
 	case "uuid.UUID":
@@ -435,6 +447,7 @@ func scalarLiteral(goType string, v any) (string, bool) {
 		if !ok {
 			return "", false
 		}
+
 		return fmt.Sprintf("uuid.MustParse(%q)", s), true
 
 	default:

@@ -22,7 +22,6 @@ func response(d *openapi.Document, r *openapi.Response, rspName string, modeSche
 	// if err := l.resolveHeaders(r.Headers); err != nil {
 	// 	return &errpath.ErrField{Field: "headers", Err: err}
 	// }
-
 	if err := content(d, r.Content, rspName, "Response", modeSchema); err != nil {
 		return &errpath.ErrField{Field: "content", Err: err}
 	}

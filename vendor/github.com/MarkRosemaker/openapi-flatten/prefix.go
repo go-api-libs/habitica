@@ -28,18 +28,21 @@ func moveCommonPathPrefix(d *openapi.Document) {
 		path openapi.Path
 		item *openapi.PathItem
 	}
+
 	ordered := make([]entry, 0, len(d.Paths))
 	for path, item := range d.Paths.ByIndex() {
 		stripped := strings.TrimPrefix(string(path), prefix)
 		if stripped == "" {
 			stripped = "/"
 		}
+
 		ordered = append(ordered, entry{openapi.Path(stripped), item})
 	}
 
 	for path := range d.Paths {
 		delete(d.Paths, path)
 	}
+
 	for _, e := range ordered {
 		d.Paths.Set(e.path, e.item)
 	}
@@ -57,6 +60,7 @@ func commonPathPrefix(paths openapi.Paths) string {
 	// Each path starts with "/", so splitting by "/" gives ["", seg1, seg2, ...].
 	// The first element is always ""; we need at least one more shared segment.
 	var common []string
+
 	first := true
 	for path := range paths {
 		segs := strings.Split(string(path), "/")
@@ -65,6 +69,7 @@ func commonPathPrefix(paths openapi.Paths) string {
 			first = false
 			continue
 		}
+
 		common = sharedPrefix(common, segs)
 		if len(common) <= 1 {
 			return "" // only the leading empty string is shared
@@ -86,5 +91,6 @@ func sharedPrefix(a, b []string) []string {
 			return a[:i]
 		}
 	}
+
 	return a[:n]
 }

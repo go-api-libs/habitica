@@ -17,6 +17,7 @@ import (
 // After compression, long names of merged schemas are shortened.
 func Document(d *openapi.Document, cfg Config) error {
 	cfg.setDefaults()
+
 	if err := cfg.validate(); err != nil {
 		return err
 	}
@@ -33,9 +34,11 @@ func Document(d *openapi.Document, cfg Config) error {
 			if err != nil {
 				return err
 			}
+
 			if len(canonicals) == 0 {
 				break
 			}
+
 			for name := range canonicals {
 				mergedCanonicals[name] = true
 			}
@@ -44,12 +47,14 @@ func Document(d *openapi.Document, cfg Config) error {
 		if threshold <= cfg.MinSimilarity+1e-9 {
 			break
 		}
+
 		threshold = math.Max(cfg.MinSimilarity, threshold-cfg.SimilarityStep)
 	}
 
 	if cfg.SkipNameShortening {
 		return nil
 	}
+
 	return shortenMergedSchemaNames(d, mergedCanonicals)
 }
 
@@ -71,11 +76,13 @@ func deduplicateSchemasAtThreshold(d *openapi.Document, threshold float64) (map[
 		if _, removed := replacements[nameA]; removed {
 			continue
 		}
+
 		schemaA := schemas[nameA]
 		for _, nameB := range names[i+1:] {
 			if _, removed := replacements[nameB]; removed {
 				continue
 			}
+
 			schemaB := schemas[nameB]
 
 			var sim float64
@@ -94,10 +101,12 @@ func deduplicateSchemasAtThreshold(d *openapi.Document, threshold float64) (map[
 					if lo > hi {
 						lo, hi = hi, lo
 					}
+
 					if float64(lo)/float64(hi) < threshold {
 						continue
 					}
 				}
+
 				sim = schemasSimilarity(schemaA, schemaB)
 			}
 
@@ -109,6 +118,7 @@ func deduplicateSchemasAtThreshold(d *openapi.Document, threshold float64) (map[
 				// Not exactly equal: widen schemaA to also cover schemaB.
 				mergeSchemas(schemaA, schemaB)
 			}
+
 			replacements[nameB] = nameA
 		}
 	}
@@ -148,18 +158,22 @@ func deduplicateParameters(d *openapi.Document) {
 		if _, removed := replacements[nameA]; removed {
 			continue
 		}
+
 		refA := params[nameA]
 		if refA == nil || refA.Value == nil {
 			continue
 		}
+
 		for _, nameB := range names[i+1:] {
 			if _, removed := replacements[nameB]; removed {
 				continue
 			}
+
 			refB := params[nameB]
 			if refB == nil || refB.Value == nil {
 				continue
 			}
+
 			if reflect.DeepEqual(refA.Value, refB.Value) {
 				replacements[nameB] = nameA
 			}
@@ -182,7 +196,9 @@ func sortedParameterNames(params openapi.Parameters) []string {
 	for name := range params {
 		names = append(names, name)
 	}
+
 	sort.Strings(names)
+
 	return names
 }
 
@@ -192,11 +208,13 @@ func replaceParameterRefsInDocument(d *openapi.Document, replacements map[string
 	for _, p := range d.Paths {
 		replaceParameterRefsInPathItem(p, replacements)
 	}
+
 	for _, piRef := range d.Webhooks {
 		if piRef != nil && piRef.Value != nil {
 			replaceParameterRefsInPathItem(piRef.Value, replacements)
 		}
 	}
+
 	for _, piRef := range d.Components.PathItems {
 		if piRef != nil && piRef.Value != nil {
 			replaceParameterRefsInPathItem(piRef.Value, replacements)
@@ -208,7 +226,9 @@ func replaceParameterRefsInPathItem(p *openapi.PathItem, replacements map[string
 	if p == nil {
 		return
 	}
+
 	replaceParameterRefList(p.Parameters, replacements)
+
 	for _, op := range p.Operations {
 		if op != nil {
 			replaceParameterRefList(op.Parameters, replacements)
@@ -221,6 +241,7 @@ func replaceParameterRefList(params openapi.ParameterList, replacements map[stri
 		if p == nil || p.Ref == nil {
 			continue
 		}
+
 		name := parameterNameFromRef(p.Ref.Identifier)
 		if canonical, ok := replacements[name]; ok {
 			p.Ref.Identifier = "#/components/parameters/" + canonical
@@ -236,14 +257,17 @@ func parameterNameFromRef(identifier string) string {
 // replaceRefsInDocument updates $ref identifiers throughout the entire document.
 func replaceRefsInDocument(d *openapi.Document, replacements map[string]string) {
 	replaceRefsInComponents(&d.Components, replacements)
+
 	for _, p := range d.Paths {
 		replaceRefsInPathItem(p, replacements)
 	}
+
 	for _, piRef := range d.Webhooks {
 		if piRef != nil && piRef.Value != nil {
 			replaceRefsInPathItem(piRef.Value, replacements)
 		}
 	}
+
 	for _, piRef := range d.Components.PathItems {
 		if piRef != nil && piRef.Value != nil {
 			replaceRefsInPathItem(piRef.Value, replacements)
@@ -255,7 +279,9 @@ func replaceRefsInPathItem(p *openapi.PathItem, replacements map[string]string) 
 	if p == nil {
 		return
 	}
+
 	replaceRefsInParameterList(p.Parameters, replacements)
+
 	for _, op := range p.Operations {
 		replaceRefsInOperation(op, replacements)
 	}
@@ -265,13 +291,17 @@ func replaceRefsInOperation(op *openapi.Operation, replacements map[string]strin
 	if op == nil {
 		return
 	}
+
 	replaceRefsInParameterList(op.Parameters, replacements)
+
 	if op.RequestBody != nil && op.RequestBody.Value != nil {
 		replaceRefsInContent(op.RequestBody.Value.Content, replacements)
 	}
+
 	for _, resp := range op.Responses {
 		replaceRefsInResponseRef(resp, replacements)
 	}
+
 	for _, cb := range op.Callbacks {
 		for _, piRef := range cb {
 			if piRef != nil && piRef.Value != nil {
@@ -294,7 +324,9 @@ func replaceRefsInResponseRef(r *openapi.ResponseRef, replacements map[string]st
 	if r == nil || r.Value == nil {
 		return
 	}
+
 	replaceRefsInContent(r.Value.Content, replacements)
+
 	for _, h := range r.Value.Headers {
 		if h != nil && h.Value != nil {
 			replaceRefsInSchema(h.Value.Schema, replacements)
@@ -306,20 +338,24 @@ func replaceRefsInResponseRef(r *openapi.ResponseRef, replacements map[string]st
 // replaceRefsInComponents updates $ref identifiers throughout all components.
 func replaceRefsInComponents(c *openapi.Components, replacements map[string]string) {
 	replaceRefsInSchemas(c.Schemas, replacements)
+
 	for _, ref := range c.Responses {
 		replaceRefsInResponseRef(ref, replacements)
 	}
+
 	for _, ref := range c.RequestBodies {
 		if ref != nil && ref.Value != nil {
 			replaceRefsInContent(ref.Value.Content, replacements)
 		}
 	}
+
 	for _, ref := range c.Parameters {
 		if ref != nil && ref.Value != nil {
 			replaceSchemaRef(ref.Value.Schema, replacements)
 			replaceRefsInContent(ref.Value.Content, replacements)
 		}
 	}
+
 	for _, ref := range c.Headers {
 		if ref != nil && ref.Value != nil {
 			replaceRefsInSchema(ref.Value.Schema, replacements)
@@ -352,10 +388,12 @@ func replaceRefsInSchemaRec(s *openapi.Schema, visited map[*openapi.Schema]bool,
 	if s == nil || visited[s] {
 		return
 	}
+
 	visited[s] = true
 
 	for _, ref := range s.Properties {
 		replaceSchemaRef(ref, replacements)
+
 		if ref != nil && ref.Ref == nil {
 			replaceRefsInSchemaRec(ref.Value, visited, replacements)
 		}
@@ -363,6 +401,7 @@ func replaceRefsInSchemaRec(s *openapi.Schema, visited map[*openapi.Schema]bool,
 
 	if s.Items != nil {
 		replaceSchemaRef(s.Items, replacements)
+
 		if s.Items.Ref == nil {
 			replaceRefsInSchemaRec(s.Items.Value, visited, replacements)
 		}
@@ -370,6 +409,7 @@ func replaceRefsInSchemaRec(s *openapi.Schema, visited map[*openapi.Schema]bool,
 
 	if s.AdditionalProperties != nil {
 		replaceSchemaRef(s.AdditionalProperties, replacements)
+
 		if s.AdditionalProperties.Ref == nil {
 			replaceRefsInSchemaRec(s.AdditionalProperties.Value, visited, replacements)
 		}
@@ -377,6 +417,7 @@ func replaceRefsInSchemaRec(s *openapi.Schema, visited map[*openapi.Schema]bool,
 
 	for _, ref := range s.AllOf {
 		replaceSchemaRef(ref, replacements)
+
 		if ref != nil && ref.Ref == nil {
 			replaceRefsInSchemaRec(ref.Value, visited, replacements)
 		}
@@ -405,6 +446,8 @@ func sortedSchemaNames(schemas openapi.Schemas) []string {
 	for name := range schemas {
 		names = append(names, name)
 	}
+
 	sort.Strings(names)
+
 	return names
 }

@@ -38,6 +38,7 @@ func Generate(cfg Config) error {
 
 		if cfg.InteractionsPath != "" {
 			var err error
+
 			cfg.Interactions, err = cassette.InteractionsReadFile(cfg.InteractionsPath)
 			if err != nil && (pathProvided || !errors.Is(err, fs.ErrNotExist)) {
 				return err
@@ -71,6 +72,7 @@ func Generate(cfg Config) error {
 	if err != nil {
 		return fmt.Errorf("build IR: %w", err)
 	}
+
 	irDoc.Debug = cfg.Debug
 
 	if len(cfg.Interactions) > 0 {

@@ -140,6 +140,7 @@ func (op Operation) JSPathTemplate() string {
 	for _, p := range op.PathParams {
 		result = strings.ReplaceAll(result, "{"+p.JSONName+"}", "${"+p.GoName+"}")
 	}
+
 	return result
 }
 

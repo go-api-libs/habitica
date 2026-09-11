@@ -27,6 +27,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 	// sort the components and responses
 	// (but not the paths since it may be good to keep them in the order they were added)
 	doc.Components.SortMaps()
+
 	for _, path := range doc.Paths {
 		for _, op := range path.Operations {
 			op.Responses.Sort()
@@ -65,6 +66,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 	for _, p := range globalParamsMap.ByIndex() {
 		globalParams = append(globalParams, p)
 	}
+
 	slices.SortFunc(globalParams, func(a, b Param) int {
 		return strings.Compare(a.JSONName, b.JSONName)
 	})
@@ -73,6 +75,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 	if doc.Info != nil {
 		title = strings.TrimSpace(doc.Info.Title)
 	}
+
 	if title == "" || title == "API" {
 		title = fmt.Sprintf("%s API", strcase.ToCase(packageName, strcase.TitleCase, ' '))
 	}
@@ -146,6 +149,7 @@ func fromPaths(paths openapi.Paths, auth Auth, globalParams paramMap) ([]Operati
 			ops = append(ops, *irOp)
 		}
 	}
+
 	return ops, nil
 }
 
@@ -223,9 +227,11 @@ func needsSpecialImports(schemas []Schema, ops []Operation) (hasURL, hasDuration
 		if containsType(goType, "url.URL") {
 			hasURL = true
 		}
+
 		if containsType(goType, "time.Duration") {
 			hasDuration = true
 		}
+
 		if containsType(goType, "civil.Date") {
 			hasDate = true
 		}
@@ -234,6 +240,7 @@ func needsSpecialImports(schemas []Schema, ops []Operation) (hasURL, hasDuration
 	for _, s := range schemas {
 		for _, f := range s.Fields {
 			check(f.Type)
+
 			if f.IsDateTimeOrInt {
 				hasDateTimeOrInt = true
 			}
@@ -244,9 +251,11 @@ func needsSpecialImports(schemas []Schema, ops []Operation) (hasURL, hasDuration
 		for _, p := range op.PathParams {
 			check(p.Type)
 		}
+
 		for _, p := range op.QueryParams {
 			check(p.Type)
 		}
+
 		if op.SuccessReturn != nil {
 			check(op.SuccessReturn.Name)
 		}

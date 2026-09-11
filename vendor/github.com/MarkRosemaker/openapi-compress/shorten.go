@@ -29,11 +29,14 @@ var noiseWords = map[string]bool{
 // ["Cik0000320193", "JSON"].
 func splitCamelCase(s string) []string {
 	runes := []rune(s)
+
 	n := len(runes)
 	if n == 0 {
 		return nil
 	}
+
 	var words []string
+
 	start := 0
 	for i := 1; i < n; i++ {
 		if unicode.IsUpper(runes[i]) {
@@ -48,7 +51,9 @@ func splitCamelCase(s string) []string {
 			}
 		}
 	}
+
 	words = append(words, string(runes[start:]))
+
 	return words
 }
 
@@ -58,8 +63,11 @@ func splitAlphaDigit(w string) []string {
 	if w == "" {
 		return nil
 	}
+
 	runes := []rune(w)
+
 	var parts []string
+
 	start := 0
 	prevDigit := unicode.IsDigit(runes[0])
 	for i := 1; i < len(runes); i++ {
@@ -70,6 +78,7 @@ func splitAlphaDigit(w string) []string {
 			prevDigit = currDigit
 		}
 	}
+
 	return append(parts, string(runes[start:]))
 }
 
@@ -78,11 +87,13 @@ func isAllDigits(s string) bool {
 	if s == "" {
 		return false
 	}
+
 	for _, r := range s {
 		if !unicode.IsDigit(r) {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -91,11 +102,13 @@ func isVersionSegment(w string) bool {
 	if len(w) < 2 || (w[0] != 'V' && w[0] != 'v') {
 		return false
 	}
+
 	for _, r := range w[1:] {
 		if !unicode.IsDigit(r) {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -120,6 +133,7 @@ func shortName(name string, existing openapi.Schemas) string {
 			}
 		}
 	}
+
 	if len(filtered) == 0 {
 		return name
 	}
@@ -147,6 +161,7 @@ func uniqueName(candidate, currentName string, existing openapi.Schemas) string 
 	if _, ok := existing[candidate]; !ok || candidate == currentName {
 		return candidate
 	}
+
 	for i := 2; ; i++ {
 		n := candidate + strconv.Itoa(i)
 		if _, ok := existing[n]; !ok {
@@ -164,19 +179,23 @@ func shortenMergedSchemaNames(d *openapi.Document, targets map[string]bool) erro
 	for name := range targets {
 		names = append(names, name)
 	}
+
 	sort.Strings(names)
 
 	for _, name := range names {
 		if _, ok := d.Components.Schemas[name]; !ok {
 			continue // merged away in a later pass
 		}
+
 		short := shortName(name, d.Components.Schemas)
 		if short == name {
 			continue
 		}
+
 		if err := edit.RenameSchema(d, name, short); err != nil {
 			return err
 		}
 	}
+
 	return nil
 }

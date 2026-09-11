@@ -28,6 +28,7 @@ func SchemaRefGoType(ref *openapi.SchemaRef) (*GoType, error) {
 		}
 		// "#/components/schemas/Name" → "Name"
 		parts := strings.Split(ref.Ref.Identifier, "/")
+
 		return &GoType{Name: parts[len(parts)-1]}, nil
 	}
 
@@ -61,6 +62,7 @@ func SchemaGoType(s *openapi.Schema) (*GoType, error) {
 		if isAnyOfOnly(s) || isOneOfOnly(s) {
 			return &GoType{Name: "any"}, nil
 		}
+
 		return nil, fmt.Errorf("unsupported schema type: %q", s.Type)
 	default:
 		return nil, fmt.Errorf("unsupported schema type: %q", s.Type)
@@ -81,6 +83,7 @@ func isDateTimeOrIntegerOneOf(s *openapi.Schema) bool {
 		if entry == nil || entry.Value == nil {
 			return false
 		}
+
 		v := entry.Value
 		switch v.Type {
 		case openapi.TypeString:
@@ -91,6 +94,7 @@ func isDateTimeOrIntegerOneOf(s *openapi.Schema) bool {
 			hasInteger = true
 		}
 	}
+
 	return hasDateTime && hasInteger
 }
 
@@ -209,6 +213,7 @@ func FromComponentSchemas(schemas openapi.Schemas) ([]Schema, error) {
 			result = append(result, *irSchema)
 		}
 	}
+
 	return result, nil
 }
 
@@ -246,15 +251,19 @@ func fromSchema(name string, s *openapi.Schema) (*Schema, error) {
 		if isDateTimeOrIntegerOneOf(s) {
 			return nil, nil // handled specially: SchemaRefGoType resolves the $ref straight to time.Time
 		}
+
 		if len(s.AllOf) > 0 {
 			return fromAllOfSchema(name, s)
 		}
+
 		if len(s.OneOf) > 0 {
 			return fromUnionSchema(name, s, true)
 		}
+
 		if len(s.AnyOf) > 0 {
 			return fromUnionSchema(name, s, false)
 		}
+
 		return nil, nil
 	default:
 		return nil, nil // scalar types are used inline
@@ -280,6 +289,7 @@ func fromUnionSchema(name string, s *openapi.Schema, isOneOf bool) (*Schema, err
 		}
 
 		base := unionVariantFieldName(tp, i)
+
 		counts[base]++
 		fieldName := base
 		if n := counts[base]; n > 1 {
@@ -308,10 +318,12 @@ func unionVariantFieldName(t *GoType, index int) string {
 	if i := strings.LastIndex(name, "."); i >= 0 {
 		name = name[i+1:] // strip package qualifier, e.g. "uuid.UUID" -> "UUID"
 	}
+
 	name = strcase.ToGoPascal(name)
 	if name == "" {
 		name = fmt.Sprintf("Variant%d", index+1)
 	}
+
 	return name
 }
 
@@ -342,8 +354,10 @@ func fromAllOfSchema(name string, s *openapi.Schema) (*Schema, error) {
 				Type:     typeName.String(),
 				Embedded: true,
 			})
+
 			continue
 		}
+
 		if entry.Value == nil {
 			continue
 		}
@@ -394,6 +408,7 @@ func getField(jsonName string, propRef *openapi.SchemaRef, requiredSet map[strin
 	}
 
 	ref := cmp.Or(propRef.Ref, &openapi.Reference{})
+
 	return Field{
 		Name:            fieldGoName(jsonName),
 		JSONName:        jsonName,
@@ -493,6 +508,7 @@ func formatEnumValue(v jsontext.Value, t openapi.DataType) (display, literal str
 		}
 
 		s := strconv.FormatInt(i, 10)
+
 		return s, s, nil
 	case openapi.TypeNumber:
 		var f float64
@@ -501,6 +517,7 @@ func formatEnumValue(v jsontext.Value, t openapi.DataType) (display, literal str
 		}
 
 		s := strconv.FormatFloat(f, 'g', -1, 64)
+
 		return s, s, nil
 	case openapi.TypeBoolean:
 		var b bool
@@ -509,6 +526,7 @@ func formatEnumValue(v jsontext.Value, t openapi.DataType) (display, literal str
 		}
 
 		s := strconv.FormatBool(b)
+
 		return s, s, nil
 	default:
 		return "", "", fmt.Errorf("unsupported enum type: %q", t)
@@ -614,22 +632,28 @@ func replaceLeadingDigits(s string) string {
 	if s == "" {
 		return s
 	}
+
 	words := strings.Fields(s)
 	if len(words) == 0 {
 		return s
 	}
+
 	first := []rune(words[0])
 	if len(first) == 0 || !unicode.IsDigit(first[0]) {
 		return s
 	}
+
 	var parts []string
+
 	i := 0
 	for i < len(first) && unicode.IsDigit(first[i]) {
 		parts = append(parts, digitWord(first[i]))
 		i++
 	}
+
 	parts = append(parts, string(first[i:]))
 	words[0] = strings.Join(parts, " ")
+
 	return strings.Join(words, " ")
 }
 
@@ -643,6 +667,7 @@ func digitWord(r rune) string {
 	if d >= 0 && d < len(digitWords) {
 		return digitWords[d]
 	}
+
 	return string(r)
 }
 

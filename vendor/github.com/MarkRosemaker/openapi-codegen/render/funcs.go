@@ -31,8 +31,10 @@ func templateFuncs() template.FuncMap {
 			if s == "" {
 				return s
 			}
+
 			r := []rune(strings.ToLower(s))
 			r[0] = unicode.ToUpper(r[0])
+
 			return string(r)
 		},
 		"camelCase":   strcase.ToGoCamel,
@@ -56,6 +58,7 @@ func isGoKeyword(s string) bool {
 		"interface", "map", "package", "range", "return",
 		"select", "struct", "switch", "type", "var",
 	}
+
 	return slices.Contains(keywords, s)
 }
 

@@ -20,15 +20,19 @@ func schemasSimilarity(a, b *openapi.Schema) float64 {
 	if a == b {
 		return 1.0
 	}
+
 	if a == nil || b == nil {
 		return 0.0
 	}
+
 	if schema.SameShape(a, b) {
 		return 1.0
 	}
+
 	if a.Type != b.Type {
 		return 0.0
 	}
+
 	if a.Type != openapi.TypeObject {
 		return 0.0
 	}
@@ -71,9 +75,11 @@ func schemaRefSameShape(a, b *openapi.SchemaRef) bool {
 	if a == b {
 		return true
 	}
+
 	if a == nil || b == nil {
 		return false
 	}
+
 	switch {
 	case a.Ref != nil && b.Ref != nil:
 		return a.Ref.Identifier == b.Ref.Identifier
@@ -101,6 +107,7 @@ func mergeSchemas(a, b *openapi.Schema) {
 			if a.Properties == nil {
 				a.Properties = make(openapi.SchemaRefs)
 			}
+
 			a.Properties.Set(name, refB)
 		}
 	}
@@ -110,12 +117,14 @@ func mergeSchemas(a, b *openapi.Schema) {
 	for _, r := range b.Required {
 		bRequired[r] = true
 	}
+
 	kept := a.Required[:0]
 	for _, r := range a.Required {
 		if bRequired[r] {
 			kept = append(kept, r)
 		}
 	}
+
 	a.Required = kept
 }
 
@@ -126,11 +135,14 @@ func reconcileSchemaRef(a, b *openapi.SchemaRef) *openapi.SchemaRef {
 	if a.Ref != nil || b.Ref != nil {
 		return a
 	}
+
 	if a.Value == nil || b.Value == nil {
 		return a
 	}
+
 	merged := *a // shallow copy of the SchemaRef wrapper
 	merged.Value = reconcileInlineSchemas(a.Value, b.Value)
+
 	return &merged
 }
 
@@ -189,11 +201,13 @@ func propertyNameUnion(a, b openapi.SchemaRefs) []string {
 			names = append(names, name)
 		}
 	}
+
 	for name := range b {
 		if _, ok := seen[name]; !ok {
 			seen[name] = struct{}{}
 			names = append(names, name)
 		}
 	}
+
 	return names
 }
