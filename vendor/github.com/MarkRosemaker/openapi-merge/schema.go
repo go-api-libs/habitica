@@ -47,6 +47,7 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 		}
 
 		*a = *b
+
 		return nil
 	}
 
@@ -564,6 +565,7 @@ func mergeArrayParamMismatch(a, b *openapi.Schema) error {
 		}
 
 		*b = *a
+
 		return nil
 	}
 
@@ -579,6 +581,7 @@ func mergeArrayParamMismatch(a, b *openapi.Schema) error {
 	}
 
 	*a = *b
+
 	return nil
 }
 

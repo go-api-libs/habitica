@@ -36,6 +36,7 @@ func analyzeInteraction(doc *openapi.Document, ia *cassette.Interaction) error {
 	if err != nil {
 		return fmt.Errorf("parsing server URL: %w", err)
 	}
+
 	reqServerURL := doc.Servers[0].URL
 	altHost := reqURL.Host != defaultURL.Host
 	if altHost {
@@ -53,10 +54,13 @@ func analyzeInteraction(doc *openapi.Document, ia *cassette.Interaction) error {
 		if matchedPath != "/" {
 			delete(doc.Paths, "/")
 		}
+
 		pi = &openapi.PathItem{}
+
 		if doc.Paths == nil {
 			doc.Paths = openapi.Paths{}
 		}
+
 		doc.Paths.Set(matchedPath, pi)
 
 		// Add path parameter definitions for each detected param.
@@ -78,6 +82,7 @@ func analyzeInteraction(doc *openapi.Document, ia *cassette.Interaction) error {
 				break
 			}
 		}
+
 		if !found {
 			pi.Servers = append(pi.Servers, altSrv)
 		}
@@ -125,8 +130,10 @@ func getOrCreateOperation(pi *openapi.PathItem, method string) *openapi.Operatio
 			return op
 		}
 	}
+
 	op := &openapi.Operation{}
 	pi.SetOperation(method, op)
+
 	return op
 }
 
@@ -136,8 +143,10 @@ func processQueryParams(doc *openapi.Document, pi *openapi.PathItem, op *openapi
 		values := query[name]
 		value := strings.Join(values, ",")
 
-		var schema *openapi.Schema
-		var explodeFalse bool
+		var (
+			schema       *openapi.Schema
+			explodeFalse bool
+		)
 
 		if strings.Contains(value, ",") {
 			// Comma-separated → non-exploded array
@@ -145,6 +154,7 @@ func processQueryParams(doc *openapi.Document, pi *openapi.PathItem, op *openapi
 			if err != nil {
 				return fmt.Errorf("param %q: %w", name, err)
 			}
+
 			schema = &openapi.Schema{
 				Type:  openapi.TypeArray,
 				Items: &openapi.SchemaRef{Value: items},
@@ -152,6 +162,7 @@ func processQueryParams(doc *openapi.Document, pi *openapi.PathItem, op *openapi
 			explodeFalse = true
 		} else {
 			var err error
+
 			schema, err = scalarSchema(value)
 			if err != nil {
 				return fmt.Errorf("param %q: %w", name, err)
@@ -281,6 +292,7 @@ func processCustomHeader(piParams openapi.ParameterList, op *openapi.Operation, 
 	}
 
 	op.Parameters = append(op.Parameters, &openapi.ParameterRef{Value: incoming})
+
 	return nil
 }
 
@@ -299,6 +311,7 @@ func processRequestBody(op *openapi.Operation, body []byte, contentType string) 
 		op.RequestBody.Value.Content.Set(mr, &openapi.MediaType{
 			Schema: &openapi.SchemaRef{Value: schema},
 		})
+
 		return nil
 	}
 
@@ -311,11 +324,14 @@ func processRequestBody(op *openapi.Operation, body []byte, contentType string) 
 
 			return growEnums(existing.Schema.Value, body)
 		}
+
 		existing.Schema = &openapi.SchemaRef{Value: schema}
+
 		return nil
 	}
 
 	rb.Content.Set(mr, &openapi.MediaType{Schema: &openapi.SchemaRef{Value: schema}})
+
 	return nil
 }
 
@@ -326,6 +342,7 @@ func processResponse(op *openapi.Operation, resp *cassette.Response) error {
 	}
 
 	sc := openapi.StatusCode(strconv.Itoa(resp.StatusCode))
+
 	if op.Responses == nil {
 		op.Responses = openapi.OperationResponses{}
 	}
@@ -380,12 +397,14 @@ func scalarSchema(value string) (*openapi.Schema, error) {
 // commaListSchema infers the item schema from a comma-separated string.
 func commaListSchema(value string) (*openapi.Schema, error) {
 	parts := strings.Split(value, ",")
+
 	var itemSchema *openapi.Schema
 	for _, part := range parts {
 		s, err := scalarSchema(strings.TrimSpace(part))
 		if err != nil {
 			return nil, err
 		}
+
 		if itemSchema == nil {
 			itemSchema = s
 		} else {
@@ -394,6 +413,7 @@ func commaListSchema(value string) (*openapi.Schema, error) {
 			}
 		}
 	}
+
 	return itemSchema, nil
 }
 
@@ -439,6 +459,7 @@ func addPathParams(pi *openapi.PathItem, p openapi.Path, reqSegments, paramNames
 		} else {
 			schema = &openapi.Schema{Type: openapi.TypeString}
 		}
+
 		pi.Parameters = append(pi.Parameters, &openapi.ParameterRef{
 			Value: &openapi.Parameter{
 				Name:     el.name,
@@ -458,5 +479,6 @@ func isCustomHeader(key string) bool {
 	}
 
 	_, isStd := standardRequestHeaders[key]
+
 	return !isStd
 }

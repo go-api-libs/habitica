@@ -49,6 +49,7 @@ func decodeSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 		if _, err := strconv.Atoi(str); err == nil {
 			return &openapi.Schema{Type: openapi.TypeInteger, Example: jsontext.Value(str)}, nil
 		}
+
 		return &openapi.Schema{Type: openapi.TypeNumber, Format: openapi.FormatDouble, Example: jsontext.Value(str)}, nil
 
 	case 't': // true
@@ -72,6 +73,7 @@ func decodeObjectSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 		key    string
 		schema *openapi.Schema
 	}
+
 	var pairs []kv
 
 	for dec.PeekKind() != '}' {
@@ -120,6 +122,7 @@ func decodeObjectSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 			break
 		}
 	}
+
 	if allNumeric {
 		var valueSchema *openapi.Schema
 		for _, p := range pairs {
@@ -127,10 +130,12 @@ func decodeObjectSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 				valueSchema = p.schema
 				continue
 			}
+
 			if err := merge.Schema(valueSchema, p.schema, false); err != nil {
 				return nil, fmt.Errorf("merging additionalProperties value: %w", err)
 			}
 		}
+
 		return &openapi.Schema{
 			Type:                 openapi.TypeObject,
 			AdditionalProperties: &openapi.SchemaRef{Value: valueSchema},
@@ -146,6 +151,7 @@ func decodeObjectSchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 		s.Properties.Set(p.key, &openapi.SchemaRef{Value: p.schema})
 		s.Required = append(s.Required, p.key)
 	}
+
 	return s, nil
 }
 
@@ -154,11 +160,13 @@ func isNumericKey(s string) bool {
 	if len(s) == 0 {
 		return false
 	}
+
 	for _, c := range s {
 		if c < '0' || c > '9' {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -171,6 +179,7 @@ func decodeArraySchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		if itemSchema == nil {
 			itemSchema = elem
 		} else {
@@ -190,6 +199,7 @@ func decodeArraySchema(dec *jsontext.Decoder) (*openapi.Schema, error) {
 	}
 
 	s.Items = &openapi.SchemaRef{Value: itemSchema}
+
 	return s, nil
 }
 

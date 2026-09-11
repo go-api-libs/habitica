@@ -23,5 +23,6 @@ func Enrich(doc *openapi.Document, interactions cassette.Interactions) error {
 	}
 
 	hoistSecurity(doc)
+
 	return nil
 }

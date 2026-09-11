@@ -26,6 +26,7 @@ func parsePath(p string) parsedPath {
 	if len(segments) == 1 && segments[0] == "" {
 		return parsedPath{{name: "", isParam: false}}
 	}
+
 	result := make(parsedPath, 0, len(segments))
 	for _, seg := range segments {
 		if strings.HasPrefix(seg, "{") && strings.HasSuffix(seg, "}") {
@@ -41,13 +42,16 @@ func parsePath(p string) parsedPath {
 					prefix:  seg[:start],
 					suffix:  seg[end+1:],
 				})
+
 				continue
 			}
+
 			result = append(result, &pathElement{name: seg, isParam: false})
 		} else {
 			result = append(result, &pathElement{name: seg, isParam: false})
 		}
 	}
+
 	return result
 }
 
@@ -105,12 +109,15 @@ func (pp parsedPath) fits(segments []string) bool {
 					return false
 				}
 			}
+
 			continue // whole-segment param: any single segment fits
 		}
+
 		if el.name != segments[i] {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -153,9 +160,11 @@ func relativePath(reqURL *url.URL, serverURL string) string {
 	if base.Path != "" && base.Path != "/" {
 		rel = strings.TrimPrefix(rel, strings.TrimSuffix(base.Path, "/"))
 	}
+
 	if rel == "" {
 		rel = "/"
 	}
+
 	return rel
 }
 
@@ -165,6 +174,7 @@ func pathSegments(path string) []string {
 	if trimmed == "" {
 		return []string{""}
 	}
+
 	return strings.Split(trimmed, "/")
 }
 
@@ -174,6 +184,7 @@ func pathSegments(path string) []string {
 func newParametricPath(urlPath string) (openapi.Path, []string) {
 	segments := pathSegments(urlPath)
 	parts := make([]string, len(segments))
+
 	var paramNames []string
 
 	for i, seg := range segments {
@@ -221,6 +232,7 @@ func extractEmbeddedParam(seg string) (prefix, paramName, suffix string, ok bool
 	for i < len(seg) && ((seg[i] >= 'a' && seg[i] <= 'z') || (seg[i] >= 'A' && seg[i] <= 'Z')) {
 		i++
 	}
+
 	if i == 0 {
 		return "", "", "", false
 	}
@@ -230,6 +242,7 @@ func extractEmbeddedParam(seg string) (prefix, paramName, suffix string, ok bool
 	for j < len(seg) && seg[j] >= '0' && seg[j] <= '9' {
 		j++
 	}
+
 	if j-i < 4 {
 		return "", "", "", false
 	}
@@ -246,6 +259,7 @@ func deriveParamName(segments []string, i int) string {
 		singular := singularize(prev)
 		return singular + "Id"
 	}
+
 	return "id"
 }
 
@@ -254,11 +268,14 @@ func singularize(word string) string {
 	if strings.HasSuffix(word, "ies") {
 		return word[:len(word)-3] + "y"
 	}
+
 	if strings.HasSuffix(word, "ses") || strings.HasSuffix(word, "xes") || strings.HasSuffix(word, "zes") {
 		return word[:len(word)-2]
 	}
+
 	if strings.HasSuffix(word, "s") && len(word) > 1 {
 		return word[:len(word)-1]
 	}
+
 	return word
 }

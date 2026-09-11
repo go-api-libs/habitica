@@ -98,6 +98,7 @@ func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	if t.cache == nil {
 		t.cache = map[string]cassette.Response{}
 	}
+
 	t.cache[key] = cResp
 
 	return resp, nil
@@ -144,6 +145,7 @@ func requestKey(r cassette.Request) string {
 
 	if len(r.Body) > 0 {
 		h := sha256.Sum256(r.Body)
+
 		b.WriteByte('\n')
 		b.WriteString(hex.EncodeToString(h[:]))
 	}
@@ -152,6 +154,7 @@ func requestKey(r cassette.Request) string {
 		h := sha256.New()
 		keys := slices.Collect(maps.Keys(r.Headers))
 		slices.Sort(keys)
+
 		for _, k := range keys {
 			if k == "Authorization" {
 				continue
@@ -164,6 +167,7 @@ func requestKey(r cassette.Request) string {
 
 			fmt.Fprintf(h, "%s: %s", k, vals[0]) //nolint:errcheck
 		}
+
 		b.WriteByte('\n')
 		b.WriteString(string(h.Sum(nil)))
 	}

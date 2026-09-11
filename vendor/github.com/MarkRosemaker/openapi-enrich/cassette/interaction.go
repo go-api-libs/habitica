@@ -41,6 +41,7 @@ func NewRequest(req *http.Request) (Request, error) {
 	// Drain and restore the request body.
 	body, err := io.ReadAll(req.Body)
 	req.Body.Close()
+
 	if err != nil {
 		return r, err
 	}
@@ -89,6 +90,7 @@ func NewResponse(resp *http.Response) (Response, error) {
 	// Drain and restore the response body.
 	body, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
+
 	if err != nil {
 		return r, err
 	}

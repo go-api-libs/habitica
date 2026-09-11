@@ -23,6 +23,7 @@ func hoistSecurity(doc *openapi.Document) {
 			ops = append(ops, op)
 		}
 	}
+
 	if len(ops) == 0 {
 		return
 	}
@@ -55,6 +56,7 @@ func allOpsHave(ops []*openapi.Operation, req openapi.SecurityRequirement) bool 
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -66,9 +68,11 @@ func removeReq(reqs openapi.SecurityRequirements, req openapi.SecurityRequiremen
 			out = append(out, r)
 		}
 	}
+
 	if len(out) == 0 {
 		return nil
 	}
+
 	return out
 }
 
@@ -79,5 +83,6 @@ func containsReq(reqs []openapi.SecurityRequirement, req openapi.SecurityRequire
 			return true
 		}
 	}
+
 	return false
 }
