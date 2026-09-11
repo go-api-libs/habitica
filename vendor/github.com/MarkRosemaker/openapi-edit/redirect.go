@@ -52,6 +52,7 @@ func RedirectSchema(doc *openapi.Document, oldName, newName, description string)
 		if description != "" {
 			r.Ref.Description = description
 		}
+
 		r.Ref.Identifier = new
 	})
 
