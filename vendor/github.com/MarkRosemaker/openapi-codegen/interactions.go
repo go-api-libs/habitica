@@ -336,6 +336,7 @@ func bodyLiteral(doc *ir.Document, goType string, v any) string {
 			if lit, ok := enumLiteral(s, v); ok {
 				return lit
 			}
+		default:
 		}
 
 		// SchemaKindAlias, SchemaKindMap, SchemaKindUnion, or an enum value

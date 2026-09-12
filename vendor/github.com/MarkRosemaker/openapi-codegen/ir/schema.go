@@ -92,6 +92,7 @@ func isDateTimeOrIntegerOneOf(s *openapi.Schema) bool {
 			}
 		case openapi.TypeInteger:
 			hasInteger = true
+		default:
 		}
 	}
 
@@ -401,6 +402,7 @@ func getField(jsonName string, propRef *openapi.SchemaRef, requiredSet map[strin
 			switch v.Format {
 			case openapi.FormatURI, openapi.FormatUUID:
 				goType.IsPointer = true
+			default:
 			}
 		default:
 			goType.IsPointer = true

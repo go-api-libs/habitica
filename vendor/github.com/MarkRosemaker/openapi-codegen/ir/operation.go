@@ -56,6 +56,7 @@ func FromOperation(
 			queryParams = append(queryParams, param)
 		case openapi.ParameterLocationHeader:
 			headerParams = append(headerParams, param)
+		default:
 		}
 	}
 
