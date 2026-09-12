@@ -257,7 +257,7 @@ func maskValue(dec *jsontext.Decoder, enc *jsontext.Encoder, r rules, sc scope) 
 
 func maskToken(tok jsontext.Token, r rules, sc scope) jsontext.Token {
 	switch tok.Kind() {
-	case '"':
+	case jsontext.KindString:
 		s := tok.String()
 
 		switch {
@@ -282,11 +282,12 @@ func maskToken(tok jsontext.Token, r rules, sc scope) jsontext.Token {
 		}
 
 		return jsontext.String(replaceLiterals(s, r.values))
-	case '0':
+	case jsontext.KindNumber:
 		if sc.all {
 			// A masked number stays a number, so the inferred type is unchanged.
 			return jsontext.Int(0)
 		}
+	default:
 	}
 
 	return tok.Clone()
