@@ -21,13 +21,16 @@ TOOL_BIN := $(shell go env GOPATH)/bin
 endif
 export PATH := $(TOOL_BIN):$(PATH)
 
-.PHONY: all ci build run lint vet vuln test test-race cover format fix tidy deps generate verify doc tools clean
+.PHONY: all ci ready build run lint vet vuln test test-race cover format fix tidy deps generate verify doc tools clean
 
 # ci, plus the checks that need the network.
 all: ci vuln
 
-# Before every commit. Needs no network beyond the module cache.
-ci: fix verify vet test-race build
+# ready, plus a stop on anything left unregenerated.
+ci: ready verify
+
+# After any code change. Needs no network beyond the module cache.
+ready: fix generate vet test-race build
 
 build:
 	mkdir -p bin
@@ -77,7 +80,7 @@ generate:
 	go generate ./...
 	devtool update
 
-# Run on a commit: it reports through git, so your own edits look like drift.
+# For a runner that did not just regenerate: it reports through git, so your own uncommitted edits look like drift.
 verify: generate
 	git diff --exit-code
 
