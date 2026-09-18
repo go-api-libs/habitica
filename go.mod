@@ -10,9 +10,9 @@ tool (
 )
 
 require (
-	github.com/MarkRosemaker/jsonutil v0.0.0-20260918135842-52d5b7cf9a2e
+	github.com/MarkRosemaker/jsonutil v0.0.0-20260918183702-d74628ea741c
 	github.com/MarkRosemaker/openapi-enrich v0.0.0-20260918180733-77357b46d638
-	github.com/go-api-libs/api v0.0.0-20260918135843-6d89b4c494cb
+	github.com/go-api-libs/api v0.0.0-20260918183703-358e12107fa2
 	github.com/go-api-libs/types v0.0.0-20260821232109-0cf45378823e
 )
 
