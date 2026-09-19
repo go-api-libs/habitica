@@ -16,8 +16,8 @@ github.com/MarkRosemaker/openapi-compress v0.0.0-20260919113829-2c75405522b3 h1:
 github.com/MarkRosemaker/openapi-compress v0.0.0-20260919113829-2c75405522b3/go.mod h1:SHNGvDFVtjCTWr3sYHhDdPQdJ40wPwDMvl+mL7GfRVY=
 github.com/MarkRosemaker/openapi-edit v0.0.0-20260919112433-34f437b66f2f h1:wFr2n++LLNz23NMrP0YgL8nboaPM+E0930Xeoiv4vP4=
 github.com/MarkRosemaker/openapi-edit v0.0.0-20260919112433-34f437b66f2f/go.mod h1:9PA9LgQgpUYGQLmkuV8DbLpDOAumEokozpYdO2izecc=
-github.com/MarkRosemaker/openapi-enrich v0.0.0-20260919113209-f4319c65997c h1:tA1QGkX+TAdx16plTNVuRIXyYHPi1QZGZWqiVShF/4c=
-github.com/MarkRosemaker/openapi-enrich v0.0.0-20260919113209-f4319c65997c/go.mod h1:SgYlkuz0F1Je7w9A7yoQVItlJMN19qcjAe/XbktiYn8=
+github.com/MarkRosemaker/openapi-enrich v0.0.0-20260919213515-9bcddeb850f8 h1:ri65kqyxPqpd0xLjgGxfPuDd0ujYc1cO/36hctDYrUw=
+github.com/MarkRosemaker/openapi-enrich v0.0.0-20260919213515-9bcddeb850f8/go.mod h1:3NYCByp08HZDgmG1hroGex7uhldNvoZkG6uUioiC44M=
 github.com/MarkRosemaker/openapi-flatten v0.0.0-20260919112445-26366da88002 h1:8c8wFdn9dps/fnohiuZrs+HAGuoHmC/7btY3WN5MpRw=
 github.com/MarkRosemaker/openapi-flatten v0.0.0-20260919112445-26366da88002/go.mod h1:hyUlE9gQA9IJmyyTfOGXVFOhTl+lFr4jkKBwl3ogDcQ=
 github.com/MarkRosemaker/openapi-merge v0.0.0-20260919112433-1a489fdc23a6 h1:0AvUpL3wuXLFZZBVJNYARHcYiUnTmjcfIJhYZWp4TFo=
@@ -38,8 +38,6 @@ github.com/go-quicktest/qt v1.102.0 h1:HSQxCeh5YZH3EL3W39ixjtyaEhcWSXQHtHnMBzSs4
 github.com/go-quicktest/qt v1.102.0/go.mod h1:p4lGIVX+8Wa6ZPNDvqcxq36XpUDLh42FLetFU7odllI=
 github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
 github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
-github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
-github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=

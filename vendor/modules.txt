@@ -30,7 +30,7 @@ github.com/MarkRosemaker/openapi-compress/cmd/openapi-compress
 # github.com/MarkRosemaker/openapi-edit v0.0.0-20260919112433-34f437b66f2f
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-edit
-# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260919113209-f4319c65997c
+# github.com/MarkRosemaker/openapi-enrich v0.0.0-20260919213515-9bcddeb850f8
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/cassette
@@ -61,9 +61,6 @@ github.com/go-api-libs/api
 # github.com/go-api-libs/types v0.0.0-20260821232109-0cf45378823e
 ## explicit; go 1.27
 github.com/go-api-libs/types
-# github.com/google/uuid v1.6.0
-## explicit
-github.com/google/uuid
 # github.com/spf13/afero v1.15.0
 ## explicit; go 1.23.0
 github.com/spf13/afero

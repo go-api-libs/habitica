@@ -8,12 +8,12 @@ import (
 	"net/url"
 	"strconv"
 	"time"
+	"uuid"
 
 	"github.com/MarkRosemaker/openapi"
 	"github.com/MarkRosemaker/openapi-enrich/cassette"
 	merge "github.com/MarkRosemaker/openapi-merge"
 	apitypes "github.com/go-api-libs/types"
-	"github.com/google/uuid"
 )
 
 // newSchemaFromJSON infers an OpenAPI schema from a JSON-encoded value.
@@ -226,6 +226,7 @@ func stringFormat(s string) openapi.Format {
 		if ip.To4() != nil {
 			return openapi.FormatIPv4
 		}
+
 		return openapi.FormatIPv6
 	}
 
@@ -234,5 +235,6 @@ func stringFormat(s string) openapi.Format {
 
 // isUUID reports whether s matches the UUID format.
 func isUUID(s string) bool {
-	return uuid.Validate(s) == nil
+	_, err := uuid.Parse(s)
+	return err == nil
 }
