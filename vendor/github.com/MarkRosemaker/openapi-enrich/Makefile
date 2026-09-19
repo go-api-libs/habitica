@@ -30,7 +30,7 @@ all: ci vuln
 ci: ready verify
 
 # After any code change. Needs no network beyond the module cache.
-ready: fix generate vet test-race build
+ready: generate fix vet test-race build
 
 build:
 	mkdir -p bin
