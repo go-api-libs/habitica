@@ -1,7 +1,7 @@
 # cloud.google.com/go v0.123.0
 ## explicit; go 1.24.0
 cloud.google.com/go/civil
-# github.com/MarkRosemaker/errpath v0.0.0-20260920105750-ecc3a0fa028d
+# github.com/MarkRosemaker/errpath v0.0.0-20260920114347-639d98dfaa6b
 ## explicit; go 1.23.2
 github.com/MarkRosemaker/errpath
 # github.com/MarkRosemaker/json2yaml v0.0.0-20260920104944-bbfc9b6648b0
@@ -10,24 +10,24 @@ github.com/MarkRosemaker/json2yaml
 # github.com/MarkRosemaker/jsonutil v0.0.0-20260920104948-8e763fe0b771
 ## explicit; go 1.27
 github.com/MarkRosemaker/jsonutil
-# github.com/MarkRosemaker/openapi v0.0.0-20260919112358-1dc07f1fec35
+# github.com/MarkRosemaker/openapi v0.0.0-20260920114109-8d00896b5c94
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi
-# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260920110850-c9f09828b818
+# github.com/MarkRosemaker/openapi-codegen v0.0.0-20260920114429-0a7890edd014
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/cmd/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/config
 github.com/MarkRosemaker/openapi-codegen/ir
 github.com/MarkRosemaker/openapi-codegen/render
-# github.com/MarkRosemaker/openapi-compare v0.0.0-20260920110526-9ab31f17c6c5
+# github.com/MarkRosemaker/openapi-compare v0.0.0-20260920112440-e132d45a9e56
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-compare/schema
-# github.com/MarkRosemaker/openapi-compress v0.0.0-20260920110520-dfcff59f9e4d
+# github.com/MarkRosemaker/openapi-compress v0.0.0-20260920114015-c3ddc13b2e08
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-compress
 github.com/MarkRosemaker/openapi-compress/cmd/openapi-compress
-# github.com/MarkRosemaker/openapi-edit v0.0.0-20260920110552-062bcd060dfa
+# github.com/MarkRosemaker/openapi-edit v0.0.0-20260920112442-cec629869a77
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-edit
 # github.com/MarkRosemaker/openapi-enrich v0.0.0-20260920113320-f5f6670a522f
@@ -36,7 +36,7 @@ github.com/MarkRosemaker/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/cassette
 github.com/MarkRosemaker/openapi-enrich/cmd/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/recorder
-# github.com/MarkRosemaker/openapi-flatten v0.0.0-20260920105131-108c46f7a72f
+# github.com/MarkRosemaker/openapi-flatten v0.0.0-20260920112514-84b27038cbce
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-flatten
 github.com/MarkRosemaker/openapi-flatten/cmd/openapi-flatten
