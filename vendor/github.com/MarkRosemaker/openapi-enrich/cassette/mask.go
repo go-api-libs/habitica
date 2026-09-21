@@ -403,6 +403,7 @@ func IsMasked(s string) bool {
 
 	// A run of asterisks, optionally still carrying its scheme.
 	s = strings.TrimPrefix(s, "Bearer ")
+	s = strings.TrimPrefix(s, "Basic ")
 
 	return s != "" && strings.Trim(s, "*") == ""
 }
@@ -410,7 +411,10 @@ func IsMasked(s string) bool {
 // maskString replaces s with a value of the same shape, so that a format
 // inferred from the masked recording matches the one inferred from the original.
 func maskString(s string) string {
-	const bearer = "Bearer "
+	const (
+		bearer = "Bearer "
+		basic  = "Basic "
+	)
 
 	switch {
 	case s == "":
@@ -425,6 +429,8 @@ func maskString(s string) string {
 		return maskedMAC
 	case strings.HasPrefix(s, bearer):
 		return bearer + strings.Repeat("*", len(s)-len(bearer))
+	case strings.HasPrefix(s, basic):
+		return basic + strings.Repeat("*", len(s)-len(basic))
 	default:
 		return strings.Repeat("*", len(s))
 	}
