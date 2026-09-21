@@ -15,6 +15,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"slices"
+	"strings"
 	"testing"
 	"uuid"
 
@@ -747,9 +748,13 @@ func replay(t *testing.T) http.RoundTripper {
 			ia.Request.Headers.Del("Content-Type")
 		}
 
-		if auth := r.Headers.Get("Authorization"); auth == "Basic dXNlcjpwYXNz" {
-			r.Headers.Set("Authorization", "**************************************************************")
+		gotScheme, _, _ := strings.Cut(r.Headers.Get("Authorization"), " ")
+		wantScheme, _, _ := strings.Cut(ia.Request.Headers.Get("Authorization"), " ")
+		if gotScheme != wantScheme {
+			return nil, fmt.Errorf("interaction #%d: got Authorization scheme %q, want %q", idx, gotScheme, wantScheme)
 		}
+		r.Headers.Del("Authorization")
+		ia.Request.Headers.Del("Authorization")
 
 		if !maps.EqualFunc(r.Headers, ia.Request.Headers, slices.Equal) {
 			return nil, fmt.Errorf("interaction #%d: got headers %s, want %s", idx, r.Headers, ia.Request.Headers)
