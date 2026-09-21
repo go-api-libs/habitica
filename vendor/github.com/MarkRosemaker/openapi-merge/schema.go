@@ -2,7 +2,6 @@ package merge
 
 import (
 	"bytes"
-	"cmp"
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"fmt"
@@ -13,27 +12,58 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
+// Schema merges b into a, so that a describes every value either one did.
+// b may be mutated too (e.g. when a turns out to be the one generated from
+// null, or when the two disagree on type in a reconcilable way), but a is
+// always the result: callers should keep using a afterward, not b.
 func Schema(a, b *openapi.Schema, isParam bool) error {
-	aString, _ := json.Marshal(a)
-	bString, _ := json.Marshal(b)
-
-	// if string(a.Example) == `"link_mention"` && a.Enum != nil &&
-	// 	string(b.Example) != `"link_mention"` {
-	// 	fmt.Printf("a: %s\n", string(aString))
-	// 	fmt.Printf("b: %s\n", string(bString))
-
-	// 	return fmt.Errorf("how to merge")
-	// }
-
-	// merge the title and description
 	a.Title = mergeString(a.Title, b.Title)
 	a.Description = mergeString(a.Description, b.Description)
 
-	// if a already represents multiple possible shapes (e.g. a date that can
-	// be either a date-time string or a unix timestamp integer), merge b into
+	if handled, err := mergeIfOneOf(a, b); handled {
+		return err
+	}
+
+	tp, err := effectiveType(a)
+	if err != nil {
+		return err
+	}
+
+	tp = reconcileGeneratedFromNull(a, b, tp)
+	improveExample(a, b)
+
+	if tp != b.Type {
+		handled, err := reconcileTypeMismatch(a, b, tp, isParam)
+		if err != nil {
+			return err
+		}
+
+		if handled {
+			return nil
+		}
+	}
+
+	if err := reconcileFormats(a, b); err != nil {
+		return err
+	}
+
+	if err := mergeEnumFromExample(a, b); err != nil {
+		return err
+	}
+
+	return mergeByType(a, b, tp)
+}
+
+// mergeIfOneOf merges b into a, or a into b, when either already represents
+// multiple possible shapes (e.g. a date that can be either a date-time
+// string or a unix timestamp integer) -- see [mergeOneOf]. handled reports
+// whether this fully resolved the merge, in which case err (nil or not) is
+// Schema's own result.
+func mergeIfOneOf(a, b *openapi.Schema) (handled bool, err error) {
+	// if a already represents multiple possible shapes, merge b into
 	// whichever alternative it matches
 	if len(a.OneOf) > 0 {
-		return mergeOneOf(a, b)
+		return true, mergeOneOf(a, b)
 	}
 
 	// symmetric case: b is the one that already has multiple possible shapes.
@@ -43,52 +73,67 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 		b.Title, b.Description = a.Title, a.Description
 
 		if err := mergeOneOf(b, a); err != nil {
-			return err
+			return true, err
 		}
 
 		*a = *b
 
-		return nil
+		return true, nil
 	}
 
+	return false, nil
+}
+
+// effectiveType is a.Type, or the common object type its allOf resolves to
+// when a has one. Only an allOf of object schemas is supported.
+func effectiveType(a *openapi.Schema) (openapi.DataType, error) {
 	tp := a.Type
 
-	if len(a.AllOf) > 0 {
-		if tp != "" && tp != openapi.TypeObject {
-			return fmt.Errorf("type %q with allOf not implemented yet", tp)
-		}
+	if len(a.AllOf) == 0 {
+		return tp, nil
+	}
 
-		tp = a.AllOf[0].Value.Type
+	if tp != "" && tp != openapi.TypeObject {
+		return "", fmt.Errorf("type %q with allOf not implemented yet", tp)
+	}
 
-		if tp != openapi.TypeObject {
-			return fmt.Errorf("allOf with type %q not implemented yet", tp)
-		}
+	tp = a.AllOf[0].Value.Type
 
-		idx := slices.IndexFunc(a.AllOf[1:], func(s *openapi.SchemaRef) bool {
-			return s.Value.Type != tp
-		})
-		if idx != -1 {
-			return &errpath.ErrField{
-				Field: "allOf",
-				Err: &errpath.ErrIndex{
-					Index: idx + 1,
-					Err: &errpath.ErrField{
-						Field: "type",
-						Err: fmt.Errorf("%q != %q",
-							a.AllOf[idx+1].Value.Type, tp),
-					},
+	if tp != openapi.TypeObject {
+		return "", fmt.Errorf("allOf with type %q not implemented yet", tp)
+	}
+
+	idx := slices.IndexFunc(a.AllOf[1:], func(s *openapi.SchemaRef) bool {
+		return s.Value.Type != tp
+	})
+	if idx != -1 {
+		return "", &errpath.ErrField{
+			Field: "allOf",
+			Err: &errpath.ErrIndex{
+				Index: idx + 1,
+				Err: &errpath.ErrField{
+					Field: "type",
+					Err: fmt.Errorf("%q != %q",
+						a.AllOf[idx+1].Value.Type, tp),
 				},
-			}
+			},
 		}
 	}
 
-	// if one was generated from null (meaning we had no info about its type),
-	// set the type and format of the other
-	if isGeneratedFromNull(b) {
+	return tp, nil
+}
+
+// reconcileGeneratedFromNull sets the type and format of whichever of a, b
+// was generated from a null value (meaning we had no real information about
+// its type) from the other, and returns the effective type to merge as: tp
+// unchanged when neither was, b.Type when a was.
+func reconcileGeneratedFromNull(a, b *openapi.Schema, tp openapi.DataType) openapi.DataType {
+	switch {
+	case isGeneratedFromNull(b):
 		b.Type = tp
 		b.Format = a.Format
 		// TODO: a.Nullable = true
-	} else if isGeneratedFromNull(a) {
+	case isGeneratedFromNull(a):
 		tp = b.Type
 		a.Type = tp
 		a.Format = b.Format
@@ -98,54 +143,70 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 		}
 	}
 
-	// improve the example
-	if a.Example == nil ||
-		(string(a.Example) == null && b.Example != nil) {
+	return tp
+}
+
+// improveExample keeps a's example unless it has none, or has only "null"
+// where b's is a real value.
+func improveExample(a, b *openapi.Schema) {
+	if a.Example == nil || (string(a.Example) == null && b.Example != nil) {
 		a.Example = b.Example
 	}
+}
 
-	// check that the types are the same
-	if tp != b.Type {
-		// HACK: allow schemas that don't quite match but were generated by analyzing json
-		// The solution lies in first improving apilib or one of its dependencies
-		// to not generate faulty schemas in the first place - then those schemas can be properly merged
-		switch {
-		case isParam && (a.Type == openapi.TypeArray || b.Type == openapi.TypeArray):
-			if err := mergeArrayParamMismatch(a, b); err != nil {
-				return err
-			}
-		case tp == openapi.TypeNumber && b.Type == openapi.TypeString && isInfinityExample(bString),
-			b.Type == openapi.TypeNumber && tp == openapi.TypeString && isZeroDoubleExample(bString):
-			*b = *a
-			return nil
-		case b.Type == openapi.TypeNumber && tp == openapi.TypeString && isInfinityExample(aString):
-			*a = *b
-			return nil
-		case a.Type == openapi.TypeNumber && b.Type == openapi.TypeInteger:
-			*b = *a
-			return nil
-		case a.Type == openapi.TypeInteger && b.Type == openapi.TypeNumber:
-			*a = *b
-			return nil
-		case isDateTimeString(a) && b.Type == openapi.TypeInteger,
-			isDateTimeString(b) && a.Type == openapi.TypeInteger:
-			// a date can be expressed as a date-time string or as a unix
-			// timestamp integer; document both possibilities with oneOf
-			// rather than silently discarding one of them
-			mergeDateTimeOrTimestamp(a, b)
-			return nil
-		case a.Type == openapi.TypeInteger && b.Type == openapi.TypeString:
-			*b = *a
-			return nil
-		default:
-			fmt.Printf("a: %s\n", string(aString))
-			fmt.Printf("b: %s\n", string(bString))
-			return &errpath.ErrField{Field: "type", Err: fmt.Errorf("%q != %q", tp, b.Type)}
+// reconcileTypeMismatch handles a and b disagreeing on type, which a strict
+// merge would otherwise reject outright.
+//
+// HACK: allow schemas that don't quite match but were generated by analyzing
+// json. The solution lies in first improving apilib or one of its
+// dependencies to not generate faulty schemas in the first place -- then
+// those schemas can be properly merged.
+//
+// handled reports whether the merge is now complete. It is false only for
+// the isParam/array case, whose own call already rewrote a and b to be
+// identical, so the merge continues below into the format and type checks.
+func reconcileTypeMismatch(a, b *openapi.Schema, tp openapi.DataType, isParam bool) (handled bool, err error) {
+	aJSON, bJSON := jsonString(a), jsonString(b)
+
+	switch {
+	case isParam && (a.Type == openapi.TypeArray || b.Type == openapi.TypeArray):
+		if err := mergeArrayParamMismatch(a, b); err != nil {
+			return true, err
 		}
-	}
 
-	// if one doesn't conform to the format,
-	// we cannot guarantee the format
+		return false, nil
+	case tp == openapi.TypeNumber && b.Type == openapi.TypeString && isInfinityExample(bJSON),
+		b.Type == openapi.TypeNumber && tp == openapi.TypeString && isZeroDoubleExample(bJSON):
+		*b = *a
+		return true, nil
+	case b.Type == openapi.TypeNumber && tp == openapi.TypeString && isInfinityExample(aJSON):
+		*a = *b
+		return true, nil
+	case a.Type == openapi.TypeNumber && b.Type == openapi.TypeInteger:
+		*b = *a
+		return true, nil
+	case a.Type == openapi.TypeInteger && b.Type == openapi.TypeNumber:
+		*a = *b
+		return true, nil
+	case isDateTimeString(a) && b.Type == openapi.TypeInteger,
+		isDateTimeString(b) && a.Type == openapi.TypeInteger:
+		// a date can be expressed as a date-time string or as a unix
+		// timestamp integer; document both possibilities with oneOf
+		// rather than silently discarding one of them
+		mergeDateTimeOrTimestamp(a, b)
+		return true, nil
+	case a.Type == openapi.TypeInteger && b.Type == openapi.TypeString:
+		*b = *a
+		return true, nil
+	default:
+		return true, mismatchError("type", fmt.Errorf("%q != %q", tp, b.Type), a, b)
+	}
+}
+
+// reconcileFormats resolves a and b's formats when either is unset, and
+// reports a mismatch it could not resolve.
+func reconcileFormats(a, b *openapi.Schema) error {
+	// if one doesn't conform to the format, we cannot guarantee the format
 	if a.Format == "" || b.Format == "" {
 		switch a.Type {
 		case openapi.TypeInteger:
@@ -178,337 +239,150 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 
 	// check that the formats are the same
 	if a.Format != b.Format {
-		fmt.Printf("a: %s\n", string(aString))
-		fmt.Printf("b: %s\n", string(bString))
-
-		return &errpath.ErrField{Field: "format", Err: fmt.Errorf("%q != %q", a.Format, b.Format)}
+		return mismatchError("format", fmt.Errorf("%q != %q", a.Format, b.Format), a, b)
 	}
 
-	// add the example from b to the enum of a; enums are no longer
-	// string-only, so this applies regardless of the schema's type
-	if a.Enum != nil && b.Example != nil {
-		ex := b.Example.Clone()
-		if err := ex.Canonicalize(); err != nil {
-			return &errpath.ErrField{Field: "example", Err: err}
-		}
+	return nil
+}
 
-		found := false
-		for i, enum := range a.Enum {
-			enum = enum.Clone()
-			if err := enum.Canonicalize(); err != nil {
-				return &errpath.ErrField{
-					Field: "enum",
-					Err:   &errpath.ErrIndex{Index: i, Err: err},
-				}
-			}
+// mergeEnumFromExample adds b's example to a's enum, when a has one and
+// doesn't already have it. Enums are no longer string-only, so this applies
+// regardless of the schema's type.
+func mergeEnumFromExample(a, b *openapi.Schema) error {
+	if a.Enum == nil || b.Example == nil {
+		return nil
+	}
 
-			if bytes.Equal(enum, ex) {
-				found = true
-				break
+	ex := b.Example.Clone()
+	if err := ex.Canonicalize(); err != nil {
+		return &errpath.ErrField{Field: "example", Err: err}
+	}
+
+	for i, enum := range a.Enum {
+		enum = enum.Clone()
+		if err := enum.Canonicalize(); err != nil {
+			return &errpath.ErrField{
+				Field: "enum",
+				Err:   &errpath.ErrIndex{Index: i, Err: err},
 			}
 		}
 
-		if !found {
-			a.Enum = append(a.Enum, ex)
+		if bytes.Equal(enum, ex) {
+			return nil
 		}
 	}
 
-	// merge according to type
+	a.Enum = append(a.Enum, ex)
+
+	return nil
+}
+
+// mergeByType finishes the merge according to tp, a and b's now-agreed type.
+func mergeByType(a, b *openapi.Schema, tp openapi.DataType) error {
 	switch tp {
 	case openapi.TypeString: // nothing left to do here; enum handled above
 	case openapi.TypeObject:
-		if a.AdditionalProperties != nil {
-			// is a string map
-			if b.AdditionalProperties != nil {
-				if err := Schema(a.AdditionalProperties.Value, b.AdditionalProperties.Value, false); err != nil {
-					return &errpath.ErrField{Field: "additionalProperties", Err: err}
-				}
-			}
-
-			// merge all property values with prop
-			for _, prop := range b.Properties {
-				if err := Schema(a.AdditionalProperties.Value, prop.Value, false); err != nil {
-					return &errpath.ErrField{Field: "additionalProperties", Err: err}
-				}
-			}
-		} else {
-			// Ensure a.Properties is initialized so schemaRefs can append to it
-			// when a has no properties yet but b does.
-			if a.Properties == nil && len(b.Properties) > 0 {
-				a.Properties = openapi.SchemaRefs{}
-			}
-
-			// get the maps that contains all properties
-			allProps := maps.Clone(a.Properties)
-			for _, allOf := range a.AllOf {
-				for k, prop := range allOf.Value.Properties.ByIndex() {
-					allProps.Set(k, &openapi.SchemaRef{Value: prop.Value})
-				}
-			}
-
-			// get the map that we should add properties from b from
-			addNewProps := a.Properties
-			field := "properties"
-			if len(a.AllOf) > 0 {
-				field = "allOf"
-				addNewProps = openapi.SchemaRefs{}
-			}
-
-			if err := schemaRefs(allProps, &addNewProps, b.Properties); err != nil {
-				return &errpath.ErrField{Field: field, Err: err}
-			}
-
-			if len(a.AllOf) > 0 && len(addNewProps) > 0 {
-				a.AllOf = append(a.AllOf, &openapi.SchemaRef{Value: &openapi.Schema{
-					Type:       openapi.TypeObject,
-					Properties: addNewProps,
-				}})
-			}
+		if err := mergeObjectProperties(a, b); err != nil {
+			return err
 		}
-
-		// remove properties if they are none
-		if len(a.Properties) == 0 {
-			a.Properties = nil
-		}
-	case openapi.TypeBoolean: // nothing to do
-	case openapi.TypeInteger: // nothing to do
-	case openapi.TypeNumber: // nothing to do
+	case openapi.TypeBoolean, openapi.TypeInteger, openapi.TypeNumber: // nothing to do
 	case openapi.TypeArray:
 		// guard against nil pointer if a schema is invalid
-		a.Items = cmp.Or(a.Items, defaultSchemaRef())
-		b.Items = cmp.Or(b.Items, defaultSchemaRef())
+		if a.Items == nil {
+			a.Items = defaultSchemaRef()
+		}
+
+		if b.Items == nil {
+			b.Items = defaultSchemaRef()
+		}
 
 		if err := Schema(a.Items.Value, b.Items.Value, false); err != nil {
 			return err
 		}
 	default:
-		fmt.Printf("a: %s\n", string(aString))
-		fmt.Printf("b: %s\n", string(bString))
-
-		return &errpath.ErrField{Field: "type", Err: fmt.Errorf("%q unimplemented", tp)}
+		return mismatchError("type", fmt.Errorf("%q unimplemented", tp), a, b)
 	}
 
-	// // validate if format is valid for type
-	// switch s.Format {
-	// case "": // no format
-	// case FormatInt32, FormatInt64:
-	// 	if s.Type != TypeInteger {
-	// 		return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-	// 			Value:   s.Format,
-	// 			Message: fmt.Sprintf("only valid for integer type, got %s", s.Type),
-	// 		}}
-	// 	}
-	// case FormatFloat, FormatDouble:
-	// 	if s.Type != TypeNumber {
-	// 		return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-	// 			Value:   s.Format,
-	// 			Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
-	// 		}}
-	// 	}
-	// case FormatDateTime, FormatEmail, FormatPassword,
-	// 	FormatUUID, FormatURI, FormatURIRef, FormatZipCode,
-	// 	FormatIPv4, FormatIPv6:
-	// 	if s.Type != TypeString {
-	// 		return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-	// 			Value:   s.Format,
-	// 			Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
-	// 		}}
-	// 	}
-	// case FormatDuration:
-	// 	switch s.Type {
-	// 	case TypeInteger, TypeString:
-	// 	default:
-	// 		return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-	// 			Value:   s.Format,
-	// 			Message: fmt.Sprintf("only valid for integer or string type, got %s", s.Type),
-	// 		}}
-	// 	}
-	// default:
-	// 	return fmt.Errorf("unimplemented format: %s", s.Format)
-	// }
+	return nil
+}
 
-	// for i, v := range s.AllOf {
-	// 	if err := v.Validate(); err != nil {
-	// 		return &errpath.ErrField{
-	// 			Field: "allOf",
-	// 			Err:   &errpath.ErrIndex{Index: i, Err: err},
-	// 		}
-	// 	}
-	// }
+// mergeObjectProperties merges b's properties into a's, either directly or,
+// when a is a string map, into its additionalProperties schema.
+func mergeObjectProperties(a, b *openapi.Schema) error {
+	if a.AdditionalProperties != nil {
+		// is a string map
+		if b.AdditionalProperties != nil {
+			if err := Schema(a.AdditionalProperties.Value, b.AdditionalProperties.Value, false); err != nil {
+				return &errpath.ErrField{Field: "additionalProperties", Err: err}
+			}
+		}
 
-	// // Integer / Number
+		// merge all property values with prop
+		for _, prop := range b.Properties {
+			if err := Schema(a.AdditionalProperties.Value, prop.Value, false); err != nil {
+				return &errpath.ErrField{Field: "additionalProperties", Err: err}
+			}
+		}
+	} else {
+		// Ensure a.Properties is initialized so schemaRefs can append to it
+		// when a has no properties yet but b does.
+		if a.Properties == nil && len(b.Properties) > 0 {
+			a.Properties = openapi.SchemaRefs{}
+		}
 
-	// // validate min and max
-	// if s.Type == TypeInteger {
-	// 	if s.Min != nil && *s.Min != float64(int(*s.Min)) {
-	// 		return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
-	// 			Value:   *s.Min,
-	// 			Message: "not an integer",
-	// 		}}
-	// 	}
+		// get the maps that contains all properties
+		allProps := maps.Clone(a.Properties)
+		for _, allOf := range a.AllOf {
+			for k, prop := range allOf.Value.Properties.ByIndex() {
+				allProps.Set(k, &openapi.SchemaRef{Value: prop.Value})
+			}
+		}
 
-	// 	if s.Max != nil && *s.Max != float64(int(*s.Max)) {
-	// 		return &errpath.ErrField{Field: "maximum", Err: &errpath.ErrInvalid[float64]{
-	// 			Value:   *s.Max,
-	// 			Message: "not an integer",
-	// 		}}
-	// 	}
-	// }
+		// get the map that we should add properties from b from
+		addNewProps := a.Properties
+		field := "properties"
+		if len(a.AllOf) > 0 {
+			field = "allOf"
+			addNewProps = openapi.SchemaRefs{}
+		}
 
-	// if s.Type == TypeNumber || s.Type == TypeInteger {
-	// 	if s.Min != nil && s.Max != nil && *s.Min > *s.Max {
-	// 		return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
-	// 			Value:   *s.Min,
-	// 			Message: fmt.Sprintf("minimum is greater than maximum (%v > %v)", *s.Min, *s.Max),
-	// 		}}
-	// 	}
-	// } else if s.Min != nil {
-	// 	return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
-	// 		Value:   *s.Min,
-	// 		Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
-	// 	}}
-	// } else if s.Max != nil {
-	// 	return &errpath.ErrField{Field: "maximum", Err: &errpath.ErrInvalid[float64]{
-	// 		Value:   *s.Max,
-	// 		Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
-	// 	}}
-	// }
+		if err := schemaRefs(allProps, &addNewProps, b.Properties); err != nil {
+			return &errpath.ErrField{Field: field, Err: err}
+		}
 
-	// // String
+		if len(a.AllOf) > 0 && len(addNewProps) > 0 {
+			a.AllOf = append(a.AllOf, &openapi.SchemaRef{Value: &openapi.Schema{
+				Type:       openapi.TypeObject,
+				Properties: addNewProps,
+			}})
+		}
+	}
 
-	// if s.Type != TypeString && s.Enum != nil {
-	// 	return &errpath.ErrField{Field: "enum", Err: &errpath.ErrInvalid[string]{
-	// 		Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
-	// 	}}
-	// }
-
-	// // Array
-
-	// // validate min and max items
-	// if s.Type == TypeArray {
-	// 	if s.MaxItems != nil && s.MinItems > *s.MaxItems {
-	// 		return &errpath.ErrField{Field: "minItems", Err: &errpath.ErrInvalid[uint]{
-	// 			Value:   s.MinItems,
-	// 			Message: fmt.Sprintf("minItems is greater than maxItems (%d > %d)", s.MinItems, *s.MaxItems),
-	// 		}}
-	// 	}
-
-	// 	if s.Items == nil {
-	// 		return &errpath.ErrField{Field: "items", Err: &errpath.ErrRequired{}}
-	// 	}
-
-	// 	// empty schema for items indicates a media type of application/octet-stream.
-	// 	if !s.Items.Value.isEmpty() {
-	// 		if err := s.Items.Validate(); err != nil {
-	// 			return &errpath.ErrField{Field: "items", Err: err}
-	// 		}
-	// 	}
-	// } else if s.MinItems != 0 {
-	// 	return &errpath.ErrField{Field: "minItems", Err: &errpath.ErrInvalid[uint]{
-	// 		Value:   s.MinItems,
-	// 		Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
-	// 	}}
-	// } else if s.MaxItems != nil {
-	// 	return &errpath.ErrField{Field: "maxItems", Err: &errpath.ErrInvalid[uint]{
-	// 		Value:   *s.MaxItems,
-	// 		Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
-	// 	}}
-	// } else if s.Items != nil {
-	// 	return &errpath.ErrField{Field: "items", Err: &errpath.ErrInvalid[string]{
-	// 		Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
-	// 	}}
-	// }
-
-	// // Object
-
-	// if s.Type == TypeObject {
-	// 	if err := s.Properties.Validate(); err != nil {
-	// 		return &errpath.ErrField{Field: "properties", Err: err}
-	// 	}
-
-	// 	for i, r := range s.Required {
-	// 		if _, ok := s.Properties[r]; ok {
-	// 			continue
-	// 		}
-
-	// 		return &errpath.ErrField{
-	// 			Field: "required",
-	// 			Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[string]{
-	// 				Value:   r,
-	// 				Message: "property does not exist",
-	// 			}},
-	// 		}
-	// 	}
-
-	// 	if s.AdditionalProperties != nil {
-	// 		if err := s.AdditionalProperties.Validate(); err != nil {
-	// 			return &errpath.ErrField{Field: "additionalProperties", Err: err}
-	// 		}
-	// 	}
-	// } else if s.Properties != nil {
-	// 	return &errpath.ErrField{Field: "properties", Err: &errpath.ErrInvalid[string]{
-	// 		Message: fmt.Sprintf("only valid for object type, got %s", s.Type),
-	// 	}}
-	// } else if s.AdditionalProperties != nil {
-	// 	return &errpath.ErrField{Field: "additionalProperties", Err: &errpath.ErrInvalid[string]{
-	// 		Message: fmt.Sprintf("only valid for object type, got %s", s.Type),
-	// 	}}
-	// }
-
-	// // validate default
-	// switch dflt := s.Default.(type) {
-	// case nil: // empty
-	// case string:
-	// 	if s.Type != TypeString {
-	// 		return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[string]{
-	// 			Value:   dflt,
-	// 			Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
-	// 		}}
-	// 	}
-
-	// 	if s.Enum != nil {
-	// 		if !slices.Contains(s.Enum, dflt) {
-	// 			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[string]{
-	// 				Value:   dflt,
-	// 				Message: fmt.Sprintf("is not one of the enums (%q)", s.Enum),
-	// 			}}
-	// 		}
-	// 	}
-	// case float64:
-	// 	switch s.Type {
-	// 	case TypeNumber: // fits
-	// 	case TypeInteger:
-	// 		if asInt := int(dflt); dflt != float64(asInt) {
-	// 			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[float64]{
-	// 				Value:   dflt,
-	// 				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
-	// 			}}
-	// 		} else {
-	// 			s.Default = asInt // set to int version
-	// 		}
-	// 	default:
-	// 		return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[float64]{
-	// 			Value:   dflt,
-	// 			Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
-	// 		}}
-	// 	}
-	// case int:
-	// 	switch s.Type {
-	// 	case TypeNumber, TypeInteger: // fits
-	// 	default:
-	// 		return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[int]{
-	// 			Value:   dflt,
-	// 			Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
-	// 		}}
-	// 	}
-	// default:
-	// 	return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
-	// 		Value:   s.Default,
-	// 		Message: fmt.Sprintf("unknown type %T", s.Default),
-	// 	}}
-	// }
+	// remove properties if they are none
+	if len(a.Properties) == 0 {
+		a.Properties = nil
+	}
 
 	return nil
+}
+
+// jsonString marshals s for a debug message or a shape comparison against
+// [infinityExample]/[zeroDoubleExample]. Only called on the type-mismatch
+// path, never on an ordinary merge, so it does not need to be cheap.
+func jsonString(s *openapi.Schema) string {
+	b, _ := json.Marshal(s)
+	return string(b)
+}
+
+// mismatchError builds the error for a merge that could not be resolved,
+// naming field and wrapping err, with a and b's own marshaled JSON appended
+// so whoever reads the error can see the schemas that did not match without
+// having to reproduce the merge.
+func mismatchError(field string, err error, a, b *openapi.Schema) error {
+	return &errpath.ErrField{
+		Field: field,
+		Err:   fmt.Errorf("%w\na: %s\nb: %s", err, jsonString(a), jsonString(b)),
+	}
 }
 
 func defaultSchemaRef() *openapi.SchemaRef {
@@ -542,12 +416,12 @@ const (
 	zeroDoubleExample = `{"type":"number","format":"double","example":0.0}`
 )
 
-func isInfinityExample(marshaledSchema []byte) bool {
-	return string(marshaledSchema) == infinityExample
+func isInfinityExample(marshaledSchema string) bool {
+	return marshaledSchema == infinityExample
 }
 
-func isZeroDoubleExample(marshaledSchema []byte) bool {
-	return string(marshaledSchema) == zeroDoubleExample
+func isZeroDoubleExample(marshaledSchema string) bool {
+	return marshaledSchema == zeroDoubleExample
 }
 
 // mergeArrayParamMismatch merges a parameter that was generated as an array in
@@ -670,27 +544,3 @@ func mergeDateTimeOrTimestamp(a, b *openapi.Schema) {
 	*a = merged
 	*b = merged
 }
-
-// func (l *loader) resolveSchema(s *Schema) error {
-// 	if err := l.resolveSchemaRefList(s.AllOf); err != nil {
-// 		return &errpath.ErrField{Field: "allOf", Err: err}
-// 	}
-
-// 	if s.Items != nil {
-// 		if err := l.resolveSchemaRef(s.Items); err != nil {
-// 			return &errpath.ErrField{Field: "items", Err: err}
-// 		}
-// 	}
-
-// 	if err := l.resolveSchemaRefs(s.Properties); err != nil {
-// 		return &errpath.ErrField{Field: "properties", Err: err}
-// 	}
-
-// 	if s.AdditionalProperties != nil {
-// 		if err := l.resolveSchemaRef(s.AdditionalProperties); err != nil {
-// 			return &errpath.ErrField{Field: "additionalProperties", Err: err}
-// 		}
-// 	}
-
-// 	return nil
-// }
