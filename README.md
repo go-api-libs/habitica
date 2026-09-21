@@ -7,6 +7,8 @@
 ## Additional Information
 
 - [**Go Reference**](https://pkg.go.dev/github.com/go-api-libs/habitica): API documentation.
+- [**Habitica V3 API Documentation**](https://apidoc.habitica.com/): The official API documentation.
+- [**OpenAPI Specification**](./api/openapi.json): The OpenAPI 3.1.0 specification.
 
 ## Contributing
 
