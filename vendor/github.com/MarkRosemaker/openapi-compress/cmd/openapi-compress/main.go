@@ -22,10 +22,13 @@ func run(ctx context.Context) error {
 	var (
 		specPath                      string
 		minSimilarity, similarityStep float64
+		trimExamples                  int
 	)
 	flag.StringVar(&specPath, "spec", "api/openapi.json", "path to OpenAPI spec file")
 	flag.Float64Var(&minSimilarity, "minsim", 1, "the minimum Jaccard similarity (0..1) for two schemas to be considered for merging; 1.0 means exact equality only (default)")
 	flag.Float64Var(&similarityStep, "simstep", .05, "the amount by which the similarity threshold is reduced between rounds when no merges are found at the current threshold; default: 0.05")
+	flag.IntVar(&trimExamples, "trim-examples", 0,
+		"cap array length in every schema's example to this many representative elements (0 leaves them as they are)")
 	flag.Parse()
 
 	doc, err := openapi.LoadFromFile(specPath)
@@ -38,6 +41,7 @@ func run(ctx context.Context) error {
 	if err := compress.Document(doc, compress.Config{
 		MinSimilarity:  minSimilarity,
 		SimilarityStep: similarityStep,
+		TrimExamples:   trimExamples,
 	}); err != nil {
 		return err
 	}

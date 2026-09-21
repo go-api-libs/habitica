@@ -18,6 +18,12 @@ type Config struct {
 	// names of canonical schemas produced by merging. By default (false) names
 	// are shortened; set to true to preserve the original names.
 	SkipNameShortening bool
+
+	// TrimExamples caps every schema's own Example at this many representative
+	// array elements, at any depth -- see
+	// [github.com/MarkRosemaker/openapi-edit.TrimExample] for how elements are
+	// chosen. 0 (default) leaves examples as they are.
+	TrimExamples int
 }
 
 func (c *Config) setDefaults() {

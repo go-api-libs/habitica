@@ -8,6 +8,7 @@ import (
 
 	"github.com/MarkRosemaker/openapi"
 	"github.com/MarkRosemaker/openapi-compare/schema"
+	edit "github.com/MarkRosemaker/openapi-edit"
 )
 
 // Document compresses an OpenAPI document so it contains no duplicate schemas.
@@ -51,11 +52,19 @@ func Document(d *openapi.Document, cfg Config) error {
 		threshold = math.Max(cfg.MinSimilarity, threshold-cfg.SimilarityStep)
 	}
 
-	if cfg.SkipNameShortening {
-		return nil
+	if !cfg.SkipNameShortening {
+		if err := shortenMergedSchemaNames(d, mergedCanonicals); err != nil {
+			return err
+		}
 	}
 
-	return shortenMergedSchemaNames(d, mergedCanonicals)
+	if cfg.TrimExamples > 0 {
+		if err := edit.TrimSchemaExamples(d, cfg.TrimExamples); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // deduplicateSchemasAtThreshold performs one dedup pass at the given similarity
