@@ -2,6 +2,7 @@ package enrich
 
 import (
 	"encoding/base64"
+	"encoding/json/jsontext"
 	"fmt"
 	"maps"
 	"mime"
@@ -14,6 +15,11 @@ import (
 	"github.com/MarkRosemaker/openapi"
 	"github.com/MarkRosemaker/openapi-enrich/cassette"
 	merge "github.com/MarkRosemaker/openapi-merge"
+)
+
+const (
+	schemeNameBearer = "bearerAuth"
+	schemeNameBasic  = "BasicAuth"
 )
 
 func analyzeInteraction(doc *openapi.Document, ia *cassette.Interaction) error {
@@ -161,11 +167,19 @@ func processQueryParams(doc *openapi.Document, pi *openapi.PathItem, op *openapi
 			}
 			explodeFalse = true
 		} else {
-			var err error
+			switch value {
+			case "true", "false":
+				schema = &openapi.Schema{
+					Type:    openapi.TypeBoolean,
+					Example: jsontext.Value(value),
+				}
+			default:
+				var err error
 
-			schema, err = scalarSchema(value)
-			if err != nil {
-				return fmt.Errorf("param %q: %w", name, err)
+				schema, err = scalarSchema(value)
+				if err != nil {
+					return fmt.Errorf("param %q: %w", name, err)
+				}
 			}
 		}
 
@@ -175,8 +189,7 @@ func processQueryParams(doc *openapi.Document, pi *openapi.PathItem, op *openapi
 			Schema: &openapi.SchemaRef{Value: schema},
 		}
 		if explodeFalse {
-			f := false
-			incoming.Explode = &f
+			incoming.Explode = new(false)
 		}
 
 		if existing := findParam(pi.Parameters, op.Parameters, name, openapi.ParameterLocationQuery); existing != nil {
@@ -235,15 +248,17 @@ func processAuth(doc *openapi.Document, op *openapi.Operation, v string) error {
 	switch {
 	case strings.HasPrefix(v, "Bearer "):
 		scheme = openapi.SecuritySchemeBearer
-		schemeName = "bearerAuth"
+		schemeName = schemeNameBearer
 	case strings.HasPrefix(v, "Basic "):
 		scheme = openapi.SecuritySchemeBasic
-		schemeName = "basicAuth"
+		schemeName = schemeNameBasic
 
-		// Validate it is actually base64
+		// Validate it is either masked or actually base64
 		encoded := strings.TrimPrefix(v, "Basic ")
-		if _, err := base64.StdEncoding.DecodeString(encoded); err != nil {
-			return fmt.Errorf("invalid basic auth: %w", err)
+		if encoded != strings.Repeat("*", len(encoded)) {
+			if _, err := base64.StdEncoding.DecodeString(encoded); err != nil {
+				return fmt.Errorf("invalid basic auth: %w", err)
+			}
 		}
 	default:
 		return nil

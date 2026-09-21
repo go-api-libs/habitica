@@ -150,9 +150,11 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 		switch a.Type {
 		case openapi.TypeInteger:
 			// Except if one is a date or datetime, then we can transform the integer
-			if a.Format == openapi.FormatDate || a.Format == openapi.FormatDateTime {
+			if a.Format == openapi.FormatDate || a.Format == openapi.FormatDateTime ||
+				a.Format == openapi.FormatDuration {
 				b.Format = a.Format
-			} else if b.Format == openapi.FormatDate || b.Format == openapi.FormatDateTime {
+			} else if b.Format == openapi.FormatDate || b.Format == openapi.FormatDateTime ||
+				b.Format == openapi.FormatDuration {
 				a.Format = b.Format
 			} else {
 				a.Format = ""
