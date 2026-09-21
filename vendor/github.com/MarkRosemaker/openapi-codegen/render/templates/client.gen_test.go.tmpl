@@ -214,11 +214,18 @@ func replay(t *testing.T) http.RoundTripper {
 			ia.Request.Headers.Del("Content-Type")
 		}
 
-		{{/* Basic authentication with "user" and "pass" will render to this.
-			We need to correct it to the standard masking. */}}
-		if auth := r.Headers.Get("Authorization"); auth == "Basic dXNlcjpwYXNz" {
-			r.Headers.Set("Authorization", "**************************************************************")
+		{{/* Authorization always carries this client's own live test credentials,
+			never what was recorded -- see the "Authorization" entry in
+			openapi-enrich/cassette.DefaultMasker's HeaderKeys. The masker keeps
+			the scheme visible (e.g. "Bearer ", "Basic "), so that much is still
+			worth checking; the credential after it is not. */}}
+		gotScheme, _, _ := strings.Cut(r.Headers.Get("Authorization"), " ")
+		wantScheme, _, _ := strings.Cut(ia.Request.Headers.Get("Authorization"), " ")
+		if gotScheme != wantScheme {
+			return nil, fmt.Errorf("interaction #%d: got Authorization scheme %q, want %q", idx, gotScheme, wantScheme)
 		}
+		r.Headers.Del("Authorization")
+		ia.Request.Headers.Del("Authorization")
 
 		if !maps.EqualFunc(r.Headers, ia.Request.Headers, slices.Equal) {
 			return nil, fmt.Errorf("interaction #%d: got headers %s, want %s", idx, r.Headers, ia.Request.Headers)
