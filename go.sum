@@ -16,12 +16,12 @@ github.com/MarkRosemaker/openapi-compress v0.0.0-20260921132137-fa203fed7945 h1:
 github.com/MarkRosemaker/openapi-compress v0.0.0-20260921132137-fa203fed7945/go.mod h1:Z+2C5zUaEwRQMYZDrtTFECqVZR/JcyZb8Ln0VRQjxyw=
 github.com/MarkRosemaker/openapi-edit v0.0.0-20260921123035-ab33005df2a6 h1:lLEZAJn9ObXPjzLYdU3LADcQFObVeXGyBonmRG/3yoc=
 github.com/MarkRosemaker/openapi-edit v0.0.0-20260921123035-ab33005df2a6/go.mod h1:oIjhqy2a5oefEeZUDCShhaQt5hcgGG+SqrE9KtiPQVM=
-github.com/MarkRosemaker/openapi-enrich v0.0.0-20260921131711-bcd1163ce8ec h1:021aHLagrEKkk6R0fyZ3pGvZdUQWFn7UduhF0ORA5N4=
-github.com/MarkRosemaker/openapi-enrich v0.0.0-20260921131711-bcd1163ce8ec/go.mod h1:YeQxj90vvme551FypWrC8y8z1OHQ97F/ysYpdnllPUs=
+github.com/MarkRosemaker/openapi-enrich v0.0.0-20260921143416-1e92a24b502b h1:GzWBt8SXrcBEWiN1mSkfFS/HXG4miOiyOWgQ9z0kTs8=
+github.com/MarkRosemaker/openapi-enrich v0.0.0-20260921143416-1e92a24b502b/go.mod h1:wGvT6DY7ghirIoXD5c1hJoUVVv+Pb6GalYPGA+caolE=
 github.com/MarkRosemaker/openapi-flatten v0.0.0-20260921010307-e11f061bee66 h1:gIqPshzTdboxX64fzMG1cX8uXMU/R9SLvlm6jpV/wDQ=
 github.com/MarkRosemaker/openapi-flatten v0.0.0-20260921010307-e11f061bee66/go.mod h1:Q8fCcOJR/+ChXOIF3w5f7cDoykl9EUrixU86t9sU9Cg=
-github.com/MarkRosemaker/openapi-merge v0.0.0-20260921131035-ee51de10518e h1:CRaYSTWPR8HCpD7b8kyACdmsktXTeVSvfGTWkgpF2qs=
-github.com/MarkRosemaker/openapi-merge v0.0.0-20260921131035-ee51de10518e/go.mod h1:xN+ymSwPoEo33ttG8q+TZKSjfKKAI359IshbzjIDTwU=
+github.com/MarkRosemaker/openapi-merge v0.0.0-20260921143057-32bb5089eb14 h1:07z9UVFCaCKu8WHw2WPXSBXPuiVSegzd2SywYdHtO/A=
+github.com/MarkRosemaker/openapi-merge v0.0.0-20260921143057-32bb5089eb14/go.mod h1:xN+ymSwPoEo33ttG8q+TZKSjfKKAI359IshbzjIDTwU=
 github.com/MarkRosemaker/ordmap v0.0.0-20260920172223-2eab4db34adb h1:vjDTzlsbaciHxDp/+Is4CM3XETAK2FxGIdAjxr5ZsPs=
 github.com/MarkRosemaker/ordmap v0.0.0-20260920172223-2eab4db34adb/go.mod h1:GcGN4XfhIesAK68DvVMIrFGcA3iCysFBVfKQl9pR4BU=
 github.com/MarkRosemaker/yaml v0.0.0-20260920172227-27bebaf02fb5 h1:TH8/jtBFWo/6+y5++zN8LxV574zdnNhPNvd2IeeCv5s=
