@@ -25,10 +25,16 @@ func main() {
 }
 
 func run(ctx context.Context) error {
-	var specPath, iaPath, auth string
+	var (
+		specPath, iaPath, auth string
+		trimExamples           int
+	)
+
 	flag.StringVar(&specPath, "spec", "api/openapi.json", "path to OpenAPI spec file")
 	flag.StringVar(&iaPath, "ia", "api/interactions.json", "path to interactions file")
 	flag.StringVar(&auth, "auth", "", "authorization header")
+	flag.IntVar(&trimExamples, "trim-examples", 0,
+		"cap array length in recorded response bodies to this many representative elements (0 leaves them as recorded)")
 	flag.Parse()
 
 	doc, err := openapi.LoadFromFile(specPath)
@@ -114,6 +120,10 @@ func run(ctx context.Context) error {
 	}
 
 	ias.TrimResponseHeaders()
+
+	if trimExamples > 0 {
+		ias.TrimResponseBodies(trimExamples)
+	}
 
 	if scaffoldNext {
 		ias = append(ias, cassette.Interaction{})
