@@ -258,7 +258,7 @@ func extractSegmentParam(tmpl, value string, out map[string]string) bool {
 // goLiteralForType returns a Go literal expression for value given the Go type.
 func goLiteralForType(goType, value string) string {
 	switch goType {
-	case "int", "int32", "int64", "uint", "uint32", "uint64":
+	case "int", "int32", "int64", "uint", "uint32", "uint64", "bool":
 		return value
 	case "uuid.UUID":
 		return fmt.Sprintf("uuid.MustParse(%q)", value)
