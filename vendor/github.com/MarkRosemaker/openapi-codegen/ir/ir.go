@@ -351,10 +351,16 @@ type ReqBody struct {
 
 type Auth struct {
 	Bearer Bearer `json:"bearer,omitzero"`
+	Basic  Basic  `json:"basic,omitzero"`
 }
 
 type Bearer struct {
 	Name string `json:"name,omitzero"`
+}
+
+type Basic struct {
+	UsernameEnvName string `json:"usernameEnvName,omitzero"`
+	PasswordEnvName string `json:"passwordEnvName,omitzero"`
 }
 
 // BaseURLExpr returns the Go expression for the URL an operation builds its

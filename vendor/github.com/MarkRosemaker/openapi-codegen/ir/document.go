@@ -155,10 +155,11 @@ func fromPaths(paths openapi.Paths, auth Auth, globalParams paramMap) ([]Operati
 
 // fromSecurity reads the security schemes. Bearer.Name is the environment
 // variable the generated client reads the token from, and everything the
-// client emits for bearer auth hangs off it being set.
+// client emits for bearer auth hangs off it being set. Basic's two env
+// vars work the same way, one for the username and one for the password.
 //
 // A scheme's name field only means anything for type apiKey, where it names
-// the header, so an http bearer scheme usually leaves it empty. Falling back
+// the header, so an http scheme usually leaves it empty. Falling back
 // to the title matches how an API key parameter gets its own variable.
 func fromSecurity(schemes openapi.SecuritySchemes, apiTitle string) Auth {
 	s := Auth{}
@@ -173,6 +174,13 @@ func fromSecurity(schemes openapi.SecuritySchemes, apiTitle string) Auth {
 			}
 
 			s.Bearer = Bearer{Name: name}
+		case openapi.SecuritySchemeBasic:
+			if apiTitle != "" {
+				s.Basic = Basic{
+					UsernameEnvName: strcase.ToSNAKE(fmt.Sprintf("%s_USERNAME", apiTitle)),
+					PasswordEnvName: strcase.ToSNAKE(fmt.Sprintf("%s_PASSWORD", apiTitle)),
+				}
+			}
 		}
 	}
 

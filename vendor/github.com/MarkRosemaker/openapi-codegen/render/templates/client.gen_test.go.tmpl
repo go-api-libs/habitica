@@ -41,6 +41,10 @@ func TestClient_Error(t *testing.T) {
 		{{- with $.Auth.Bearer.Name}}
 		t.Setenv({{printf "%q" . }}, "**************************************************")
 		{{end}}
+		{{- with $.Auth.Basic.UsernameEnvName}}
+		t.Setenv({{printf "%q" . }}, "user")
+		t.Setenv({{printf "%q" $.Auth.Basic.PasswordEnvName }}, "pass")
+		{{end}}
 		{{- with $.APIKey }}
 		t.Setenv({{printf "%q" .EnvName }}, {{ or .Example `"**************************************************"` }})
 		{{end}}
@@ -210,6 +214,12 @@ func replay(t *testing.T) http.RoundTripper {
 			ia.Request.Headers.Del("Content-Type")
 		}
 
+		{{/* Basic authentication with "user" and "pass" will render to this.
+			We need to correct it to the standard masking. */}}
+		if auth := r.Headers.Get("Authorization"); auth == "Basic dXNlcjpwYXNz" {
+			r.Headers.Set("Authorization", "**************************************************************")
+		}
+
 		if !maps.EqualFunc(r.Headers, ia.Request.Headers, slices.Equal) {
 			return nil, fmt.Errorf("interaction #%d: got headers %s, want %s", idx, r.Headers, ia.Request.Headers)
 		}
@@ -246,6 +256,10 @@ func TestClient_Interactions(t *testing.T) {
 	ctx := t.Context()
 	{{- with $.Auth.Bearer.Name}}
 	t.Setenv({{printf "%q" . }}, "**************************************************")
+	{{end}}
+	{{- with $.Auth.Basic.UsernameEnvName}}
+	t.Setenv({{printf "%q" . }}, "user")
+	t.Setenv({{printf "%q" $.Auth.Basic.PasswordEnvName }}, "pass")
 	{{end}}
 	{{- with $.APIKey }}
 	t.Setenv({{printf "%q" .EnvName }}, {{ or .Example `"**************************************************"` }})
