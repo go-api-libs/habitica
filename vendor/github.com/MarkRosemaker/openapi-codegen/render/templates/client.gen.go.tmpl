@@ -212,7 +212,16 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 // Deprecated.
 {{- end}}
 func (c *Client) {{.Name}}(ctx context.Context{{range .PathParams}}, {{.GoName}} {{.Type}}{{end}}{{if .ParamsInStruct}}, params {{ if not .ParamsInStruct.Required }}*{{ end }}{{.ParamStructName}}{{end}}{{if .RequestBody}}, body {{if .RequestBody.Required}}{{.RequestBody.TypeName}}{{else}}*{{.RequestBody.TypeName}}{{end}}{{end}}) ({{.SuccessReturn.Nilable}}, error) {
+	{{- if .SuccessReturn.IsNilable}}
+	out, err := c.{{.Name}}WithResult[{{.SuccessReturn}}](ctx{{range .PathParams}}, {{.GoName}}{{end}}{{if .ParamsInStruct}}, params{{end}}{{if .RequestBody}}, body{{end}})
+	if err != nil {
+		return nil, err
+	}
+
+	return *out, nil
+	{{- else}}
 	return c.{{.Name}}WithResult[{{.SuccessReturn}}](ctx{{range .PathParams}}, {{.GoName}}{{end}}{{if .ParamsInStruct}}, params{{end}}{{if .RequestBody}}, body{{end}})
+	{{- end}}
 }
 {{ end }}
 

@@ -143,6 +143,7 @@ func fromParam(p *openapi.Parameter, apiTitle string) (Param, error) {
 	}
 
 	param.Type = tp.String()
+	param.IsUnixTime = param.Type == "time.Time" && p.Schema.Value.Type == openapi.TypeInteger
 
 	param.GoName = strcase.ToGoCamel(p.Name)
 	param.ParseExpr, param.ParseCast, param.ParseErrFree = tp.serverParseExpr()
@@ -356,6 +357,10 @@ func (p Param) FormatExpr() string {
 	case "url.URL":
 		return p.VarName + ".String()"
 	case "time.Time":
+		if p.IsUnixTime {
+			return "strconv.Itoa(int(" + p.VarName + ".Unix()))"
+		}
+
 		return p.VarName + ".Format(time.RFC3339)"
 	case "civil.Date":
 		return p.VarName + ".String()"

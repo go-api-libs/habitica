@@ -245,9 +245,14 @@ type Param struct {
 	ParseCast    string     `json:"parseCast,omitzero"`
 	ParseErrFree bool       `json:"parseErrFree,omitzero"`
 	IsEnum       bool       `json:"isEnum,omitzero"`
-	Description  string     `json:"description,omitzero"`
-	Value        string     `json:"value,omitzero"`   // hardcoded value, always the same
-	Example      string     `json:"example,omitzero"` // hardcoded example for tests
+	// IsUnixTime is true when Type is "time.Time" but the OpenAPI schema
+	// itself is an integer (format: date-time), not a date-time string --
+	// see [integerGoType]. FormatExpr needs this to know whether to encode
+	// the param back into an integer instead of an RFC 3339 string.
+	IsUnixTime  bool   `json:"isUnixTime,omitzero"`
+	Description string `json:"description,omitzero"`
+	Value       string `json:"value,omitzero"`   // hardcoded value, always the same
+	Example     string `json:"example,omitzero"` // hardcoded example for tests
 }
 
 func (doc Document) APIKey() *Param {
@@ -275,6 +280,11 @@ type GoType struct {
 	IsPointer     bool   `json:"isPointer,omitzero"`
 	IsSlice       bool   `json:"isSlice,omitzero"`
 	IsArrayOfSize int    `json:"isArrayOfSize,omitzero"`
+	// IsNilable is true for a $ref to a named component schema that is
+	// itself array-kind (e.g. "type TimeEntries []TimeEntry"): Name is
+	// already a nilable Go type on its own, so Nilable returns it
+	// unchanged instead of adding a pointer.
+	IsNilable bool `json:"isNilable,omitzero"`
 }
 
 // String returns the Go type expression.
@@ -297,6 +307,8 @@ func (t GoType) Nilable() string {
 		return "[]" + t.Name
 	case t.IsArrayOfSize > 0:
 		return fmt.Sprintf("[%d]%s", t.IsArrayOfSize, t.Name)
+	case t.IsNilable:
+		return t.Name
 	default:
 		return "*" + t.Name
 	}

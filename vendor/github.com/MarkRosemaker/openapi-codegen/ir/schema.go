@@ -28,8 +28,14 @@ func SchemaRefGoType(ref *openapi.SchemaRef) (*GoType, error) {
 		}
 		// "#/components/schemas/Name" → "Name"
 		parts := strings.Split(ref.Ref.Identifier, "/")
+		name := parts[len(parts)-1]
 
-		return &GoType{Name: parts[len(parts)-1]}, nil
+		// The named type this $ref points at is itself array-kind (e.g.
+		// "type TimeEntries []TimeEntry"), so it's already nilable on its
+		// own -- see [GoType.IsNilable].
+		isNilable := ref.Value != nil && ref.Value.Type == openapi.TypeArray
+
+		return &GoType{Name: name, IsNilable: isNilable}, nil
 	}
 
 	return SchemaGoType(ref.Value)
