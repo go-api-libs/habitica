@@ -7,16 +7,6 @@
 
 <h3 align="center">Change an API spec without breaking it.</h3>
 
-<div align="center" id=badges>
-
-![Code Coverage](https://img.shields.io/badge/coverage-93.8%25-green)
-
-</div>
-
-
-
-
-
 `openapi-edit` provides safe structural edits to an
 [OpenAPI 3.x](https://spec.openapis.org/oas/v3.1.0) specification — the kind of
 change where touching one place obliges you to touch several others, and forgetting
