@@ -137,7 +137,10 @@ func fromParam(p *openapi.Parameter, apiTitle string) (Param, error) {
 
 	param.IsEnum = len(p.Schema.Value.Enum) > 0
 
-	tp, err := SchemaGoType(p.Schema.Value)
+	// SchemaRefGoType, not SchemaGoType(p.Schema.Value): a $ref resolves to
+	// its own generated type name (e.g. a string enum), where reading the
+	// resolved value directly would only ever see its underlying builtin.
+	tp, err := SchemaRefGoType(p.Schema)
 	if err != nil {
 		return param, err
 	}
