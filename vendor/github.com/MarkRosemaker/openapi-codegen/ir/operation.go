@@ -146,6 +146,20 @@ func fromParam(p *openapi.Parameter, apiTitle string) (Param, error) {
 	}
 
 	param.Type = tp.String()
+
+	if p.Schema.Ref != nil {
+		// Type is a generated name here (an enum or any other named
+		// scalar component), not a builtin: NotZero and FormatExpr need
+		// the underlying representation it was declared from to know how
+		// to compare or format it.
+		base, err := SchemaGoType(p.Schema.Value)
+		if err != nil {
+			return param, err
+		}
+
+		param.BaseType = base.String()
+	}
+
 	param.IsUnixTime = param.Type == "time.Time" && p.Schema.Value.Type == openapi.TypeInteger
 
 	param.GoName = strcase.ToGoCamel(p.Name)
@@ -301,7 +315,16 @@ func segmentExpr(seg string, params map[string]Param) string {
 
 // NotZero returns the Go boolean expression that is true when param is not the zero value.
 func (p Param) NotZero() string {
-	switch p.Type {
+	// A generated Type (BaseType set) carries no zero-value semantics of
+	// its own: switch on the type it was declared from instead.
+	// Comparisons against an untyped constant ("", 0) work directly on
+	// the named type, no conversion needed.
+	tp := p.Type
+	if p.BaseType != "" {
+		tp = p.BaseType
+	}
+
+	switch tp {
 	case "string":
 		return p.VarName + ` != ""`
 	case "types.Email":
@@ -332,47 +355,57 @@ func (p Param) FormatExpr() string {
 		return "c." + p.VarName
 	}
 
-	switch p.Type {
+	// A generated Type (BaseType set) has none of the methods or
+	// conversions below: convert to the type it was declared from first.
+	// That conversion is always legal, since it targets the generated
+	// type's own underlying type.
+	tp, v := p.Type, p.VarName
+	if p.BaseType != "" {
+		tp = p.BaseType
+		v = tp + "(" + p.VarName + ")"
+	}
+
+	switch tp {
 	case "string":
-		return p.VarName
+		return v
 	case "types.Email":
-		return "string(" + p.VarName + ")"
+		return "string(" + v + ")"
 	case "bool":
-		return "strconv.FormatBool(" + p.VarName + ")"
+		return "strconv.FormatBool(" + v + ")"
 	case "int":
-		return "strconv.Itoa(" + p.VarName + ")"
+		return "strconv.Itoa(" + v + ")"
 	case "int32":
-		return "strconv.FormatInt(int64(" + p.VarName + "), 10)"
+		return "strconv.FormatInt(int64(" + v + "), 10)"
 	case "int64":
-		return "strconv.FormatInt(" + p.VarName + ", 10)"
+		return "strconv.FormatInt(" + v + ", 10)"
 	case "uint":
-		return "strconv.FormatUint(uint64(" + p.VarName + "), 10)"
+		return "strconv.FormatUint(uint64(" + v + "), 10)"
 	case "uint32":
-		return "strconv.FormatUint(uint64(" + p.VarName + "), 10)"
+		return "strconv.FormatUint(uint64(" + v + "), 10)"
 	case "uint64":
-		return "strconv.FormatUint(" + p.VarName + ", 10)"
+		return "strconv.FormatUint(" + v + ", 10)"
 	case "float32":
-		return "strconv.FormatFloat(float64(" + p.VarName + "), 'f', -1, 32)"
+		return "strconv.FormatFloat(float64(" + v + "), 'f', -1, 32)"
 	case "float64":
-		return "strconv.FormatFloat(" + p.VarName + ", 'f', -1, 64)"
+		return "strconv.FormatFloat(" + v + ", 'f', -1, 64)"
 	case "uuid.UUID":
-		return p.VarName + ".String()"
+		return v + ".String()"
 	case "url.URL":
-		return p.VarName + ".String()"
+		return v + ".String()"
 	case "time.Time":
 		if p.IsUnixTime {
-			return "strconv.Itoa(int(" + p.VarName + ".Unix()))"
+			return "strconv.Itoa(int(" + v + ".Unix()))"
 		}
 
-		return p.VarName + ".Format(time.RFC3339)"
+		return v + ".Format(time.RFC3339)"
 	case "civil.Date":
-		return p.VarName + ".String()"
+		return v + ".String()"
 	case "net.IP":
-		return p.VarName + ".String()"
+		return v + ".String()"
 	case "time.Duration":
-		return "strconv.FormatInt(int64(" + p.VarName + "/time.Second), 10)"
+		return "strconv.FormatInt(int64(" + v + "/time.Second), 10)"
 	default:
-		return "fmt.Sprint(" + p.VarName + ")"
+		return "fmt.Sprint(" + v + ")"
 	}
 }
 
