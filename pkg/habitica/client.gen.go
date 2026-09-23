@@ -188,7 +188,7 @@ func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTask
 	q := make(url.Values, 1)
 
 	if params.Type != "" {
-		q["type"] = []string{params.Type}
+		q["type"] = []string{string(params.Type)}
 	}
 
 	u.RawQuery = q.Encode()
@@ -354,7 +354,7 @@ func (c *Client) GetTaskByIDWithResult[R any](ctx context.Context, taskID uuid.U
 // Score a task
 //
 //	POST /tasks/{taskId}/score/{direction}
-func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction string, params ScoreTaskParams) (*ScoreTaskResponse, error) {
+func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Direction, params ScoreTaskParams) (*ScoreTaskResponse, error) {
 	return c.ScoreTaskWithResult[ScoreTaskResponse](ctx, taskID, direction, params)
 }
 
@@ -362,8 +362,8 @@ func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction stri
 // You can define a custom result to unmarshal the response into.
 //
 //	POST /tasks/{taskId}/score/{direction}
-func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUID, direction string, params ScoreTaskParams) (*R, error) {
-	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", direction)
+func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUID, direction Direction, params ScoreTaskParams) (*R, error) {
+	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", string(direction))
 	req := (&http.Request{
 		Header: http.Header{
 			"X-Api-Key":  []string{c.apiKey},
@@ -449,7 +449,7 @@ func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUI
 // Cast a skill (spell) on a target
 //
 //	POST /user/class/cast/{spellId}
-func (c *Client) Cast(ctx context.Context, spellID string, params CastParams) (*CastResponse, error) {
+func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (*CastResponse, error) {
 	return c.CastWithResult[CastResponse](ctx, spellID, params)
 }
 
@@ -457,8 +457,8 @@ func (c *Client) Cast(ctx context.Context, spellID string, params CastParams) (*
 // You can define a custom result to unmarshal the response into.
 //
 //	POST /user/class/cast/{spellId}
-func (c *Client) CastWithResult[R any](ctx context.Context, spellID string, params CastParams) (*R, error) {
-	u := c.baseURL.JoinPath("user", "class", "cast", spellID)
+func (c *Client) CastWithResult[R any](ctx context.Context, spellID SpellID, params CastParams) (*R, error) {
+	u := c.baseURL.JoinPath("user", "class", "cast", string(spellID))
 
 	q := make(url.Values, 1)
 

@@ -27,7 +27,7 @@ type GetUserParams struct {
 
 // ListTasksParams holds the query parameters for ListTasks.
 type ListTasksParams struct {
-	Type     string
+	Type     Type
 	XAPIUser uuid.UUID
 }
 
