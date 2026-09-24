@@ -68,7 +68,7 @@ func Generate(cfg Config) error {
 		return fmt.Errorf("invalid spec given: %w", err)
 	}
 
-	irDoc, err := ir.FromDocument(cfg.Spec, cfg.PackageName, cfg.UserAgent)
+	irDoc, err := ir.FromDocument(cfg.Spec, cfg.PackageName, cfg.UserAgent, cfg.Production)
 	if err != nil {
 		return fmt.Errorf("build IR: %w", err)
 	}

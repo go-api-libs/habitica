@@ -15,7 +15,7 @@ import (
 
 // FromDocument converts a fully-loaded and flattened openapi.Document to an IR Document.
 // cfg provides the package name and optional user-agent override.
-func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Document, error) {
+func FromDocument(doc *openapi.Document, packageName, userAgent string, production bool) (*Document, error) {
 	if err := flatten.Document(doc); err != nil {
 		return nil, fmt.Errorf("flatten: %w", err)
 	}
@@ -82,7 +82,7 @@ func FromDocument(doc *openapi.Document, packageName, userAgent string) (*Docume
 
 	return &Document{
 		Title:                  title,
-		Production:             true,
+		Production:             production,
 		PackageName:            packageName,
 		BaseURL:                baseURL,
 		UserAgent:              userAgent,

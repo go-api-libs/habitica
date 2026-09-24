@@ -18,6 +18,7 @@ type Config struct {
 	OutputFs         afero.Fs              // Filesystem to write the generated Go files
 	PackageName      string                // Go package name for the generated code
 	UserAgent        string                // User-Agent header value for the generated client
+	Production       bool                  // Render production ready JS without development features
 
 	config.Generate
 }

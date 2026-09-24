@@ -13,9 +13,11 @@
  *   {{if .SuccessReturn}}const result = await {{end}}window.API.{{.Name | camelCase}}({{range $i, $p := .PathParams}}{{if $i}}, {{end}}{{$p.GoName}}{{end}});
 {{- end}}
  *
+ {{- if not .Production }}
  * Environment:
  *   Set `window.ENV = 'development'` to enable mocking via /mocks.json.
  *   Set `window.ENV = 'production'` (or anything else) to use real API calls.
+ {{ end -}}
  */
 
 {{ with .BaseURL -}}
@@ -26,8 +28,11 @@ const API_BASE = "";
 const TIMEOUT = 4000;
 
 // ====================== ENVIRONMENT ======================
-// Change this to 'production' when connecting to a real backend
-window.ENV = "{{ if .Production }}production{{ else }}development{{ end }}";
+{{ if .Production -}}
+window.ENV = "production";
+{{- else -}}
+const inClaudeDesign = typeof window.claude !== "undefined";
+window.ENV = inClaudeDesign ? "development" : "production";
 
 // Cache for mocks (loaded once)
 let mocks = null;
@@ -76,6 +81,7 @@ function matchesRequest(mockRequest, method, path) {
         return mockUrl.endsWith(path) || mockUrl === path;
     }
 }
+{{- end }}
 
 // reportApiError broadcasts a failed API call as a "{{.PackageName}}:ws-message"
 // CustomEvent, the same channel server-pushed notifications use, so a single
@@ -95,6 +101,7 @@ async function apiFetch(path, options = {}) {
     const {
         method = "GET", operationId = "Request"
     } = options;
+{{- if not .Production }}
 
     // ====================== DEVELOPMENT MOCKING ======================
     if (window.ENV === "development") {
@@ -132,6 +139,7 @@ async function apiFetch(path, options = {}) {
     }
 
     // ====================== REAL API CALL ======================
+{{- end }}
     const ctrl = new AbortController();
     const timeoutId = setTimeout(() => ctrl.abort(), TIMEOUT);
 
@@ -148,7 +156,7 @@ async function apiFetch(path, options = {}) {
         clearTimeout(timeoutId);
 
         if (!res.ok) {
-            console.warn(`API Error: ${res.status} ${path}`);
+            console.warn(`API Error: ${res.status} ${method} ${path}`);
             let message = res.statusText || "Request failed";
             try {
                 const body = await res.clone().json();
