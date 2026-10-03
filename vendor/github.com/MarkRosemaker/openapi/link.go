@@ -35,7 +35,7 @@ type Link struct {
 	// A description of the link. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// A server object to be used by the target operation.
-	Server *Server `json:"server,omitempty" yaml:"server,omitempty"`
+	Server *Server `json:"server,omitzero" yaml:"server,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:"-"`
 }

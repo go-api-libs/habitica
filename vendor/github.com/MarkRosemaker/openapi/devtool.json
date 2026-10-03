@@ -13,7 +13,7 @@
 		"validation",
 		"yaml"
 	],
-	"coverage": 94.8,
-	"devtoolVersion": "v0.0.0-20260927105104-016049d867cb",
+	"coverage": 95.5,
+	"devtoolVersion": "v0.0.0-20260929233704-b7f506df5126",
 	"kind": "library"
 }

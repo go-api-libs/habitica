@@ -14,11 +14,11 @@ import (
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#media-type-object
 type MediaType struct {
 	// The schema defining the content of the request, response, or parameter.
-	Schema *SchemaRef `json:"schema,omitempty" yaml:"schema,omitempty"`
+	Schema *Schema `json:"schema,omitzero" yaml:"schema,omitempty"`
 	// Example of the media type.
 	// The example object SHOULD be in the correct format as specified by the media type.
 	// The `example` field is mutually exclusive of the `examples` field.  Furthermore, if referencing a `schema` which contains an example, the `example` value SHALL _override_ the example provided by the schema.
-	Example jsontext.Value `json:"example,omitempty" yaml:"example,omitempty"`
+	Example jsontext.Value `json:"example,omitzero" yaml:"example,omitempty"`
 	// Examples of the media type.
 	// Each example object SHOULD match the media type and specified schema if present.
 	// The `examples` field is mutually exclusive of the `example` field.  Furthermore, if referencing a `schema` which contains an example, the `examples` value SHALL _override_ the example provided by the schema.
@@ -60,7 +60,7 @@ func (mt *MediaType) Validate() error {
 
 func (l *loader) resolveMediaType(mt *MediaType) error {
 	if mt.Schema != nil {
-		if err := l.resolveSchemaRef(mt.Schema); err != nil {
+		if err := l.resolveSchema(mt.Schema); err != nil {
 			return &errpath.ErrField{Field: "schema", Err: err}
 		}
 	}

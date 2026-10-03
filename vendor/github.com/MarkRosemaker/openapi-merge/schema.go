@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"errors"
 	"fmt"
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/openapi"
@@ -24,12 +26,21 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 		return err
 	}
 
+	if handled, err := mergeIfUnionInAllOf(a, b); handled {
+		return err
+	}
+
 	tp, err := effectiveType(a)
 	if err != nil {
 		return err
 	}
 
-	tp = reconcileGeneratedFromNull(a, b, tp)
+	if b.Type == openapi.TypeNull {
+		mergeNull(a)
+		return nil
+	}
+
+	tp = reconcileNull(a, b, tp)
 	improveExample(a, b)
 
 	if tp != b.Type {
@@ -62,21 +73,21 @@ func Schema(a, b *openapi.Schema, isParam bool) error {
 func mergeIfOneOf(a, b *openapi.Schema) (handled bool, err error) {
 	// if a already represents multiple possible shapes, merge b into
 	// whichever alternative it matches
-	if len(a.OneOf) > 0 {
-		return true, mergeOneOf(a, b)
+	if alts, field := union(a); len(alts) > 0 {
+		return true, mergeAlternatives(alts, field, b)
 	}
 
 	// symmetric case: b is the one that already has multiple possible shapes.
 	// a's Title/Description were already merged into a above; carry that
 	// over to b, since b (not a) is about to become the authoritative result.
-	if len(b.OneOf) > 0 {
+	if alts, field := union(b); len(alts) > 0 {
 		b.Title, b.Description = a.Title, a.Description
 
-		if err := mergeOneOf(b, a); err != nil {
+		if err := mergeAlternatives(alts, field, a); err != nil {
 			return true, err
 		}
 
-		*a = *b
+		a.Replace(b)
 
 		return true, nil
 	}
@@ -97,14 +108,14 @@ func effectiveType(a *openapi.Schema) (openapi.DataType, error) {
 		return "", fmt.Errorf("type %q with allOf not implemented yet", tp)
 	}
 
-	tp = a.AllOf[0].Value.Type
+	tp = deref(a.AllOf[0]).Type
 
 	if tp != openapi.TypeObject {
 		return "", fmt.Errorf("allOf with type %q not implemented yet", tp)
 	}
 
-	idx := slices.IndexFunc(a.AllOf[1:], func(s *openapi.SchemaRef) bool {
-		return s.Value.Type != tp
+	idx := slices.IndexFunc(a.AllOf[1:], func(s *openapi.Schema) bool {
+		return deref(s).Type != tp
 	})
 	if idx != -1 {
 		return "", &errpath.ErrField{
@@ -114,7 +125,7 @@ func effectiveType(a *openapi.Schema) (openapi.DataType, error) {
 				Err: &errpath.ErrField{
 					Field: "type",
 					Err: fmt.Errorf("%q != %q",
-						a.AllOf[idx+1].Value.Type, tp),
+						deref(a.AllOf[idx+1]).Type, tp),
 				},
 			},
 		}
@@ -123,32 +134,36 @@ func effectiveType(a *openapi.Schema) (openapi.DataType, error) {
 	return tp, nil
 }
 
-// reconcileGeneratedFromNull sets the type and format of whichever of a, b
-// was generated from a null value (meaning we had no real information about
-// its type) from the other, and returns the effective type to merge as: tp
-// unchanged when neither was, b.Type when a was.
-func reconcileGeneratedFromNull(a, b *openapi.Schema, tp openapi.DataType) openapi.DataType {
-	switch {
-	case isGeneratedFromNull(b):
-		b.Type = tp
-		b.Format = a.Format
-		// TODO: a.Nullable = true
-	case isGeneratedFromNull(a):
-		tp = b.Type
-		a.Type = tp
-		a.Format = b.Format
-
-		if tp != openapi.TypeObject {
-			a.Properties = nil
-		}
+// mergeNull merges a value seen as null into a: a typed schema becomes nullable, and an untyped one, which already allows null, is left alone.
+func mergeNull(a *openapi.Schema) {
+	if a.Type != "" && a.Type != openapi.TypeNull {
+		a.Nullable = true
 	}
+}
+
+// reconcileNull makes a, if it was only seen as null, take b's type and allow null too, and carries over b's nullability.
+// It returns the type to merge as.
+func reconcileNull(a, b *openapi.Schema, tp openapi.DataType) openapi.DataType {
+	if a.Type == openapi.TypeNull && b.Type != "" {
+		tp = b.Type
+		a.Type, a.Format, a.Nullable = tp, b.Format, true
+		// a has no bounds of its own to widen b's with
+		a.MinItems, a.MaxItems = b.MinItems, b.MaxItems
+	}
+
+	a.Nullable = a.Nullable || b.Nullable
 
 	return tp
 }
 
 // improveExample keeps a's example unless it has none, or has only "null"
-// where b's is a real value.
+// where b's is a real value. A const gets no example, which could only repeat
+// it; a one-value enum still does, since an enum grows from examples.
 func improveExample(a, b *openapi.Schema) {
+	if len(a.Const) > 0 {
+		return
+	}
+
 	if a.Example == nil || (string(a.Example) == null && b.Example != nil) {
 		a.Example = b.Example
 	}
@@ -177,16 +192,16 @@ func reconcileTypeMismatch(a, b *openapi.Schema, tp openapi.DataType, isParam bo
 		return false, nil
 	case tp == openapi.TypeNumber && b.Type == openapi.TypeString && isInfinityExample(bJSON),
 		b.Type == openapi.TypeNumber && tp == openapi.TypeString && isZeroDoubleExample(bJSON):
-		*b = *a
+		b.Replace(a)
 		return true, nil
 	case b.Type == openapi.TypeNumber && tp == openapi.TypeString && isInfinityExample(aJSON):
-		*a = *b
+		a.Replace(b)
 		return true, nil
 	case a.Type == openapi.TypeNumber && b.Type == openapi.TypeInteger:
-		*b = *a
+		b.Replace(a)
 		return true, nil
 	case a.Type == openapi.TypeInteger && b.Type == openapi.TypeNumber:
-		*a = *b
+		a.Replace(b)
 		return true, nil
 	case isDateTimeString(a) && b.Type == openapi.TypeInteger,
 		isDateTimeString(b) && a.Type == openapi.TypeInteger:
@@ -196,7 +211,7 @@ func reconcileTypeMismatch(a, b *openapi.Schema, tp openapi.DataType, isParam bo
 		mergeDateTimeOrTimestamp(a, b)
 		return true, nil
 	case a.Type == openapi.TypeInteger && b.Type == openapi.TypeString:
-		*b = *a
+		b.Replace(a)
 		return true, nil
 	default:
 		return true, mismatchError("type", fmt.Errorf("%q != %q", tp, b.Type), a, b)
@@ -304,12 +319,14 @@ func mergeByType(a, b *openapi.Schema, tp openapi.DataType) error {
 // all -- positions can't line up, so the result keeps both shapes as
 // alternatives instead of forcing a lossy merge between them.
 func mergeArrayItems(a, b *openapi.Schema) error {
+	mergeItemBounds(a, b)
+
 	switch {
 	case len(a.PrefixItems) == 0 && len(b.PrefixItems) == 0:
 		return mergeItemsField(a, b)
 	case len(a.PrefixItems) == len(b.PrefixItems):
 		for i, ai := range a.PrefixItems {
-			if err := Schema(ai.Value, b.PrefixItems[i].Value, false); err != nil {
+			if err := Schema(deref(ai), deref(b.PrefixItems[i]), false); err != nil {
 				return &errpath.ErrField{Field: "prefixItems", Err: &errpath.ErrIndex{Index: i, Err: err}}
 			}
 		}
@@ -324,6 +341,17 @@ func mergeArrayItems(a, b *openapi.Schema) error {
 	default:
 		mergeArrayShapeMismatch(a, b)
 		return nil
+	}
+}
+
+// mergeItemBounds widens a's bounds on the number of items to cover b's too: an unbounded side leaves the result unbounded.
+func mergeItemBounds(a, b *openapi.Schema) {
+	a.MinItems = min(a.MinItems, b.MinItems)
+
+	if a.MaxItems != nil && b.MaxItems != nil {
+		a.MaxItems = new(max(*a.MaxItems, *b.MaxItems))
+	} else {
+		a.MaxItems = nil
 	}
 }
 
@@ -342,7 +370,7 @@ func mergeItemsField(a, b *openapi.Schema) error {
 		b.Items = a.Items
 		return nil
 	default:
-		return Schema(a.Items.Value, b.Items.Value, false)
+		return Schema(deref(a.Items), deref(b.Items), false)
 	}
 }
 
@@ -358,46 +386,47 @@ func mergeArrayShapeMismatch(a, b *openapi.Schema) {
 	merged := openapi.Schema{
 		Title:       a.Title,
 		Description: a.Description,
-		OneOf: openapi.SchemaRefList{
-			{Value: &aCopy},
-			{Value: &bCopy},
+		OneOf: openapi.SchemaList{
+			&aCopy,
+			&bCopy,
 		},
 	}
 
-	*a = merged
-	*b = merged
+	a.Replace(&merged)
+	b.Replace(&merged)
 }
 
 // mergeObjectProperties merges b's properties into a's, either directly or,
 // when a is a string map, into its additionalProperties schema.
 func mergeObjectProperties(a, b *openapi.Schema) error {
-	if a.AdditionalProperties != nil {
+	if ap := a.AdditionalProperties; ap != nil && ap.Schema != nil {
 		// is a string map
-		if b.AdditionalProperties != nil {
-			if err := Schema(a.AdditionalProperties.Value, b.AdditionalProperties.Value, false); err != nil {
+		if bp := b.AdditionalProperties; bp != nil && bp.Schema != nil {
+			if err := Schema(deref(ap.Schema), deref(bp.Schema), false); err != nil {
 				return &errpath.ErrField{Field: "additionalProperties", Err: err}
 			}
 		}
 
 		// merge all property values with prop
 		for _, prop := range b.Properties {
-			if err := Schema(a.AdditionalProperties.Value, prop.Value, false); err != nil {
+			if err := Schema(deref(ap.Schema), deref(prop), false); err != nil {
 				return &errpath.ErrField{Field: "additionalProperties", Err: err}
 			}
 		}
 	} else {
-		// Ensure a.Properties is initialized so schemaRefs can append to it
+		a.AdditionalProperties = mergeAdditionalProperties(a.AdditionalProperties, b.AdditionalProperties)
+
+		// Ensure a.Properties is initialized so schemas can append to it
 		// when a has no properties yet but b does.
 		if a.Properties == nil && len(b.Properties) > 0 {
-			a.Properties = openapi.SchemaRefs{}
+			a.Properties = openapi.Schemas{}
 		}
 
 		// get the maps that contains all properties
 		allProps := maps.Clone(a.Properties)
 		for _, allOf := range a.AllOf {
-			for k, prop := range allOf.Value.Properties.ByIndex() {
-				allProps.Set(k, &openapi.SchemaRef{Value: prop.Value})
-			}
+			// only looked up, so no index to set
+			maps.Insert(allProps, deref(allOf).Properties.ByIndex())
 		}
 
 		// get the map that we should add properties from b from
@@ -405,18 +434,18 @@ func mergeObjectProperties(a, b *openapi.Schema) error {
 		field := "properties"
 		if len(a.AllOf) > 0 {
 			field = "allOf"
-			addNewProps = openapi.SchemaRefs{}
+			addNewProps = openapi.Schemas{}
 		}
 
-		if err := schemaRefs(allProps, &addNewProps, b.Properties); err != nil {
+		if err := schemas(allProps, &addNewProps, b.Properties); err != nil {
 			return &errpath.ErrField{Field: field, Err: err}
 		}
 
 		if len(a.AllOf) > 0 && len(addNewProps) > 0 {
-			a.AllOf = append(a.AllOf, &openapi.SchemaRef{Value: &openapi.Schema{
+			a.AllOf = append(a.AllOf, &openapi.Schema{
 				Type:       openapi.TypeObject,
 				Properties: addNewProps,
-			}})
+			})
 		}
 	}
 
@@ -426,6 +455,20 @@ func mergeObjectProperties(a, b *openapi.Schema) error {
 	}
 
 	return nil
+}
+
+// mergeAdditionalProperties merges a non-schema a with b: absent says nothing, a schema beats a boolean, and true beats false.
+func mergeAdditionalProperties(a, b *openapi.AdditionalProperties) *openapi.AdditionalProperties {
+	switch {
+	case a == nil:
+		return b
+	case b == nil:
+		return a
+	case b.Schema != nil:
+		return b
+	default:
+		return &openapi.AdditionalProperties{Allowed: a.Allowed || b.Allowed}
+	}
 }
 
 // jsonString marshals s for a debug message or a shape comparison against
@@ -448,16 +491,6 @@ func mismatchError(field string, err error, a, b *openapi.Schema) error {
 }
 
 var null = jsontext.Null.String()
-
-// isGeneratedFromNull checks whether the schema was generated from null
-// and we actually have no idea about the schema otherwise
-func isGeneratedFromNull(s *openapi.Schema) bool {
-	return string(s.Example) == null &&
-		s.Type == openapi.TypeObject &&
-		s.Format == "" &&
-		len(s.Properties) == 0 &&
-		s.AdditionalProperties == nil
-}
 
 // isDateTimeString reports whether the schema is a string with a date or date-time format.
 func isDateTimeString(s *openapi.Schema) bool {
@@ -487,7 +520,7 @@ func isZeroDoubleExample(marshaledSchema string) bool {
 // the array's item schema.
 func mergeArrayParamMismatch(a, b *openapi.Schema) error {
 	if a.Type == openapi.TypeArray {
-		if err := Schema(a.Items.Value, b, false); err != nil {
+		if err := Schema(deref(a.Items), b, false); err != nil {
 			return fmt.Errorf("item of param: %w", err)
 		}
 
@@ -498,12 +531,12 @@ func mergeArrayParamMismatch(a, b *openapi.Schema) error {
 			}
 		}
 
-		*b = *a
+		b.Replace(a)
 
 		return nil
 	}
 
-	if err := Schema(a, b.Items.Value, false); err != nil {
+	if err := Schema(a, deref(b.Items), false); err != nil {
 		return fmt.Errorf("item of param: %w", err)
 	}
 
@@ -514,21 +547,37 @@ func mergeArrayParamMismatch(a, b *openapi.Schema) error {
 		}
 	}
 
-	*a = *b
+	a.Replace(b)
 
 	return nil
 }
 
-// mergeOneOf merges b into the alternative of a.OneOf that matches its type,
+// union is the alternatives of s if it is a union, oneOf before anyOf, with the keyword that lists them.
+func union(s *openapi.Schema) (openapi.SchemaList, string) {
+	if len(s.OneOf) > 0 {
+		return s.OneOf, "oneOf"
+	}
+
+	return s.AnyOf, "anyOf"
+}
+
+// mergeOneOf merges b into the alternative of a.OneOf that matches it,
 // since a already represents a value that can take multiple shapes.
 func mergeOneOf(a, b *openapi.Schema) error {
-	// b is itself a oneOf (e.g. built up from another, independent set of
+	return mergeAlternatives(a.OneOf, "oneOf", b)
+}
+
+// mergeAlternatives merges b into the one of alts that matches it -- see
+// [matchingAlternative] -- reporting errors under field, the keyword alts are
+// listed in.
+func mergeAlternatives(alts openapi.SchemaList, field string, b *openapi.Schema) error {
+	// b is itself a union (e.g. built up from another, independent set of
 	// samples that happened to hit the same alternatives); merge each of its
 	// alternatives into a in turn rather than treating b as a single schema
-	if len(b.OneOf) > 0 {
-		for i, alt := range b.OneOf {
-			if err := mergeOneOf(a, alt.Value); err != nil {
-				return &errpath.ErrField{Field: "oneOf", Err: &errpath.ErrIndex{Index: i, Err: err}}
+	if bAlts, bField := union(b); len(bAlts) > 0 {
+		for i, alt := range bAlts {
+			if err := mergeAlternatives(alts, field, deref(alt)); err != nil {
+				return &errpath.ErrField{Field: bField, Err: &errpath.ErrIndex{Index: i, Err: err}}
 			}
 		}
 
@@ -538,40 +587,284 @@ func mergeOneOf(a, b *openapi.Schema) error {
 	// b carries no real type information (e.g. it was generated from a null
 	// value in this particular sample); there's no way to tell which
 	// alternative it would belong to, so there's nothing to merge
-	if b.Type == "" || isGeneratedFromNull(b) {
+	if b.Type == "" || b.Type == openapi.TypeNull {
 		return nil
 	}
 
-	idx := slices.IndexFunc(a.OneOf, func(alt *openapi.SchemaRef) bool {
-		return oneOfBranchMatches(alt.Value, b)
-	})
-	if idx == -1 {
-		return &errpath.ErrField{Field: "oneOf", Err: fmt.Errorf("no branch matches type %q", b.Type)}
+	idx, err := matchingAlternative(alts, b)
+	if err != nil {
+		return &errpath.ErrField{Field: field, Err: err}
 	}
 
-	branch := a.OneOf[idx].Value
-	if err := Schema(branch, b, false); err != nil {
-		return &errpath.ErrField{
-			Field: "oneOf",
-			Err:   &errpath.ErrIndex{Index: idx, Err: err},
-		}
+	if err := mergeIntoAlternative(deref(alts[idx]), b); err != nil {
+		return &errpath.ErrField{Field: field, Err: &errpath.ErrIndex{Index: idx, Err: err}}
 	}
-
-	// the title and description belong on the oneOf schema itself, not on the
-	// individual alternatives; undo whatever the merge above picked up
-	branch.Title, branch.Description = "", ""
 
 	return nil
 }
 
-// oneOfBranchMatches reports whether b could be an instance of the given oneOf alternative.
-func oneOfBranchMatches(alt, b *openapi.Schema) bool {
-	if alt.Type != b.Type {
+// mergeIntoAlternative merges b into alt, one alternative of a union.
+func mergeIntoAlternative(alt, b *openapi.Schema) error {
+	// the title and description belong on the union itself, not on the
+	// individual alternatives; undo whatever the merge picks up from b, but
+	// keep what alt had, which may be a component's own
+	title, desc := alt.Title, alt.Description
+	defer func() { alt.Title, alt.Description = title, desc }()
+
+	return Schema(alt, b, false)
+}
+
+// matchingAlternative is the index of the one of alts b is an instance of.
+//
+// Among alternatives of b's type, one that pins properties to a single value
+// -- with const or a one-value enum, the way a tagged union's "type" names
+// its variant -- matches only if b has each of those properties with that
+// value. One that pins none matches any b of its type, and is the fallback
+// when no alternative's pinned properties match.
+func matchingAlternative(alts openapi.SchemaList, b *openapi.Schema) (int, error) {
+	discriminators := map[string]bool{}
+
+	idx, _, ok := matchAlternative(alts, b, false, discriminators)
+	if !ok && b.Type == openapi.TypeString {
+		// an alternative without a format takes any string, when none has b's
+		idx, _, ok = matchAlternative(alts, b, true, discriminators)
+	}
+
+	if ok {
+		return idx, nil
+	}
+
+	if len(discriminators) == 0 {
+		return -1, fmt.Errorf("no branch matches type %q", b.Type)
+	}
+
+	got := make([]string, 0, len(discriminators))
+	for _, name := range slices.Sorted(maps.Keys(discriminators)) {
+		v := "none"
+		if p, ok := b.Properties[name]; ok && valueOf(deref(p)) != nil {
+			v = string(valueOf(deref(p)))
+		}
+
+		got = append(got, name+": "+v)
+	}
+
+	return -1, fmt.Errorf("no branch matches %s", strings.Join(got, ", "))
+}
+
+// matchAlternative is the search [matchingAlternative] makes, with anyFormat letting an alternative of strings
+// without a format take a string of any format -- see [oneOfBranchMatches]. It reports whether one matches, and
+// whether through its pinned properties. An alternative that is itself a union
+// matches as its own best alternative does. It adds the names of the pinned properties that did not match to
+// discriminators.
+func matchAlternative(
+	alts openapi.SchemaList, b *openapi.Schema, anyFormat bool, discriminators map[string]bool,
+) (idx int, pinned, ok bool) {
+	fallback := -1
+
+	for i, alt := range alts {
+		alt = deref(alt)
+
+		union := alt.OneOf
+		if len(union) == 0 {
+			union = alt.AnyOf
+		}
+
+		if len(union) > 0 {
+			if _, p, ok := matchAlternative(union, b, anyFormat, discriminators); p {
+				return i, true, true
+			} else if ok && fallback == -1 {
+				fallback = i
+			}
+
+			continue
+		}
+
+		if !oneOfBranchMatches(alt, b, anyFormat) {
+			continue
+		}
+
+		values := pinnedProperties(alt)
+		if len(values) == 0 {
+			if fallback == -1 {
+				fallback = i
+			}
+
+			continue
+		}
+
+		if hasValues(b, values) {
+			return i, true, true
+		}
+
+		for name := range values {
+			discriminators[name] = true
+		}
+	}
+
+	return fallback, false, fallback != -1
+}
+
+// pinnedProperties are the properties s, or the parts of its allOf, allows
+// only one value for, with that value.
+func pinnedProperties(s *openapi.Schema) map[string]jsontext.Value {
+	pinned := map[string]jsontext.Value{}
+
+	for _, part := range append(openapi.SchemaList{s}, s.AllOf...) {
+		for name, p := range deref(part).Properties {
+			p = deref(p)
+			switch {
+			case len(p.Const) > 0:
+				pinned[name] = p.Const
+			case len(p.Enum) == 1:
+				pinned[name] = p.Enum[0]
+			}
+		}
+	}
+
+	return pinned
+}
+
+// hasValues reports whether b has each of the properties with its value.
+func hasValues(b *openapi.Schema, values map[string]jsontext.Value) bool {
+	for name, want := range values {
+		p, ok := b.Properties[name]
+		if !ok || !equalJSON(valueOf(deref(p)), want) {
+			return false
+		}
+	}
+
+	return true
+}
+
+// valueOf is the one value s says a property has: its const, its only enum
+// value, or, for a schema inferred from a single sample, its example.
+func valueOf(s *openapi.Schema) jsontext.Value {
+	switch {
+	case len(s.Const) > 0:
+		return s.Const
+	case len(s.Enum) == 1:
+		return s.Enum[0]
+	default:
+		return s.Example
+	}
+}
+
+// equalJSON reports whether a and b are the same JSON value.
+func equalJSON(a, b jsontext.Value) bool {
+	if a == nil || b == nil {
+		return false
+	}
+
+	a, b = a.Clone(), b.Clone()
+
+	return a.Canonicalize() == nil && b.Canonicalize() == nil && bytes.Equal(a, b)
+}
+
+// mergeIfUnionInAllOf merges b, an object, into a when a is an allOf of
+// object parts and one union of objects -- the way a tagged union whose
+// variants share common properties is often written. Each of b's properties
+// that a part declares is merged into that part; the rest, into the variant
+// of the union b matches. handled reports whether a was of that shape, in
+// which case err is Schema's own result.
+func mergeIfUnionInAllOf(a, b *openapi.Schema) (handled bool, err error) {
+	if len(a.AllOf) == 0 || b.Type != openapi.TypeObject {
+		return false, nil
+	}
+
+	unionIdx := -1
+
+	for i, part := range a.AllOf {
+		if part = deref(part); len(part.OneOf) == 0 && len(part.AnyOf) == 0 {
+			continue
+		}
+
+		if unionIdx != -1 {
+			return true, &errpath.ErrField{Field: "allOf", Err: errors.New("more than one union not implemented yet")}
+		}
+
+		unionIdx = i
+	}
+
+	if unionIdx == -1 {
+		return false, nil
+	}
+
+	declared := map[string]bool{}
+
+	for i, part := range a.AllOf {
+		if i == unionIdx {
+			continue
+		}
+
+		part = deref(part)
+
+		props := propertiesOf(b, func(name string) bool { _, ok := part.Properties[name]; return ok })
+		if len(props) == 0 {
+			continue
+		}
+
+		for name := range props {
+			declared[name] = true
+		}
+
+		if err := Schema(part, &openapi.Schema{Type: openapi.TypeObject, Properties: props}, false); err != nil {
+			return true, &errpath.ErrField{Field: "allOf", Err: &errpath.ErrIndex{Index: i, Err: err}}
+		}
+	}
+
+	union := deref(a.AllOf[unionIdx])
+	alts, field := union.OneOf, "oneOf"
+
+	if len(alts) == 0 {
+		alts, field = union.AnyOf, "anyOf"
+	}
+
+	// the whole of b decides the variant, since what tells them apart may be
+	// declared in a common part too
+	idx, err := matchingAlternative(alts, b)
+	if err != nil {
+		return true, &errpath.ErrField{Field: "allOf", Err: &errpath.ErrIndex{
+			Index: unionIdx, Err: &errpath.ErrField{Field: field, Err: err},
+		}}
+	}
+
+	rest := &openapi.Schema{
+		Type:       openapi.TypeObject,
+		Properties: propertiesOf(b, func(name string) bool { return !declared[name] }),
+	}
+
+	if err := mergeIntoAlternative(deref(alts[idx]), rest); err != nil {
+		return true, &errpath.ErrField{Field: "allOf", Err: &errpath.ErrIndex{
+			Index: unionIdx, Err: &errpath.ErrField{Field: field, Err: &errpath.ErrIndex{Index: idx, Err: err}},
+		}}
+	}
+
+	return true, nil
+}
+
+// propertiesOf is b's properties that keep accepts, in b's order.
+func propertiesOf(b *openapi.Schema, keep func(name string) bool) openapi.Schemas {
+	props := openapi.Schemas{}
+
+	for name, p := range b.Properties.ByIndex() {
+		if keep(name) {
+			props.Set(name, p)
+		}
+	}
+
+	return props
+}
+
+// oneOfBranchMatches reports whether b could be an instance of the given oneOf alternative. A string must have
+// alt's format, unless anyFormat lets an alternative without one take a string of any format.
+func oneOfBranchMatches(alt, b *openapi.Schema, anyFormat bool) bool {
+	// an integer is a number too
+	if tp, err := effectiveType(alt); err != nil || tp != b.Type && (tp != openapi.TypeNumber || b.Type != openapi.TypeInteger) {
 		return false
 	}
 
 	if alt.Type == openapi.TypeString {
-		return alt.Format == b.Format
+		return alt.Format == b.Format || anyFormat && alt.Format == ""
 	}
 
 	return true
@@ -593,12 +886,27 @@ func mergeDateTimeOrTimestamp(a, b *openapi.Schema) {
 	merged := openapi.Schema{
 		Title:       a.Title,
 		Description: a.Description,
-		OneOf: openapi.SchemaRefList{
-			{Value: &strCopy},
-			{Value: &intCopy},
+		OneOf: openapi.SchemaList{
+			&strCopy,
+			&intCopy,
 		},
 	}
 
-	*a = merged
-	*b = merged
+	a.Replace(&merged)
+	b.Replace(&merged)
+}
+
+// deref is the schema s stands for: the one it refers to, if it is a reference, following a reference to a
+// reference too.
+func deref(s *openapi.Schema) *openapi.Schema {
+	// a bound, not a record of where it has been, stops a cycle of references: deref is called for every schema
+	for range 64 {
+		if s == nil || s.Ref == nil || s.Ref.Value == nil {
+			break
+		}
+
+		s = s.Ref.Value
+	}
+
+	return s
 }

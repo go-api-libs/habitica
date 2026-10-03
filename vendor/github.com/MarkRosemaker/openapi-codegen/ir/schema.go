@@ -5,6 +5,8 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"fmt"
+	"go/token"
+	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
@@ -14,37 +16,45 @@ import (
 	"github.com/ettle/strcase"
 )
 
-// SchemaRefGoType returns the Go type string for a SchemaRef.
+// SchemaGoType maps an openapi.Schema to its Go type string.
 // After flattening, complex schemas are moved to components and referenced by $ref;
-// this function extracts the component name from the identifier or maps the inline type.
-func SchemaRefGoType(ref *openapi.SchemaRef) (*GoType, error) {
-	if ref.Ref != nil {
+// a reference maps to the name of the component it points to.
+func SchemaGoType(s *openapi.Schema) (*GoType, error) {
+	if s.Ref != nil {
+		// a component that declares no type of its own is used as it would be inline
+		if declaresNoType(s.Ref.Value) {
+			return SchemaGoType(s.Ref.Value)
+		}
+
 		// A date-time-or-int oneOf collapses to time.Time even when reached
 		// via $ref, so no synthetic component type name leaks into the
 		// generated code. A oneOf/anyOf union otherwise resolves to its own
 		// generated pointer-bag type (see fromUnionSchema), so the ordinary
 		// $ref-name resolution below already does the right thing for it.
-		if ref.Value != nil && isDateTimeOrIntegerOneOf(ref.Value) {
+		if s.Ref.Value != nil && isDateTimeOrIntegerOneOf(s.Ref.Value) {
 			return &GoType{Name: "time.Time"}, nil
 		}
-		// "#/components/schemas/Name" → "Name"
-		parts := strings.Split(ref.Ref.Identifier, "/")
-		name := parts[len(parts)-1]
 
-		// The named type this $ref points at is itself array-kind (e.g.
-		// "type TimeEntries []TimeEntry"), so it's already nilable on its
-		// own -- see [GoType.IsNilable].
-		isNilable := ref.Value != nil && ref.Value.Type == openapi.TypeArray
+		// "X or null" gets no type of its own either: it is a pointer to X.
+		if v := nullableVariant(s.Ref.Value); v != nil {
+			return nullableGoType(v)
+		}
+		// "#/components/schemas/Name" → "Name"
+		parts := strings.Split(s.Ref.Identifier, "/")
+		name := componentGoName(parts[len(parts)-1], s.Ref.Value)
+
+		// The named type this $ref points at is itself array- or map-kind
+		// (e.g. "type TimeEntries []TimeEntry"), so it's already nilable on
+		// its own -- see [GoType.IsNilable].
+		isNilable := s.Ref.Value != nil && (s.Ref.Value.Type == openapi.TypeArray || mapValues(s.Ref.Value) != nil)
 
 		return &GoType{Name: name, IsNilable: isNilable}, nil
 	}
 
-	return SchemaGoType(ref.Value)
-}
-
-// SchemaGoType maps an openapi.Schema to its Go type string.
-func SchemaGoType(s *openapi.Schema) (*GoType, error) {
 	switch s.Type {
+	case openapi.TypeNull:
+		// only ever seen as null: nothing but null fits
+		return &GoType{Name: "struct{}", IsPointer: true}, nil
 	case openapi.TypeBoolean:
 		return &GoType{Name: "bool"}, nil
 	case openapi.TypeInteger:
@@ -61,12 +71,21 @@ func SchemaGoType(s *openapi.Schema) (*GoType, error) {
 		if isDateTimeOrIntegerOneOf(s) {
 			return &GoType{Name: "time.Time"}, nil
 		}
+
+		if v := nullableVariant(s); v != nil {
+			return nullableGoType(v)
+		}
 		// A oneOf/anyOf union normally goes through fromSchema as a named
 		// component and gets a real generated pointer-bag type (see
 		// fromUnionSchema). This is only reached for a union with no name to
 		// give it (e.g. inline within array items or additionalProperties),
 		// where there's nothing to generate a struct for.
 		if isAnyOfOnly(s) || isOneOfOnly(s) {
+			return &GoType{Name: "any"}, nil
+		}
+
+		// the empty schema accepts any value
+		if len(s.Properties) == 0 && len(s.AllOf) == 0 {
 			return &GoType{Name: "any"}, nil
 		}
 
@@ -87,11 +106,11 @@ func isDateTimeOrIntegerOneOf(s *openapi.Schema) bool {
 
 	var hasDateTime, hasInteger bool
 	for _, entry := range s.OneOf {
-		if entry == nil || entry.Value == nil {
+		v := deref(entry)
+		if v == nil {
 			return false
 		}
 
-		v := entry.Value
 		switch v.Type {
 		case openapi.TypeString:
 			if v.Format == openapi.FormatDateTime {
@@ -110,6 +129,54 @@ func isDateTimeOrIntegerOneOf(s *openapi.Schema) bool {
 // anyOf (no type, allOf, or oneOf of its own).
 func isAnyOfOnly(s *openapi.Schema) bool {
 	return s.Type == "" && len(s.AnyOf) > 0 && len(s.AllOf) == 0 && len(s.OneOf) == 0
+}
+
+// isNull reports whether s, or the schema it refers to, is the null type.
+func isNull(s *openapi.Schema) bool {
+	v := deref(s)
+	return v != nil && v.Type == openapi.TypeNull
+}
+
+// nullableVariant returns X if s is a oneOf or anyOf of just X and null, or nil otherwise.
+func nullableVariant(s *openapi.Schema) *openapi.Schema {
+	if s == nil || s.Type != "" || len(s.AllOf) > 0 || len(s.Properties) > 0 {
+		return nil
+	}
+
+	variants := s.OneOf
+	if len(variants) == 0 {
+		variants = s.AnyOf
+	} else if len(s.AnyOf) > 0 {
+		return nil
+	}
+
+	if len(variants) != 2 {
+		return nil
+	}
+
+	switch {
+	case isNull(variants[0]) && !isNull(variants[1]):
+		return variants[1]
+	case isNull(variants[1]) && !isNull(variants[0]):
+		return variants[0]
+	default:
+		return nil
+	}
+}
+
+// nullableGoType is the Go type of X or null: a pointer to X if its zero value is a value of its own, or X itself.
+func nullableGoType(v *openapi.Schema) (*GoType, error) {
+	tp, err := SchemaGoType(v)
+	if err != nil {
+		return nil, err
+	}
+
+	// null otherwise reads as the zero value, which is all it needs to be when that is no value of X
+	if zeroIsAValue(v, tp) {
+		tp.IsPointer = true
+	}
+
+	return tp, nil
 }
 
 // isOneOfOnly reports whether s is an untagged union expressed purely via
@@ -180,7 +247,7 @@ func arrayGoType(s *openapi.Schema) (*GoType, error) {
 		return &GoType{Name: "[]any"}, nil
 	}
 
-	tp, err := SchemaRefGoType(s.Items)
+	tp, err := SchemaGoType(s.Items)
 	if err != nil {
 		return nil, fmt.Errorf("items: %w", err)
 	}
@@ -195,45 +262,81 @@ func arrayGoType(s *openapi.Schema) (*GoType, error) {
 }
 
 func objectGoType(s *openapi.Schema) (*GoType, error) {
-	if s.AdditionalProperties != nil {
-		tp, err := SchemaRefGoType(s.AdditionalProperties)
+	if values := mapValues(s); values != nil {
+		tp, err := SchemaGoType(values)
 		if err != nil {
 			return nil, fmt.Errorf("additionalProperties: %w", err)
 		}
 
-		return &GoType{Name: "map[string]" + tp.Name}, nil
+		return &GoType{Name: "map[string]" + tp.Name, IsNilable: true}, nil
 	}
 
 	// Named objects with properties are moved to components by the flatten pass.
 	return &GoType{Name: "struct{}"}, nil
 }
 
+// mapValues is the schema of the values of an object that is a map, or nil if it is a struct.
+// additionalProperties: true on an object without properties allows any values, like the empty schema.
+func mapValues(s *openapi.Schema) *openapi.Schema {
+	switch ap := s.AdditionalProperties; {
+	case ap == nil:
+		return nil
+	case ap.Schema != nil:
+		return ap.Schema
+	case ap.Allowed && len(s.Properties) == 0:
+		return &openapi.Schema{}
+	default:
+		return nil
+	}
+}
+
+// schemaRefPrefix starts every reference to a component schema.
+const schemaRefPrefix = "#/components/schemas/"
+
 // FromComponentSchemas converts a set of named component schemas to IR schemas.
 func FromComponentSchemas(schemas openapi.Schemas) ([]Schema, error) {
-	result := make([]Schema, 0, len(schemas))
-	for name, s := range schemas.ByIndex() {
-		if override := goNameOverride(s); override != "" {
-			name = override
-		}
+	return fromComponentSchemas(schemas, nil)
+}
 
-		irSchema, err := fromSchema(name, s)
+// fromComponentSchemas converts the component schemas; uses counts the references to each, so that an allOf part
+// only one schema refers to can be folded into that schema and need no type of its own.
+func fromComponentSchemas(schemas openapi.Schemas, uses map[string]int) ([]Schema, error) {
+	folded := map[string]bool{}
+	keys := make([]string, 0, len(schemas))
+	result := make([]Schema, 0, len(schemas))
+
+	for key, s := range schemas.ByIndex() {
+		name := componentGoName(key, s)
+
+		irSchema, err := fromSchema(name, s, uses, folded)
 		if err != nil {
 			return nil, fmt.Errorf("schema %q: %w", name, err)
 		}
 
 		if irSchema != nil {
+			keys = append(keys, key)
 			result = append(result, *irSchema)
 		}
 	}
 
-	return result, nil
+	kept := result[:0]
+	for i, s := range result {
+		if !folded[schemaRefPrefix+keys[i]] {
+			kept = append(kept, s)
+		}
+	}
+
+	pointRecursiveFields(kept)
+	markStreaming(kept)
+
+	return kept, nil
 }
 
-func fromSchema(name string, s *openapi.Schema) (*Schema, error) {
+func fromSchema(name string, s *openapi.Schema, uses map[string]int, folded map[string]bool) (*Schema, error) {
 	switch s.Type {
 	case openapi.TypeObject:
-		if s.AdditionalProperties != nil {
-			mapValueType, err := SchemaRefGoType(s.AdditionalProperties)
+		if values := mapValues(s); values != nil {
+			mapValueType, err := SchemaGoType(values)
 			if err != nil {
 				return nil, err
 			}
@@ -265,11 +368,15 @@ func fromSchema(name string, s *openapi.Schema) (*Schema, error) {
 		return fromArraySchema(name, s)
 	case "":
 		if isDateTimeOrIntegerOneOf(s) {
-			return nil, nil // handled specially: SchemaRefGoType resolves the $ref straight to time.Time
+			return nil, nil // handled specially: SchemaGoType resolves the $ref straight to time.Time
+		}
+
+		if nullableVariant(s) != nil {
+			return nil, nil // handled specially: SchemaGoType resolves the $ref straight to a pointer
 		}
 
 		if len(s.AllOf) > 0 {
-			return fromAllOfSchema(name, s)
+			return fromAllOfSchema(name, s, uses, folded)
 		}
 
 		if len(s.OneOf) > 0 {
@@ -296,26 +403,9 @@ func fromUnionSchema(name string, s *openapi.Schema, isOneOf bool) (*Schema, err
 		variants = s.OneOf
 	}
 
-	counts := make(map[string]int, len(variants))
-	unionVariants := make([]UnionVariant, len(variants))
-	for i, v := range variants {
-		tp, err := SchemaRefGoType(v)
-		if err != nil {
-			return nil, fmt.Errorf("variant %d: %w", i, err)
-		}
-
-		base := unionVariantFieldName(tp, i)
-
-		counts[base]++
-		fieldName := base
-		if n := counts[base]; n > 1 {
-			fieldName = fmt.Sprintf("%s%d", base, n)
-		}
-
-		unionVariants[i] = UnionVariant{
-			FieldName: fieldName,
-			Type:      tp.String(),
-		}
+	unionVariants, choices, discriminator, err := unionVariants(s, variants)
+	if err != nil {
+		return nil, err
 	}
 
 	return &Schema{
@@ -323,7 +413,9 @@ func fromUnionSchema(name string, s *openapi.Schema, isOneOf bool) (*Schema, err
 		Description:   getDescription(s, name),
 		Kind:          SchemaKindUnion,
 		UnionVariants: unionVariants,
+		Choices:       choices,
 		IsOneOf:       isOneOf,
+		Discriminator: discriminator,
 	}, nil
 }
 
@@ -335,7 +427,18 @@ func unionVariantFieldName(t *GoType, index int) string {
 		name = name[i+1:] // strip package qualifier, e.g. "uuid.UUID" -> "UUID"
 	}
 
-	name = strcase.ToGoPascal(name)
+	switch {
+	case name == "struct{}":
+		name = "object" // an object with no properties of its own
+	case strings.HasPrefix(name, "map[string]"):
+		name = "map of " + strings.TrimPrefix(name, "map[string]")
+	}
+
+	// a type's own exported name is kept as it is, which Go-style casing could change, such as URL2 to Url2
+	if !isExported(name) || !token.IsIdentifier(name) {
+		name = strcase.ToGoPascal(name)
+	}
+
 	if name == "" {
 		name = fmt.Sprintf("Variant%d", index+1)
 	}
@@ -392,80 +495,18 @@ func enumNameOverrides(s *openapi.Schema) []string {
 	return ext.Names
 }
 
-func fromAllOfSchema(name string, s *openapi.Schema) (*Schema, error) {
-	requiredSet := make(map[string]bool)
-	for _, r := range s.Required {
-		requiredSet[r] = true
-	}
-
-	var fields []Field
-	for _, entry := range s.AllOf {
-		if entry.Ref != nil {
-			// $ref entry → embedded struct
-			typeName, err := SchemaRefGoType(entry)
-			if err != nil {
-				return nil, err
-			}
-
-			fields = append(fields, Field{
-				Type:     typeName.String(),
-				Embedded: true,
-			})
-
-			continue
-		}
-
-		if entry.Value == nil {
-			continue
-		}
-
-		// inline object entry → merge its properties as regular fields
-		for _, r := range entry.Value.Required {
-			requiredSet[r] = true
-		}
-
-		for jsonName, propRef := range entry.Value.Properties.ByIndex() {
-			field, err := getField(jsonName, propRef, requiredSet)
-			if err != nil {
-				return nil, fmt.Errorf("allOf property %q: %w", jsonName, err)
-			}
-
-			fields = append(fields, field)
-		}
-	}
-
-	return &Schema{
-		Name:        name,
-		Description: getDescription(s, name),
-		Kind:        SchemaKindAllOf,
-		Fields:      fields,
-	}, nil
-}
-
-func getField(jsonName string, propRef *openapi.SchemaRef, requiredSet map[string]bool) (Field, error) {
-	goType, err := SchemaRefGoType(propRef)
+func getField(jsonName string, propRef *openapi.Schema, requiredSet map[string]bool) (Field, error) {
+	goType, err := SchemaGoType(propRef)
 	if err != nil {
 		return Field{}, err
 	}
 
-	v := propRef.Value
+	v := deref(propRef)
 
 	required := requiredSet[jsonName]
-	if !required {
-		switch v.Type {
-		case openapi.TypeBoolean, openapi.TypeArray:
-		case openapi.TypeString:
-			switch v.Format {
-			case openapi.FormatURI, openapi.FormatUUID:
-				goType.IsPointer = true
-			default:
-			}
-		default:
-			goType.IsPointer = true
-		}
+	if !required && zeroIsAValue(propRef, goType) {
+		goType.IsPointer = true
 	}
-
-	ref := cmp.Or(propRef.Ref, &openapi.Reference{})
 
 	fieldName := fieldGoName(jsonName)
 	if override := goNameOverride(v); override != "" {
@@ -476,8 +517,8 @@ func getField(jsonName string, propRef *openapi.SchemaRef, requiredSet map[strin
 		Name:            fieldName,
 		JSONName:        jsonName,
 		Type:            goType.String(),
-		JSONTag:         buildJSONTag(jsonName, v.Type, v.Format, required),
-		Description:     cmp.Or(ref.Description, v.Description),
+		JSONTag:         buildJSONTag(jsonName, required),
+		Description:     cmp.Or(propRef.Description, v.Description),
 		Required:        required,
 		IsDateTimeOrInt: isDateTimeOrIntegerOneOf(v),
 		IsUnixTime:      goType.Name == "time.Time" && v.Type == openapi.TypeInteger,
@@ -615,6 +656,8 @@ func fromArraySchema(name string, s *openapi.Schema) (*Schema, error) {
 		Description: getDescription(s, name),
 		Kind:        SchemaKindAlias,
 		Type:        aliasType.String(),
+		// a defined type would drop the methods uuid.UUID or time.Time encode themselves with
+		IsTypeAlias: strings.Contains(aliasType.Name, ".") && !aliasType.IsPointer && !aliasType.IsSlice,
 	}, nil
 }
 
@@ -627,22 +670,20 @@ func fromTupleSchema(name string, s *openapi.Schema) (*Schema, error) {
 
 	fields := make([]Field, len(s.PrefixItems))
 	for i, p := range s.PrefixItems {
-		tp, err := SchemaRefGoType(p)
+		tp, err := SchemaGoType(p)
 		if err != nil {
 			return nil, &errpath.ErrField{Field: "prefixItems", Err: &errpath.ErrIndex{Index: i, Err: err}}
 		}
 
 		fieldName := fmt.Sprintf("Item%0*d", width, i)
-		if override := goNameOverride(p.Value); override != "" {
+		if override := goNameOverride(deref(p)); override != "" {
 			fieldName = override
 		}
-
-		ref := cmp.Or(p.Ref, &openapi.Reference{})
 
 		fields[i] = Field{
 			Name:        fieldName,
 			Type:        tp.String(),
-			Description: cmp.Or(ref.Description, p.Value.Description),
+			Description: cmp.Or(p.Description, deref(p).Description),
 		}
 	}
 
@@ -670,6 +711,8 @@ func fromScalarSchema(name string, s *openapi.Schema) (*Schema, error) {
 		Description: getDescription(s, name),
 		Kind:        SchemaKindAlias,
 		Type:        aliasType.String(),
+		// a defined type would drop the methods uuid.UUID or time.Time encode themselves with
+		IsTypeAlias: strings.Contains(aliasType.Name, ".") && !aliasType.IsPointer && !aliasType.IsSlice,
 	}, nil
 }
 
@@ -718,11 +761,20 @@ var replInvalidChars = strings.NewReplacer(
 	"(", "",
 	")", "",
 	":", "",
+	"'", "",
+	"’", "",
 )
 
 // enumConstName builds the Go constant name for an enum value, e.g. MyEnum + "foo_bar" → MyEnumFooBar.
 func enumConstName(typeName, value string) string {
 	sanitized := replInvalidChars.Replace(value)
+	sanitized = strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) || r == '_' || r == '-' {
+			return r
+		}
+
+		return ' ' // any other character only separates words, e.g. the comma in "Modify, only changes"
+	}, sanitized)
 	sanitized = replaceLeadingDigits(sanitized)
 
 	if len(sanitized) <= 3 && sanitized == strings.ToUpper(sanitized) {
@@ -780,52 +832,47 @@ func digitWord(r rune) string {
 
 // buildJSONTag computes the json struct tag for a field.
 //
-// Rules (mirroring the apilib reference):
-//   - plain string, required:     json:"name"
-//   - plain string, optional:     json:"name"       (empty strings are valid values)
-//   - array:                      json:"name,omitempty"
-//   - other, required:            json:"name"        (a required field must always be sent,
-//     zero value included -- omitzero would silently drop e.g. a required "false" or "0")
-//   - other, optional:            json:"name,omitempty"
-func buildJSONTag(jsonName string, tp openapi.DataType, format openapi.Format, required bool) string {
-	// NOTE: JSON tags need to be rethought;
-	// ideally, we want to not marshal unnecessarily
-	// at the same time, sometimes we need to marshal null to delete values
-	// we may need to decide based on custom x- tags in the openapi spec
-	var opts string
-	switch tp {
-	case openapi.TypeString:
-		switch format {
-		case "": // regular string
-			opts = ",omitzero"
-		default:
-			// NOTE: copied from legacy code, might not make sense
-			if required {
-				opts = ",omitzero"
-			} else {
-				opts = ",omitempty"
-			}
-		}
-	case openapi.TypeArray:
-		// omitempty would drop an initialised-but-empty slice, so a required
-		// array could never be sent as []. omitzero drops only a nil slice,
-		// leaving the sender to choose: nil omits the field, []T{} sends [].
-		// If the array is required, we do not have any tags.
-		if !required {
-			opts = ",omitzero"
-		}
-	case openapi.TypeBoolean, openapi.TypeInteger:
-		// A required field must always be sent, zero value included: a
-		// required boolean that happens to be false, or a required count of
-		// 0, is a real value, not an absence to omit.
-		if !required {
-			opts = ",omitempty"
-		}
-	default:
-		if !required {
-			opts = ",omitempty"
+// An optional field is omitted when it holds its zero value, which is how a caller leaves it unset: nil for a pointer,
+// a map or a slice, so an empty one is still sent. omitempty would not do: encoding/json/v2 omits with it only what
+// encodes as an empty JSON value, so an unset time, number or boolean would still be sent, as "0001-01-01T00:00:00Z",
+// 0 or false.
+//
+// A required field is always sent, zero value included: a required "", false or 0 is a real value.
+func buildJSONTag(jsonName string, required bool) string {
+	if required {
+		return fmt.Sprintf(`json:"%s"`, jsonName)
+	}
+
+	return fmt.Sprintf(`json:"%s,omitzero"`, jsonName)
+}
+
+// deref is the schema s stands for: the one it refers to, if it is a reference.
+func deref(s *openapi.Schema) *openapi.Schema {
+	if s != nil && s.Ref != nil {
+		return s.Ref.Value
+	}
+
+	return s
+}
+
+// declaresNoType reports whether fromSchema declares no type for the component s: it is null, only a reference, or the empty schema.
+func declaresNoType(s *openapi.Schema) bool {
+	return s != nil && (s.Type == openapi.TypeNull ||
+		s.Type == "" && len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && len(s.Properties) == 0)
+}
+
+// reNotInGoName matches what a component name may hold but a Go identifier may not, e.g. the "-" in "Keypoint-Input".
+var reNotInGoName = regexp.MustCompile(`[^A-Za-z0-9_]+(.?)`)
+
+// componentGoName is the Go type name of the component schema s, named name: its x-go-name, or name made a valid identifier.
+func componentGoName(name string, s *openapi.Schema) string {
+	if s != nil {
+		if override := goNameOverride(s); override != "" {
+			return override
 		}
 	}
 
-	return fmt.Sprintf(`json:"%s%s"`, jsonName, opts)
+	return reNotInGoName.ReplaceAllStringFunc(name, func(m string) string {
+		return strings.ToUpper(reNotInGoName.ReplaceAllString(m, "$1"))
+	})
 }

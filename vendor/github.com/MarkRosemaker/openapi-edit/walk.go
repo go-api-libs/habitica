@@ -1,73 +1,81 @@
 package edit
 
-import "github.com/MarkRosemaker/openapi"
+import (
+	"maps"
+	"slices"
 
-// walkSchemaRefs calls fn once for every schema reference reachable from doc:
-// through components (schemas, responses, parameters, request bodies,
-// headers, callbacks, path items) and through every path, operation, and
-// webhook.
+	"github.com/MarkRosemaker/openapi"
+)
+
+// walkSchemas calls fn once for every schema reachable from doc: through
+// components (schemas, responses, parameters, request bodies, headers,
+// callbacks, path items), through every path, operation, and webhook, and
+// through the schemas each one contains or refers to.
 //
-// A schema reachable through more than one reference — directly, or because
-// two references resolve to the same schema — is still walked into only
-// once, so fn can freely mutate the references it's given without risking
-// infinite recursion on a self-referential schema.
+// It visits them in the order the document holds them, so an edit that depends
+// on which it meets first gives the same result every time.
+//
+// A schema with a $ref is itself one of them, so fn sees every reference, and
+// the keywords beside it too. Each schema is walked into only once, so fn can
+// freely edit what it is given without risking infinite recursion on a
+// self-referential schema.
 //
 // This is the traversal RenameSchema uses to find every occurrence of a
-// reference; it's exported because other structural edits need the same
+// reference; it's shared because other structural edits need the same
 // walk with a different fn, e.g. finding every reference to a schema that's
 // about to be redirected onto another with [RedirectSchema].
-func walkSchemaRefs(doc *openapi.Document, fn func(*openapi.SchemaRef)) {
-	w := &schemaRefWalker{fn: fn, visited: map[*openapi.Schema]bool{}}
+func walkSchemas(doc *openapi.Document, fn func(*openapi.Schema)) {
+	w := &schemaWalker{fn: fn, visited: map[*openapi.Schema]bool{}}
 
-	for _, s := range doc.Components.Schemas {
+	for _, s := range doc.Components.Schemas.ByIndex() {
 		w.schema(s)
 	}
 
-	for _, r := range doc.Components.Responses {
+	for _, r := range doc.Components.Responses.ByIndex() {
 		w.response(r)
 	}
 
-	for _, p := range doc.Components.Parameters {
+	for _, p := range doc.Components.Parameters.ByIndex() {
 		w.parameter(p)
 	}
 
-	for _, rb := range doc.Components.RequestBodies {
+	for _, rb := range doc.Components.RequestBodies.ByIndex() {
 		w.requestBody(rb)
 	}
 
 	w.headers(doc.Components.Headers)
 
-	for _, c := range doc.Components.Callbacks {
+	for _, c := range doc.Components.Callbacks.ByIndex() {
 		w.callbackRef(c)
 	}
 
-	for _, p := range doc.Components.PathItems {
+	for _, p := range doc.Components.PathItems.ByIndex() {
 		w.pathItemRef(p)
 	}
 
-	for _, p := range doc.Paths {
+	for _, p := range doc.Paths.ByIndex() {
 		w.pathItem(p)
 	}
 
-	for _, p := range doc.Webhooks {
+	for _, p := range doc.Webhooks.ByIndex() {
 		w.pathItemRef(p)
 	}
 }
 
-// schemaRefWalker walks every schema reference reachable from a document,
+// schemaWalker walks every schema reference reachable from a document,
 // calling fn once for each.
-type schemaRefWalker struct {
-	fn      func(*openapi.SchemaRef)
+type schemaWalker struct {
+	fn      func(*openapi.Schema)
 	visited map[*openapi.Schema]bool
 }
 
-func (w *schemaRefWalker) pathItemRef(r *openapi.PathItemRef) {
+func (w *schemaWalker) pathItemRef(r *openapi.PathItemRef) {
 	if r != nil {
 		w.pathItem(r.Value)
 	}
 }
 
-func (w *schemaRefWalker) pathItem(p *openapi.PathItem) {
+func (w *schemaWalker) pathItem(p *openapi.PathItem) {
 	if p == nil {
 		return
 	}
@@ -79,7 +87,7 @@ func (w *schemaRefWalker) pathItem(p *openapi.PathItem) {
 	}
 }
 
-func (w *schemaRefWalker) operation(op *openapi.Operation) {
+func (w *schemaWalker) operation(op *openapi.Operation) {
 	if op == nil {
 		return
 	}
@@ -87,45 +95,46 @@ func (w *schemaRefWalker) operation(op *openapi.Operation) {
 	w.parameterList(op.Parameters)
 	w.requestBody(op.RequestBody)
 
-	for _, r := range op.Responses {
+	for _, r := range op.Responses.ByIndex() {
 		w.response(r)
 	}
 
-	for _, c := range op.Callbacks {
-		w.callback(c)
+	// an operation's callbacks keep no order of their own
+	for _, name := range slices.Sorted(maps.Keys(op.Callbacks)) {
+		w.callback(op.Callbacks[name])
 	}
 }
 
 // callbackRef covers components.callbacks, which holds references, whereas an
 // operation holds callbacks by value.
-func (w *schemaRefWalker) callbackRef(r *openapi.CallbackRef) {
+func (w *schemaWalker) callbackRef(r *openapi.CallbackRef) {
 	if r != nil && r.Value != nil {
 		w.callback(*r.Value)
 	}
 }
 
-func (w *schemaRefWalker) callback(c openapi.Callback) {
-	for _, p := range c {
+func (w *schemaWalker) callback(c openapi.Callback) {
+	for _, p := range c.ByIndex() {
 		w.pathItemRef(p)
 	}
 }
 
-func (w *schemaRefWalker) parameterList(ps openapi.ParameterList) {
+func (w *schemaWalker) parameterList(ps openapi.ParameterList) {
 	for _, p := range ps {
 		w.parameter(p)
 	}
 }
 
-func (w *schemaRefWalker) parameter(r *openapi.ParameterRef) {
+func (w *schemaWalker) parameter(r *openapi.ParameterRef) {
 	if r == nil || r.Value == nil {
 		return
 	}
 
-	w.schemaRef(r.Value.Schema)
+	w.schema(r.Value.Schema)
 	w.content(r.Value.Content)
 }
 
-func (w *schemaRefWalker) requestBody(r *openapi.RequestBodyRef) {
+func (w *schemaWalker) requestBody(r *openapi.RequestBodyRef) {
 	if r == nil || r.Value == nil {
 		return
 	}
@@ -133,7 +142,7 @@ func (w *schemaRefWalker) requestBody(r *openapi.RequestBodyRef) {
 	w.content(r.Value.Content)
 }
 
-func (w *schemaRefWalker) response(r *openapi.ResponseRef) {
+func (w *schemaWalker) response(r *openapi.ResponseRef) {
 	if r == nil || r.Value == nil {
 		return
 	}
@@ -142,8 +151,8 @@ func (w *schemaRefWalker) response(r *openapi.ResponseRef) {
 	w.content(r.Value.Content)
 }
 
-func (w *schemaRefWalker) headers(hs openapi.Headers) {
-	for _, r := range hs {
+func (w *schemaWalker) headers(hs openapi.Headers) {
+	for _, r := range hs.ByIndex() {
 		if r == nil || r.Value == nil {
 			continue
 		}
@@ -153,15 +162,15 @@ func (w *schemaRefWalker) headers(hs openapi.Headers) {
 	}
 }
 
-func (w *schemaRefWalker) content(c openapi.Content) {
-	for _, mt := range c {
+func (w *schemaWalker) content(c openapi.Content) {
+	for _, mt := range c.ByIndex() {
 		if mt == nil {
 			continue
 		}
 
-		w.schemaRef(mt.Schema)
+		w.schema(mt.Schema)
 
-		for _, e := range mt.Encoding {
+		for _, e := range mt.Encoding.ByIndex() {
 			if e != nil {
 				w.headers(e.Headers)
 			}
@@ -169,39 +178,53 @@ func (w *schemaRefWalker) content(c openapi.Content) {
 	}
 }
 
-func (w *schemaRefWalker) schemaRef(r *openapi.SchemaRef) {
-	if r == nil {
-		return
-	}
-
-	w.fn(r)
-
-	// A resolved reference also carries the schema it points at. Walking it is
-	// what reaches references nested inside a referenced schema.
-	w.schema(r.Value)
-}
-
-func (w *schemaRefWalker) schemaRefList(l openapi.SchemaRefList) {
-	for _, r := range l {
-		w.schemaRef(r)
+func (w *schemaWalker) schemaList(l openapi.SchemaList) {
+	for _, s := range l {
+		w.schema(s)
 	}
 }
 
-func (w *schemaRefWalker) schema(s *openapi.Schema) {
+func (w *schemaWalker) schema(s *openapi.Schema) {
 	if s == nil || w.visited[s] {
 		return
 	}
 
 	w.visited[s] = true
 
-	w.schemaRefList(s.AllOf)
-	w.schemaRefList(s.OneOf)
-	w.schemaRefList(s.AnyOf)
-	w.schemaRef(s.Not)
-	w.schemaRef(s.Items)
-	w.schemaRef(s.AdditionalProperties)
+	w.fn(s)
 
-	for _, r := range s.Properties {
-		w.schemaRef(r)
+	// A resolved reference also carries the schema it points at. Walking it is
+	// what reaches references nested inside a referenced schema.
+	if s.Ref != nil {
+		w.schema(s.Ref.Value)
+	}
+
+	subschemas(s, w.schema)
+}
+
+// subschemas calls fn for each schema s holds inline, in the order s holds them; a reference's target is not one.
+func subschemas(s *openapi.Schema, fn func(*openapi.Schema)) {
+	for _, l := range []openapi.SchemaList{s.AllOf, s.OneOf, s.AnyOf} {
+		for _, e := range l {
+			fn(e)
+		}
+	}
+
+	fn(s.Not)
+
+	for _, e := range s.PrefixItems {
+		fn(e)
+	}
+
+	fn(s.Items)
+
+	if s.AdditionalProperties != nil {
+		fn(s.AdditionalProperties.Schema)
+	}
+
+	fn(s.PropertyNames)
+
+	for _, p := range s.Properties.ByIndex() {
+		fn(p)
 	}
 }
