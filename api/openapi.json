@@ -210,8 +210,7 @@
           "challenges": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "partyUp": {
@@ -725,7 +724,10 @@
             "example": "2026-05-06T02:26:43.371Z"
           },
           {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "example": 1485487350827
           }
         ]
@@ -1188,8 +1190,7 @@
           "assignedUsers": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "sharedCompletion": {
@@ -1219,8 +1220,7 @@
           "blocks": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "newMessages": {
@@ -1450,8 +1450,7 @@
             "format": "uuid",
             "example": "c6333f37-308d-4a56-bf5f-a700ecb268c1"
           }
-        },
-        "example": null
+        }
       },
       "NotificationData": {
         "type": "object",
@@ -1667,8 +1666,7 @@
           "mysteryItems": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "gemsBought": {
@@ -1806,8 +1804,7 @@
             "format": "uuid",
             "example": "b8b549c4-8d56-4e49-9b38-b4dcde9763b9"
           }
-        },
-        "example": null
+        }
       },
       "Reminders": {
         "type": "array",
@@ -2232,15 +2229,13 @@
           "weeksOfMonth": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "checklist": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "isDue": {
@@ -2373,8 +2368,7 @@
           "value",
           "scoredUp",
           "scoredDown"
-        ],
-        "example": null
+        ]
       },
       "TaskHistory": {
         "type": "array",
@@ -2657,8 +2651,7 @@
           "webhooks": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "pushDevices": {
@@ -2717,8 +2710,7 @@
           "unpinnedItems": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "invitesSent": {
@@ -2728,8 +2720,7 @@
           "pinnedItemsOrder": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "_subSignature": {
@@ -2817,8 +2808,7 @@
           "webhooks": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "pushDevices": {
@@ -2875,8 +2865,7 @@
           "unpinnedItems": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "invitesSent": {
@@ -2886,8 +2875,7 @@
           "pinnedItemsOrder": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "_subSignature": {
@@ -2969,15 +2957,13 @@
           "guilds": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "parties": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           }
         },
@@ -5151,8 +5137,7 @@
           "birthdayReceived": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "birthday": {
@@ -5162,8 +5147,7 @@
           "thankyouReceived": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "thankyou": {
@@ -5173,8 +5157,7 @@
           "greetingReceived": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "greeting": {
@@ -5184,8 +5167,7 @@
           "nyeReceived": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "nye": {
@@ -5195,8 +5177,7 @@
           "valentineReceived": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "valentine": {
@@ -5222,22 +5203,19 @@
           "congratsReceived": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "getwellReceived": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "goodluckReceived": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "congrats": {
@@ -5385,8 +5363,7 @@
           "improvementCategories": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           },
           "automaticAllocation": {
@@ -5700,8 +5677,7 @@
           "mirrorGroupTasks": {
             "type": "array",
             "items": {
-              "type": "object",
-              "example": null
+              "type": "object"
             }
           }
         },
