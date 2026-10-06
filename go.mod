@@ -11,7 +11,7 @@ tool (
 
 require (
 	github.com/MarkRosemaker/jsonutil v0.0.0-20261004011215-c1eff28436f6
-	github.com/MarkRosemaker/openapi-enrich v0.0.0-20261006190920-cec15e14d62a
+	github.com/MarkRosemaker/openapi-enrich v0.0.0-20261006202640-f657defddb11
 	github.com/go-api-libs/api v0.0.0-20261004011215-1ec8b5a6b7dc
 	github.com/go-api-libs/types v0.0.0-20260821232109-0cf45378823e
 )
@@ -26,7 +26,7 @@ require (
 	github.com/MarkRosemaker/openapi-compress v0.0.0-20261006190958-adbbc7924a68 // indirect
 	github.com/MarkRosemaker/openapi-edit v0.0.0-20261006170628-7d8379d5a60a // indirect
 	github.com/MarkRosemaker/openapi-flatten v0.0.0-20261006190940-037d84db18de // indirect
-	github.com/MarkRosemaker/openapi-merge v0.0.0-20261006185915-34714385a10c // indirect
+	github.com/MarkRosemaker/openapi-merge v0.0.0-20261006202601-52d812cd2e36 // indirect
 	github.com/MarkRosemaker/ordmap v0.0.0-20261005183330-99e2b69a0bc0 // indirect
 	github.com/MarkRosemaker/yaml v0.0.0-20261004011229-302f2a2e75b5 // indirect
 	github.com/MarkRosemaker/yaml2json v0.0.0-20261004011213-bbdd737b26f4 // indirect
