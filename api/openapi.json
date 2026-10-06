@@ -680,11 +680,7 @@
             "format": "uuid",
             "example": "f23c12f2-5830-4f15-9c36-e17fd729a812"
           }
-        },
-        "required": [
-          "taskId",
-          "id"
-        ]
+        }
       },
       "CronResponse": {
         "type": "object",
@@ -776,8 +772,6 @@
           }
         },
         "required": [
-          "target",
-          "canDrop",
           "value",
           "key",
           "type",
@@ -1203,8 +1197,7 @@
         },
         "required": [
           "approval",
-          "assignedUsers",
-          "sharedCompletion"
+          "assignedUsers"
         ]
       },
       "Inbox": {
@@ -1782,8 +1775,7 @@
           }
         },
         "required": [
-          "progressDelta",
-          "collection"
+          "progressDelta"
         ]
       },
       "Reminder": {
@@ -2073,10 +2065,7 @@
           "gp",
           "exp",
           "mp",
-          "hp",
-          "toNextLevel",
-          "maxHealth",
-          "maxMP"
+          "hp"
         ]
       },
       "Task": {
@@ -2313,19 +2302,12 @@
           "_id",
           "challenge",
           "group",
-          "up",
-          "down",
-          "counterUp",
-          "counterDown",
-          "frequency",
-          "history",
           "type",
           "notes",
           "tags",
           "value",
           "priority",
           "attribute",
-          "byHabitica",
           "text",
           "reminders",
           "createdAt",
@@ -2365,9 +2347,7 @@
         },
         "required": [
           "date",
-          "value",
-          "scoredUp",
-          "scoredDown"
+          "value"
         ]
       },
       "TaskHistory": {
@@ -2470,9 +2450,7 @@
         "required": [
           "success",
           "data",
-          "notifications",
-          "userV",
-          "appVersion"
+          "notifications"
         ]
       },
       "Tmp": {
@@ -2734,11 +2712,7 @@
           }
         },
         "required": [
-          "success",
-          "data",
-          "notifications",
-          "userV",
-          "appVersion"
+          "notifications"
         ]
       },
       "UserData": {

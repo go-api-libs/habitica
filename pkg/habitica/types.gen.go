@@ -193,8 +193,8 @@ type CastResponseData struct {
 
 // Challenge defines a model
 type Challenge struct {
-	TaskID uuid.UUID `json:"taskId"`
-	ID     uuid.UUID `json:"id"`
+	TaskID uuid.UUID `json:"taskId,omitzero"`
+	ID     uuid.UUID `json:"id,omitzero"`
 }
 
 // CronResponse defines a model
@@ -226,8 +226,8 @@ func (e Direction) Valid() bool {
 
 // Drop defines a model
 type Drop struct {
-	Target  string `json:"target"`
-	CanDrop bool   `json:"canDrop"`
+	Target  string `json:"target,omitzero"`
+	CanDrop *bool  `json:"canDrop,omitzero"`
 	Value   int    `json:"value"`
 	Key     string `json:"key"`
 	Type    string `json:"type"`
@@ -338,7 +338,7 @@ type FlagsTutorialIos struct {
 type Group struct {
 	Approval         Approval   `json:"approval"`
 	AssignedUsers    []struct{} `json:"assignedUsers"`
-	SharedCompletion string     `json:"sharedCompletion"`
+	SharedCompletion string     `json:"sharedCompletion,omitzero"`
 	CompletedBy      *struct{}  `json:"completedBy,omitzero"`
 }
 
@@ -508,7 +508,7 @@ type PushDevices []PushDevice
 // Quest defines a model
 type Quest struct {
 	ProgressDelta float64 `json:"progressDelta"`
-	Collection    int     `json:"collection"`
+	Collection    *int    `json:"collection,omitzero"`
 }
 
 // Reminder defines a model
@@ -611,9 +611,9 @@ type Stats struct {
 	Exp         int      `json:"exp"`
 	Mp          float64  `json:"mp"`
 	Hp          float64  `json:"hp"`
-	ToNextLevel int      `json:"toNextLevel"`
-	MaxHealth   int      `json:"maxHealth"`
-	MaxMp       int      `json:"maxMP"`
+	ToNextLevel *int     `json:"toNextLevel,omitzero"`
+	MaxHealth   *int     `json:"maxHealth,omitzero"`
+	MaxMp       *int     `json:"maxMP,omitzero"`
 }
 
 // Task defines a model
@@ -635,14 +635,14 @@ type Task struct {
 	Reminders         Reminders    `json:"reminders"`
 	CreatedAt         time.Time    `json:"createdAt"`
 	UpdatedAt         time.Time    `json:"updatedAt"`
-	History           TaskHistory  `json:"history"`
-	Down              bool         `json:"down"`
-	Up                bool         `json:"up"`
+	History           TaskHistory  `json:"history,omitzero"`
+	Down              *bool        `json:"down,omitzero"`
+	Up                *bool        `json:"up,omitzero"`
 	ID                uuid.UUID    `json:"id"`
-	CounterUp         int          `json:"counterUp"`
-	CounterDown       int          `json:"counterDown"`
-	Frequency         string       `json:"frequency"`
-	ByHabitica        bool         `json:"byHabitica"`
+	CounterUp         *int         `json:"counterUp,omitzero"`
+	CounterDown       *int         `json:"counterDown,omitzero"`
+	Frequency         string       `json:"frequency,omitzero"`
+	ByHabitica        *bool        `json:"byHabitica,omitzero"`
 	Repeat            RepeatWeekly `json:"repeat,omitzero"`
 	EveryX            *int         `json:"everyX,omitzero"`
 	Streak            *int         `json:"streak,omitzero"`
@@ -677,8 +677,8 @@ type Task struct {
 type TaskActivity struct {
 	Date       int     `json:"date"`
 	Value      float64 `json:"value"`
-	ScoredUp   int     `json:"scoredUp"`
-	ScoredDown int     `json:"scoredDown"`
+	ScoredUp   *int    `json:"scoredUp,omitzero"`
+	ScoredDown *int    `json:"scoredDown,omitzero"`
 	IsDue      *bool   `json:"isDue,omitzero"`
 	Completed  *bool   `json:"completed,omitzero"`
 }
@@ -709,8 +709,8 @@ type TasksResponse struct {
 	Success       bool          `json:"success"`
 	Data          Tasks         `json:"data"`
 	Notifications Notifications `json:"notifications"`
-	UserV         int           `json:"userV"`
-	AppVersion    string        `json:"appVersion"`
+	UserV         *int          `json:"userV,omitzero"`
+	AppVersion    string        `json:"appVersion,omitzero"`
 }
 
 // Tmp defines a model
@@ -760,11 +760,11 @@ type UltimateGearSets struct {
 
 // User defines a model
 type User struct {
-	Success                bool                `json:"success"`
-	Data                   UserData            `json:"data"`
+	Success                *bool               `json:"success,omitzero"`
+	Data                   UserData            `json:"data,omitzero"`
 	Notifications          Notifications       `json:"notifications"`
-	UserV                  int                 `json:"userV"`
-	AppVersion             string              `json:"appVersion"`
+	UserV                  *int                `json:"userV,omitzero"`
+	AppVersion             string              `json:"appVersion,omitzero"`
 	Auth                   Auth                `json:"auth,omitzero"`
 	Achievements           Achievements        `json:"achievements,omitzero"`
 	Backer                 *struct{}           `json:"backer,omitzero"`
