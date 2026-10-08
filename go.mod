@@ -11,7 +11,7 @@ tool (
 
 require (
 	github.com/MarkRosemaker/jsonutil v0.0.0-20261004011215-c1eff28436f6
-	github.com/MarkRosemaker/openapi-enrich v0.0.0-20261008184654-895309ca972c
+	github.com/MarkRosemaker/openapi-enrich v0.0.0-20261008193713-b90b71fb19c7
 	github.com/go-api-libs/api v0.0.0-20261004011215-1ec8b5a6b7dc
 	github.com/go-api-libs/types v0.0.0-20260821232109-0cf45378823e
 )
