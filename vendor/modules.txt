@@ -10,7 +10,7 @@ github.com/MarkRosemaker/json2yaml
 # github.com/MarkRosemaker/jsonutil v0.0.0-20261009163256-63143e59ef10
 ## explicit; go 1.27
 github.com/MarkRosemaker/jsonutil
-# github.com/MarkRosemaker/openapi v0.0.0-20261009163327-1d4ffdc7ddea
+# github.com/MarkRosemaker/openapi v0.0.0-20261009220216-37f4a6ce811f
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi
 # github.com/MarkRosemaker/openapi-codegen v0.0.0-20261009163613-f7c71fa5307a
@@ -27,10 +27,10 @@ github.com/MarkRosemaker/openapi-compare/schema
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-compress
 github.com/MarkRosemaker/openapi-compress/cmd/openapi-compress
-# github.com/MarkRosemaker/openapi-edit v0.0.0-20261009163351-a02bdc2eaf2e
+# github.com/MarkRosemaker/openapi-edit v0.0.0-20261009220258-f1baf7a308df
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-edit
-# github.com/MarkRosemaker/openapi-enrich v0.0.0-20261009163427-0ef9adec7284
+# github.com/MarkRosemaker/openapi-enrich v0.0.0-20261009220358-945c5d3e5f89
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/cassette
@@ -40,10 +40,10 @@ github.com/MarkRosemaker/openapi-enrich/recorder
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-flatten
 github.com/MarkRosemaker/openapi-flatten/cmd/openapi-flatten
-# github.com/MarkRosemaker/openapi-merge v0.0.0-20261009163349-48493c28b2d5
+# github.com/MarkRosemaker/openapi-merge v0.0.0-20261009220258-57c4bc8ba894
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-merge
-# github.com/MarkRosemaker/ordmap v0.0.0-20261009163305-fc252a982e0c
+# github.com/MarkRosemaker/ordmap v0.0.0-20261009220143-681d018b7a2f
 ## explicit; go 1.27
 github.com/MarkRosemaker/ordmap
 # github.com/MarkRosemaker/yaml v0.0.0-20261009163313-a4483f4cc7d4
@@ -66,7 +66,7 @@ github.com/go-api-libs/types
 github.com/spf13/afero
 github.com/spf13/afero/internal/common
 github.com/spf13/afero/mem
-# golang.org/x/exp v0.0.0-20261007192929-f45ad48fbe92
+# golang.org/x/exp v0.0.0-20261009195045-ca0d7ba23607
 ## explicit; go 1.26.0
 golang.org/x/exp/maps
 # golang.org/x/mod v0.41.0
