@@ -13,17 +13,17 @@ github.com/MarkRosemaker/jsonutil
 # github.com/MarkRosemaker/openapi v0.0.0-20261009220216-37f4a6ce811f
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi
-# github.com/MarkRosemaker/openapi-codegen v0.0.0-20261009163613-f7c71fa5307a
+# github.com/MarkRosemaker/openapi-codegen v0.0.0-20261009220548-970d7bf89703
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/cmd/openapi-codegen
 github.com/MarkRosemaker/openapi-codegen/config
 github.com/MarkRosemaker/openapi-codegen/ir
 github.com/MarkRosemaker/openapi-codegen/render
-# github.com/MarkRosemaker/openapi-compare v0.0.0-20261009163350-9faceaea9606
+# github.com/MarkRosemaker/openapi-compare v0.0.0-20261009220258-3e82e16d5a53
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-compare/schema
-# github.com/MarkRosemaker/openapi-compress v0.0.0-20261009163450-c6bbb79acd15
+# github.com/MarkRosemaker/openapi-compress v0.0.0-20261009220421-362b51b23a69
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-compress
 github.com/MarkRosemaker/openapi-compress/cmd/openapi-compress
@@ -36,7 +36,7 @@ github.com/MarkRosemaker/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/cassette
 github.com/MarkRosemaker/openapi-enrich/cmd/openapi-enrich
 github.com/MarkRosemaker/openapi-enrich/recorder
-# github.com/MarkRosemaker/openapi-flatten v0.0.0-20261009163350-13e83c998a1a
+# github.com/MarkRosemaker/openapi-flatten v0.0.0-20261009220258-093ea11bfb55
 ## explicit; go 1.27
 github.com/MarkRosemaker/openapi-flatten
 github.com/MarkRosemaker/openapi-flatten/cmd/openapi-flatten
@@ -69,7 +69,7 @@ github.com/spf13/afero/mem
 # golang.org/x/exp v0.0.0-20261009195045-ca0d7ba23607
 ## explicit; go 1.26.0
 golang.org/x/exp/maps
-# golang.org/x/mod v0.41.0
+# golang.org/x/mod v0.42.0
 ## explicit; go 1.26.0
 golang.org/x/mod/internal/lazyregexp
 golang.org/x/mod/module
