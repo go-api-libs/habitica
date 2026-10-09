@@ -16,12 +16,12 @@ github.com/MarkRosemaker/openapi-compress v0.0.0-20261008184720-596edaeb762b h1:
 github.com/MarkRosemaker/openapi-compress v0.0.0-20261008184720-596edaeb762b/go.mod h1:mrDVRN6unxXyZOtgi/BNRKRCj1QWUF+Twk6M8tUAp4s=
 github.com/MarkRosemaker/openapi-edit v0.0.0-20261008160230-e0aad33a8e1a h1:5Kw1GjmsVO9nRkBjcdESSGFTZQI2tRxQ+JXPOiElFsI=
 github.com/MarkRosemaker/openapi-edit v0.0.0-20261008160230-e0aad33a8e1a/go.mod h1:xU48Wno0FTe+42GTQwbko30e8gC9H2wTOG/gIoHWbdc=
-github.com/MarkRosemaker/openapi-enrich v0.0.0-20261009090739-71b6e0fff27d h1:DQeK2DTWBYGHY8swIwkdc2HCn7MZneUWcF1WYBjlK0w=
-github.com/MarkRosemaker/openapi-enrich v0.0.0-20261009090739-71b6e0fff27d/go.mod h1:keNkZK9N+BnyCy7v1TooEPbeJLnJbSiE/aJpbBLh3n0=
+github.com/MarkRosemaker/openapi-enrich v0.0.0-20261009091848-99075774c671 h1:L7Fg2v70KAFbhBAqqBYXE2ahnxSaFlNYNapfh1WPfw8=
+github.com/MarkRosemaker/openapi-enrich v0.0.0-20261009091848-99075774c671/go.mod h1:IPcKC1aDIIAMv773aUQOjF5BvE8i2KCWz9KDiRnujTg=
 github.com/MarkRosemaker/openapi-flatten v0.0.0-20261008184626-791fd077df8e h1:SaL6iONzARXqh5gp3rH1XubljGkcchNuSMk0CUMMeX8=
 github.com/MarkRosemaker/openapi-flatten v0.0.0-20261008184626-791fd077df8e/go.mod h1:WqSZJhrWOfikF3fPLzlvIYLVDrMIMTWd4Hd5nD9Qypc=
-github.com/MarkRosemaker/openapi-merge v0.0.0-20261009090536-d922ddf8adc4 h1:VRi8mk9os5M+/gSguQg+VYTZXqpSJihi9pAhRDWCnMc=
-github.com/MarkRosemaker/openapi-merge v0.0.0-20261009090536-d922ddf8adc4/go.mod h1:YPN/bMWGHEZfFEtsanL788wq+iFFSCrBrlLBZKlajp0=
+github.com/MarkRosemaker/openapi-merge v0.0.0-20261009091825-cb3e2f02392d h1:XsVceOZpKU5h1orUxCwFZcxn6LInCZGXiuKXLzpQmSs=
+github.com/MarkRosemaker/openapi-merge v0.0.0-20261009091825-cb3e2f02392d/go.mod h1:YPN/bMWGHEZfFEtsanL788wq+iFFSCrBrlLBZKlajp0=
 github.com/MarkRosemaker/ordmap v0.0.0-20261007220122-6960b8cdcc3e h1:5yWgxrM7KbGFKyWSbLyd0o6dGekKEykrOdZvJyw90KY=
 github.com/MarkRosemaker/ordmap v0.0.0-20261007220122-6960b8cdcc3e/go.mod h1:Cy5850VCnJ6/inTrECL7/DOUnOwcCIRiW+rbOT8aDCE=
 github.com/MarkRosemaker/yaml v0.0.0-20261004011229-302f2a2e75b5 h1:vJWwunjkKI6K3UdeY+RAIUbMZdj5dZKgKbz5btusM8o=
