@@ -9,6 +9,7 @@ import (
 	"encoding/json/v2"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
@@ -314,6 +315,25 @@ func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTask
 			}
 
 			return nil, api.NewErrCustom(rsp, &out)
+		default:
+			if c.debug {
+				if err := cassette.AddInteraction("api/interactions.json", ia); err != nil {
+					return nil, errors.Join(api.NewErrUnknownContentType(rsp), err)
+				}
+			}
+
+			return nil, api.NewErrUnknownContentType(rsp)
+		}
+	case http.StatusBadGateway:
+		// Bad Gateway
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "text/html":
+			out, err := io.ReadAll(rsp.Body)
+			if err != nil {
+				return nil, api.WrapDecodingError(rsp, err)
+			}
+
+			return nil, api.NewErrBody(rsp, out)
 		default:
 			if c.debug {
 				if err := cassette.AddInteraction("api/interactions.json", ia); err != nil {

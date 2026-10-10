@@ -4121,5 +4121,24 @@
 				"appVersion": "5.49.0"
 			}
 		}
+	},
+	{
+		"request": {
+			"method": "GET",
+			"url": "https://habitica.com/api/v3/tasks/user?type=dailys",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "8027d396-e2bb-4389-b002-782025424e75"
+			}
+		},
+		"response": {
+			"statusCode": 502,
+			"header": {
+				"Content-Type": "text/html; charset=UTF-8"
+			},
+			"body": "\n<html><head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n<title>502 Server Error</title>\n</head>\n<body text=#000000 bgcolor=#ffffff>\n<h1>Error: Server Error</h1>\n<h2>The server encountered a temporary error and could not complete your request.<p>Please try again in 30 seconds.</h2>\n<h2></h2>\n</body></html>\n"
+		}
 	}
 ]

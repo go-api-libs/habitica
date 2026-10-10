@@ -56,6 +56,9 @@
           },
           "400": {
             "$ref": "#/components/responses/Error"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
           }
         }
       }
@@ -5731,6 +5734,12 @@
       }
     },
     "responses": {
+      "BadGateway": {
+        "description": "Bad Gateway",
+        "content": {
+          "text/html": {}
+        }
+      },
       "BuyHealthPotion": {
         "description": "OK",
         "content": {

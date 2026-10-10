@@ -856,4 +856,13 @@ func TestClient_Interactions(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("ScoreTask: %v", err)
 	}
+
+	if _, err := c.ListTasks(ctx, ListTasksParams{
+		Type:     "dailys",
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
+	}); err == nil {
+		t.Fatal("ListTasks: expected error")
+	} else if _, ok := errors.AsType[*api.ErrorBody](err); !ok {
+		t.Fatalf("ListTasks: got: %T, want: *api.ErrorBody", err)
+	}
 }
