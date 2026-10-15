@@ -810,4 +810,10 @@ func TestClient_Interactions(t *testing.T) {
 	} else if _, ok := errors.AsType[*api.ErrorBody](err); !ok {
 		t.Fatalf("ListTasks: got: %T, want: *api.ErrorBody", err)
 	}
+
+	if _, err := c.ScoreTask(ctx, uuid.MustParse("466efa39-c62b-4a76-821b-cc829e27f578"), "up", ScoreTaskParams{
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
+	}); err != nil {
+		t.Fatalf("ScoreTask: %v", err)
+	}
 }

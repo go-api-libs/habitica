@@ -2474,6 +2474,10 @@
             "type": "number",
             "format": "double",
             "example": 2.992163009404389
+          },
+          "leveledUp": {
+            "type": "array",
+            "maxItems": 0
           }
         },
         "required": [

@@ -715,10 +715,11 @@ type TasksResponse struct {
 
 // Tmp defines a model
 type Tmp struct {
-	Quest       Quest    `json:"quest"`
-	Drop        Drop     `json:"drop"`
-	StreakBonus *float64 `json:"streakBonus,omitzero"`
-	Crit        *float64 `json:"crit,omitzero"`
+	Quest       Quest      `json:"quest"`
+	Drop        Drop       `json:"drop"`
+	StreakBonus *float64   `json:"streakBonus,omitzero"`
+	Crit        *float64   `json:"crit,omitzero"`
+	LeveledUp   []struct{} `json:"leveledUp,omitzero"`
 }
 
 // Training defines a model

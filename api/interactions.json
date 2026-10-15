@@ -4140,5 +4140,78 @@
 			},
 			"body": "\n<html><head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n<title>502 Server Error</title>\n</head>\n<body text=#000000 bgcolor=#ffffff>\n<h1>Error: Server Error</h1>\n<h2>The server encountered a temporary error and could not complete your request.<p>Please try again in 30 seconds.</h2>\n<h2></h2>\n</body></html>\n"
 		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "https://habitica.com/api/v3/tasks/466efa39-c62b-4a76-821b-cc829e27f578/score/up",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			"body": {
+				"success": true,
+				"data": {
+					"delta": 0.5798096619915684,
+					"_tmp": {
+						"crit": 3,
+						"quest": {
+							"progressDelta": 3,
+							"collection": 1
+						},
+						"streakBonus": 1,
+						"leveledUp": [],
+						"drop": {
+							"value": 2,
+							"key": "Base",
+							"premium": false,
+							"limited": false,
+							"type": "HatchingPotion",
+							"dialog": "You've found a Base Hatching Potion!"
+						}
+					},
+					"buffs": {
+						"str": 0,
+						"int": 0,
+						"per": 0,
+						"con": 0,
+						"stealth": 0,
+						"streaks": false,
+						"seafoam": false,
+						"shinySeed": false,
+						"snowball": false,
+						"spookySparkles": false
+					},
+					"training": {
+						"con": 0,
+						"str": 29.414499390190787,
+						"per": 0,
+						"int": 0
+					},
+					"per": 11,
+					"int": 11,
+					"con": 22,
+					"str": 34,
+					"points": 0,
+					"class": "warrior",
+					"lvl": 78,
+					"gp": 8151,
+					"exp": 15,
+					"mp": 7,
+					"hp": 50
+				},
+				"notifications": [],
+				"userV": 16678,
+				"appVersion": "5.51.0"
+			}
+		}
 	}
 ]
