@@ -675,7 +675,7 @@ type Task struct {
 
 // TaskActivity defines a model
 type TaskActivity struct {
-	Date       int     `json:"date"`
+	Date       int64   `json:"date"`
 	Value      float64 `json:"value"`
 	ScoredUp   *int    `json:"scoredUp,omitzero"`
 	ScoredDown *int    `json:"scoredDown,omitzero"`

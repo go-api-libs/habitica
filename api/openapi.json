@@ -727,6 +727,7 @@
               "integer",
               "null"
             ],
+            "format": "int64",
             "example": 1485487350827
           }
         ]
@@ -2324,6 +2325,7 @@
         "properties": {
           "date": {
             "type": "integer",
+            "format": "int64",
             "example": 1626804748216
           },
           "value": {
