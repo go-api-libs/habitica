@@ -1,7 +1,7 @@
 cloud.google.com/go v0.123.0 h1:2NAUJwPR47q+E35uaJeYoNhuNEM9kM8SjgRgdeOJUSE=
 cloud.google.com/go v0.123.0/go.mod h1:xBoMV08QcqUGuPW65Qfm1o9Y4zKZBpGS+7bImXLTAZU=
-github.com/MarkRosemaker/cassette v0.0.0-20261017150245-0c5e435b873d h1:bQSwk3bN6zauL0XADLyUStVguwXzpJGH8DG0LX6rCds=
-github.com/MarkRosemaker/cassette v0.0.0-20261017150245-0c5e435b873d/go.mod h1:veUg75S0Z3b+jaMAyyACHQBOSvMFOOXq1FcdV5MitWw=
+github.com/MarkRosemaker/cassette v0.0.0-20261017155413-e4203654f140 h1:bvBunrq2Pn27L4fiYR2DDf3HLzPHsWWcpdKJtHDZauM=
+github.com/MarkRosemaker/cassette v0.0.0-20261017155413-e4203654f140/go.mod h1:bBpygX23ei1F4xLCGV2Ywv4skR77IuWavBG8wUZRE5w=
 github.com/MarkRosemaker/errpath v0.0.0-20261016110315-f418d8a9c89d h1:m3mqYMoAPvGdiieKUReazosYbPQHKbf3jI1fZg1jM/s=
 github.com/MarkRosemaker/errpath v0.0.0-20261016110315-f418d8a9c89d/go.mod h1:VnXpUlsS3n1gSToedcQl2FCARGoA16CyitbCanUIv+I=
 github.com/MarkRosemaker/json2yaml v0.0.0-20261016110315-5aef3717d3ec h1:5hrbP2LG5Rs+6IAWYty5q19gyIgWhYSp69mu/NwhqMY=
