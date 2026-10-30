@@ -484,6 +484,7 @@ type PurchasedPlan struct {
 	DateUpdated     time.Time                `json:"dateUpdated"`
 	PerkMonthCount  int                      `json:"perkMonthCount"`
 	CumulativeCount int                      `json:"cumulativeCount"`
+	Deferred        *struct{}                `json:"deferred,omitzero"`
 }
 
 // PurchasedPlanConsecutive defines a model

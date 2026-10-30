@@ -816,4 +816,10 @@ func TestClient_Interactions(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("ScoreTask: %v", err)
 	}
+
+	if _, err := c.GetUser(ctx, GetUserParams{
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
+	}); err != nil {
+		t.Fatalf("GetUser: %v", err)
+	}
 }

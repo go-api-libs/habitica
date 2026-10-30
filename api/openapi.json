@@ -1690,6 +1690,9 @@
           "cumulativeCount": {
             "type": "integer",
             "example": 0
+          },
+          "deferred": {
+            "type": "object"
           }
         },
         "required": [
