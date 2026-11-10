@@ -122,14 +122,6 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 //
 //	GET /user
 func (c *Client) GetUser(ctx context.Context, params GetUserParams) (*User, error) {
-	return c.GetUserWithResult[User](ctx, params)
-}
-
-// The user profile contains data related to the authenticated user including (but not limited to): Achievements; Authentications (including types and timestamps); Challenges memberships (Challenge IDs); Flags (including armoire, tutorial, tour etc...); Guilds memberships (Guild IDs); History (including timestamps and values, only for Experience and summed To Do values); Inbox; Invitations (to parties/guilds); Items (character's full inventory); New Messages (flags for party/guilds that have new messages; also reported in Notifications); Notifications; Party (includes current quest information); Preferences (user selected prefs); Profile (name, photo url, blurb); Purchased (includes subscription data and some gem-purchased items); PushDevices (identifiers for mobile devices authorized); Stats (standard RPG stats, class, buffs, xp, etc..); Tags; TasksOrder (list of all IDs for Dailys, Habits, Rewards and To Do's).
-// You can define a custom result to unmarshal the response into.
-//
-//	GET /user
-func (c *Client) GetUserWithResult[R any](ctx context.Context, params GetUserParams) (*R, error) {
 	u := c.baseURL.JoinPath("user")
 	req := (&http.Request{
 		Header: http.Header{
@@ -157,15 +149,8 @@ func (c *Client) GetUserWithResult[R any](ctx context.Context, params GetUserPar
 		// OK
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
-			var out R
-
-			// a type of the caller's own declares only what it needs of the response, so it is decoded leniently
-			opts := jsonOptsLenient
-			if _, ok := any(&out).(*User); ok {
-				opts = jsonOpts
-			}
-
-			if err := json.UnmarshalRead(rsp.Body, &out, opts); err != nil {
+			var out User
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if ia == nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -174,7 +159,7 @@ func (c *Client) GetUserWithResult[R any](ctx context.Context, params GetUserPar
 					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
 				}
 
-				out = *new(R)
+				out = *new(User)
 				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -191,11 +176,6 @@ func (c *Client) GetUserWithResult[R any](ctx context.Context, params GetUserPar
 
 // GET /tasks/user
 func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TasksResponse, error) {
-	return c.ListTasksWithResult[TasksResponse](ctx, params)
-}
-
-// GET /tasks/user
-func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTasksParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", "user")
 
 	q := make(url.Values, 1)
@@ -232,15 +212,8 @@ func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTask
 		// OK
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
-			var out R
-
-			// a type of the caller's own declares only what it needs of the response, so it is decoded leniently
-			opts := jsonOptsLenient
-			if _, ok := any(&out).(*TasksResponse); ok {
-				opts = jsonOpts
-			}
-
-			if err := json.UnmarshalRead(rsp.Body, &out, opts); err != nil {
+			var out TasksResponse
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if ia == nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -249,7 +222,7 @@ func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTask
 					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
 				}
 
-				out = *new(R)
+				out = *new(TasksResponse)
 				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -305,14 +278,6 @@ func (c *Client) ListTasksWithResult[R any](ctx context.Context, params ListTask
 //
 //	GET /tasks/{taskId}
 func (c *Client) GetTaskByID(ctx context.Context, taskID uuid.UUID, params GetTaskByIDParams) (*TaskResponse, error) {
-	return c.GetTaskByIDWithResult[TaskResponse](ctx, taskID, params)
-}
-
-// Get a task
-// You can define a custom result to unmarshal the response into.
-//
-//	GET /tasks/{taskId}
-func (c *Client) GetTaskByIDWithResult[R any](ctx context.Context, taskID uuid.UUID, params GetTaskByIDParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", taskID.String())
 	req := (&http.Request{
 		Header: http.Header{
@@ -340,15 +305,8 @@ func (c *Client) GetTaskByIDWithResult[R any](ctx context.Context, taskID uuid.U
 		// OK
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
-			var out R
-
-			// a type of the caller's own declares only what it needs of the response, so it is decoded leniently
-			opts := jsonOptsLenient
-			if _, ok := any(&out).(*TaskResponse); ok {
-				opts = jsonOpts
-			}
-
-			if err := json.UnmarshalRead(rsp.Body, &out, opts); err != nil {
+			var out TaskResponse
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if ia == nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -357,7 +315,7 @@ func (c *Client) GetTaskByIDWithResult[R any](ctx context.Context, taskID uuid.U
 					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
 				}
 
-				out = *new(R)
+				out = *new(TaskResponse)
 				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -376,14 +334,6 @@ func (c *Client) GetTaskByIDWithResult[R any](ctx context.Context, taskID uuid.U
 //
 //	POST /tasks/{taskId}/score/{direction}
 func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Direction, params ScoreTaskParams) (*ScoreTaskResponse, error) {
-	return c.ScoreTaskWithResult[ScoreTaskResponse](ctx, taskID, direction, params)
-}
-
-// Score a task
-// You can define a custom result to unmarshal the response into.
-//
-//	POST /tasks/{taskId}/score/{direction}
-func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUID, direction Direction, params ScoreTaskParams) (*R, error) {
 	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", url.PathEscape(string(direction)))
 	req := (&http.Request{
 		Header: http.Header{
@@ -411,15 +361,8 @@ func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUI
 		// OK
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
-			var out R
-
-			// a type of the caller's own declares only what it needs of the response, so it is decoded leniently
-			opts := jsonOptsLenient
-			if _, ok := any(&out).(*ScoreTaskResponse); ok {
-				opts = jsonOpts
-			}
-
-			if err := json.UnmarshalRead(rsp.Body, &out, opts); err != nil {
+			var out ScoreTaskResponse
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if ia == nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -428,7 +371,7 @@ func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUI
 					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
 				}
 
-				out = *new(R)
+				out = *new(ScoreTaskResponse)
 				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -471,14 +414,6 @@ func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUI
 //
 //	POST /user/class/cast/{spellId}
 func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (*CastResponse, error) {
-	return c.CastWithResult[CastResponse](ctx, spellID, params)
-}
-
-// Cast a skill (spell) on a target
-// You can define a custom result to unmarshal the response into.
-//
-//	POST /user/class/cast/{spellId}
-func (c *Client) CastWithResult[R any](ctx context.Context, spellID SpellID, params CastParams) (*R, error) {
 	u := c.baseURL.JoinPath("user", "class", "cast", url.PathEscape(string(spellID)))
 
 	q := make(url.Values, 1)
@@ -515,15 +450,8 @@ func (c *Client) CastWithResult[R any](ctx context.Context, spellID SpellID, par
 		// OK
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
-			var out R
-
-			// a type of the caller's own declares only what it needs of the response, so it is decoded leniently
-			opts := jsonOptsLenient
-			if _, ok := any(&out).(*CastResponse); ok {
-				opts = jsonOpts
-			}
-
-			if err := json.UnmarshalRead(rsp.Body, &out, opts); err != nil {
+			var out CastResponse
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if ia == nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -532,7 +460,7 @@ func (c *Client) CastWithResult[R any](ctx context.Context, spellID SpellID, par
 					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
 				}
 
-				out = *new(R)
+				out = *new(CastResponse)
 				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -573,11 +501,6 @@ func (c *Client) CastWithResult[R any](ctx context.Context, spellID SpellID, par
 
 // POST /user/buy-health-potion
 func (c *Client) BuyHealthPotion(ctx context.Context, params BuyHealthPotionParams) (*BuyHealthPotionResponse, error) {
-	return c.BuyHealthPotionWithResult[BuyHealthPotionResponse](ctx, params)
-}
-
-// POST /user/buy-health-potion
-func (c *Client) BuyHealthPotionWithResult[R any](ctx context.Context, params BuyHealthPotionParams) (*R, error) {
 	u := c.baseURL.JoinPath("user", "buy-health-potion")
 	req := (&http.Request{
 		Header: http.Header{
@@ -605,15 +528,8 @@ func (c *Client) BuyHealthPotionWithResult[R any](ctx context.Context, params Bu
 		// OK
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
-			var out R
-
-			// a type of the caller's own declares only what it needs of the response, so it is decoded leniently
-			opts := jsonOptsLenient
-			if _, ok := any(&out).(*BuyHealthPotionResponse); ok {
-				opts = jsonOpts
-			}
-
-			if err := json.UnmarshalRead(rsp.Body, &out, opts); err != nil {
+			var out BuyHealthPotionResponse
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if ia == nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -622,7 +538,7 @@ func (c *Client) BuyHealthPotionWithResult[R any](ctx context.Context, params Bu
 					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
 				}
 
-				out = *new(R)
+				out = *new(BuyHealthPotionResponse)
 				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -641,14 +557,6 @@ func (c *Client) BuyHealthPotionWithResult[R any](ctx context.Context, params Bu
 //
 //	POST /cron
 func (c *Client) Cron(ctx context.Context, params CronParams) (*CronResponse, error) {
-	return c.CronWithResult[CronResponse](ctx, params)
-}
-
-// This causes cron to run. It assumes that the user has already been shown the Record Yesterday's Activity ("Check off any Dailies you did yesterday") screen and so it will immediately apply damage for incomplete due Dailies.
-// You can define a custom result to unmarshal the response into.
-//
-//	POST /cron
-func (c *Client) CronWithResult[R any](ctx context.Context, params CronParams) (*R, error) {
 	u := c.baseURL.JoinPath("cron")
 	req := (&http.Request{
 		Header: http.Header{
@@ -676,15 +584,8 @@ func (c *Client) CronWithResult[R any](ctx context.Context, params CronParams) (
 		// OK
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
-			var out R
-
-			// a type of the caller's own declares only what it needs of the response, so it is decoded leniently
-			opts := jsonOptsLenient
-			if _, ok := any(&out).(*CronResponse); ok {
-				opts = jsonOpts
-			}
-
-			if err := json.UnmarshalRead(rsp.Body, &out, opts); err != nil {
+			var out CronResponse
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if ia == nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
@@ -693,7 +594,7 @@ func (c *Client) CronWithResult[R any](ctx context.Context, params CronParams) (
 					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
 				}
 
-				out = *new(R)
+				out = *new(CronResponse)
 				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
 					return nil, api.WrapDecodingError(rsp, err)
 				}
