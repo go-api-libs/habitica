@@ -384,7 +384,7 @@ func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Dire
 //
 //	POST /tasks/{taskId}/score/{direction}
 func (c *Client) ScoreTaskWithResult[R any](ctx context.Context, taskID uuid.UUID, direction Direction, params ScoreTaskParams) (*R, error) {
-	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", string(direction))
+	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", url.PathEscape(string(direction)))
 	req := (&http.Request{
 		Header: http.Header{
 			"X-Api-Key":  []string{c.apiKey},
@@ -479,7 +479,7 @@ func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (
 //
 //	POST /user/class/cast/{spellId}
 func (c *Client) CastWithResult[R any](ctx context.Context, spellID SpellID, params CastParams) (*R, error) {
-	u := c.baseURL.JoinPath("user", "class", "cast", string(spellID))
+	u := c.baseURL.JoinPath("user", "class", "cast", url.PathEscape(string(spellID)))
 
 	q := make(url.Values, 1)
 
