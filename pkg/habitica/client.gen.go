@@ -334,7 +334,7 @@ func (c *Client) GetTaskByID(ctx context.Context, taskID uuid.UUID, params GetTa
 //
 //	POST /tasks/{taskId}/score/{direction}
 func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Direction, params ScoreTaskParams) (*ScoreTaskResponse, error) {
-	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", url.PathEscape(string(direction)))
+	u := c.baseURL.JoinPath("tasks", taskID.String(), "score", escapePathSegment(string(direction)))
 	req := (&http.Request{
 		Header: http.Header{
 			"X-Api-Key":  []string{c.apiKey},
@@ -414,7 +414,7 @@ func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Dire
 //
 //	POST /user/class/cast/{spellId}
 func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (*CastResponse, error) {
-	u := c.baseURL.JoinPath("user", "class", "cast", url.PathEscape(string(spellID)))
+	u := c.baseURL.JoinPath("user", "class", "cast", escapePathSegment(string(spellID)))
 
 	q := make(url.Values, 1)
 
@@ -606,6 +606,18 @@ func (c *Client) Cron(ctx context.Context, params CronParams) (*CronResponse, er
 		}
 	default:
 		return nil, c.failed(ia, api.NewErrUnknownStatusCode(rsp))
+	}
+}
+
+// escapePathSegment escapes s, a path parameter, as one segment of a path: all but the characters RFC 3986 leaves
+// unreserved, as encodeURIComponent does, and a segment of . or .., so the client does not drop it, nor the segment
+// before it, from the path.
+func escapePathSegment(s string) string {
+	switch s {
+	case ".", "..":
+		return strings.ReplaceAll(s, ".", "%2E")
+	default:
+		return strings.ReplaceAll(url.QueryEscape(s), "+", "%20")
 	}
 }
 
