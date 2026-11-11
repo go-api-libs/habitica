@@ -151,17 +151,8 @@ func (c *Client) GetUser(ctx context.Context, params GetUserParams) (*User, erro
 		case "application/json":
 			var out User
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(User)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -214,17 +205,8 @@ func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TasksR
 		case "application/json":
 			var out TasksResponse
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(TasksResponse)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -238,17 +220,8 @@ func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TasksR
 		case "application/json":
 			var out Error
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(Error)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -307,17 +280,8 @@ func (c *Client) GetTaskByID(ctx context.Context, taskID uuid.UUID, params GetTa
 		case "application/json":
 			var out TaskResponse
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(TaskResponse)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -363,17 +327,8 @@ func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Dire
 		case "application/json":
 			var out ScoreTaskResponse
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(ScoreTaskResponse)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -387,17 +342,8 @@ func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Dire
 		case "application/json":
 			var out Error
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(Error)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -452,17 +398,8 @@ func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (
 		case "application/json":
 			var out CastResponse
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(CastResponse)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -476,17 +413,8 @@ func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (
 		case "application/json":
 			var out Error
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(Error)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -530,17 +458,8 @@ func (c *Client) BuyHealthPotion(ctx context.Context, params BuyHealthPotionPara
 		case "application/json":
 			var out BuyHealthPotionResponse
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(BuyHealthPotionResponse)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
@@ -586,17 +505,8 @@ func (c *Client) Cron(ctx context.Context, params CronParams) (*CronResponse, er
 		case "application/json":
 			var out CronResponse
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
-				if ia == nil {
-					return nil, api.WrapDecodingError(rsp, err)
-				}
-
-				if kerr := c.keep(ia); kerr != nil {
-					return nil, errors.Join(api.WrapDecodingError(rsp, err), kerr)
-				}
-
-				out = *new(CronResponse)
-				if err := json.Unmarshal(ia.Response.Body, &out, jsonOptsLenient); err != nil {
-					return nil, api.WrapDecodingError(rsp, err)
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
 				}
 			}
 
