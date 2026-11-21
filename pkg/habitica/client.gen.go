@@ -629,6 +629,60 @@ func (c *Client) ListTags(ctx context.Context, params ListTagsParams) (*TagsResp
 	}
 }
 
+// Add a tag to a task
+//
+//	POST /tasks/{taskId}/tags/{tagId}
+func (c *Client) AddTagToTask(ctx context.Context, taskID uuid.UUID, tagID uuid.UUID, params AddTagToTaskParams) (*TaskResponse, error) {
+	u := c.baseURL.JoinPath("tasks", taskID.String(), "tags", tagID.String())
+	req := (&http.Request{
+		Header: http.Header{
+			"X-Api-Key":  []string{c.apiKey},
+			"X-Client":   []string{c.client},
+			"X-Api-User": []string{params.XAPIUser.String()},
+			"User-Agent": []string{c.userAgent},
+		},
+		Host:       u.Host,
+		Method:     http.MethodPost,
+		Proto:      "HTTP/1.1",
+		ProtoMajor: 1,
+		ProtoMinor: 1,
+		URL:        u,
+	}).WithContext(ctx)
+
+	rsp, ia, err := c.do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer rsp.Body.Close()
+
+	switch rsp.StatusCode {
+	case http.StatusOK:
+		// OK
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out TaskResponse
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
+				}
+			}
+
+			// a value of an enum the specification does not list decodes, but is news
+			if ia != nil && out.unknownEnum() {
+				if err := c.keep(ia); err != nil {
+					return nil, fmt.Errorf("recording the call: %w", err)
+				}
+			}
+
+			return &out, nil
+		default:
+			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
+		}
+	default:
+		return nil, c.failed(ia, api.NewErrUnknownStatusCode(rsp))
+	}
+}
+
 // escapePathSegment escapes s, a path parameter, as one segment of a path: all but the characters RFC 3986 leaves
 // unreserved, as encodeURIComponent does, and a segment of . or .., so the client does not drop it, nor the segment
 // before it, from the path.

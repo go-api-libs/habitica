@@ -215,6 +215,34 @@
           }
         }
       }
+    },
+    "/tasks/{taskId}/tags/{tagId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/taskId"
+        },
+        {
+          "$ref": "#/components/parameters/tagId"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/X-Client"
+        }
+      ],
+      "post": {
+        "summary": "Add a tag to a task",
+        "operationId": "AddTagToTask",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TaskResponse"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1222,7 +1250,6 @@
           }
         },
         "required": [
-          "approval",
           "assignedUsers"
         ]
       },
@@ -2461,6 +2488,14 @@
           },
           "notifications": {
             "$ref": "#/components/schemas/Notifications"
+          },
+          "userV": {
+            "type": "integer",
+            "example": 17120
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "5.53.1"
           }
         },
         "required": [
@@ -5945,6 +5980,15 @@
         "required": true,
         "schema": {
           "$ref": "#/components/schemas/SpellID"
+        }
+      },
+      "tagId": {
+        "name": "tagId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
         }
       },
       "targetId": {

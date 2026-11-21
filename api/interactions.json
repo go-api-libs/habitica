@@ -5890,5 +5890,492 @@
 				"appVersion": "5.53.1"
 			}
 		}
+	},
+	{
+		"request": {
+			"method": "POST",
+			"url": "https://habitica.com/api/v3/tasks/5daec0b6-0197-457d-af50-1e1712c059a0/tags/ba455bc0-301e-43f8-b219-5088e63e8c18",
+			"header": {
+				"User-Agent": "Habitica API Library (github.com/go-api-libs/habitica)",
+				"X-Api-Key": "00000000-0000-0000-0000-000000000000",
+				"X-Api-User": "00000000-0000-0000-0000-000000000000",
+				"X-Client": "b0413351-405f-416f-8787-947ec1c85199-go-api-libs/habitica"
+			}
+		},
+		"response": {
+			"statusCode": 200,
+			"header": {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			"body": {
+				"success": true,
+				"data": {
+					"repeat": {
+						"m": true,
+						"t": true,
+						"w": true,
+						"th": true,
+						"f": true,
+						"s": true,
+						"su": true
+					},
+					"challenge": {},
+					"group": {
+						"completedBy": {},
+						"assignedUsers": []
+					},
+					"_id": "5daec0b6-0197-457d-af50-1e1712c059a0",
+					"type": "daily",
+					"text": "Study LSO",
+					"notes": "",
+					"tags": [
+						"ba455bc0-301e-43f8-b219-5088e63e8c18"
+					],
+					"value": -29.709022747495542,
+					"priority": 1.5,
+					"attribute": "str",
+					"reminders": [],
+					"byHabitica": false,
+					"frequency": "weekly",
+					"everyX": 1,
+					"startDate": "2026-06-13T22:00:00.000Z",
+					"streak": 0,
+					"daysOfMonth": [],
+					"weeksOfMonth": [],
+					"nextDue": [
+						"2026-11-22T23:00:00.000Z",
+						"2026-11-23T23:00:00.000Z",
+						"2026-11-24T23:00:00.000Z",
+						"2026-11-25T23:00:00.000Z",
+						"2026-11-26T23:00:00.000Z",
+						"2026-11-27T23:00:00.000Z"
+					],
+					"yesterDaily": true,
+					"history": [
+						{
+							"date": 1762070936197,
+							"value": 12.340861165891765
+						},
+						{
+							"date": 1764612019826,
+							"value": 23.892255294935644
+						},
+						{
+							"date": 1769925021096,
+							"value": 29.643453158978502
+						},
+						{
+							"date": 1772398768234,
+							"value": 36.30228385149887
+						},
+						{
+							"date": 1775036159253,
+							"value": 46.081723163704254
+						},
+						{
+							"date": 1777639487211,
+							"value": 42.9516882204035
+						},
+						{
+							"date": 1782912300151,
+							"value": 30.327915381003724
+						},
+						{
+							"date": 1788301740674,
+							"value": 20.134327595104313
+						},
+						{
+							"date": 1790080904854,
+							"value": 18.989240900585592,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1790185239669,
+							"value": 18.374533992705977,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1790269329713,
+							"value": 17.750067431760755,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1790413906027,
+							"value": 17.11552758818626,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1790502757271,
+							"value": 16.470585510062474,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1790618263349,
+							"value": 15.814895910639171,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1790703661179,
+							"value": 15.148096070976534,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1790721502482,
+							"value": 15.826387492925804,
+							"isDue": true,
+							"completed": true
+						},
+						{
+							"date": 1790874464556,
+							"value": 15.1597839822972,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1790874518313,
+							"value": 15.837872280194189,
+							"isDue": true,
+							"completed": true
+						},
+						{
+							"date": 1791064267963,
+							"value": 15.171464924754652,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1791078271244,
+							"value": 14.493579569024154,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1791224353201,
+							"value": 13.803815668918306,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1791316668627,
+							"value": 13.101751405646187,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1791326708230,
+							"value": 13.816560655859572,
+							"isDue": true,
+							"completed": true
+						},
+						{
+							"date": 1791476315664,
+							"value": 13.114725647420178,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1791492561953,
+							"value": 13.82929728303861,
+							"isDue": true,
+							"completed": true
+						},
+						{
+							"date": 1791574386734,
+							"value": 14.530903261807518,
+							"isDue": true,
+							"completed": true
+						},
+						{
+							"date": 1791720321263,
+							"value": 13.841798764143109,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1791728807666,
+							"value": 14.54318001431392,
+							"isDue": true,
+							"completed": true
+						},
+						{
+							"date": 1791857867630,
+							"value": 13.85429227379757,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1791927238517,
+							"value": 14.555449010579418,
+							"isDue": true,
+							"completed": true
+						},
+						{
+							"date": 1792022866957,
+							"value": 13.866777822151537,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792141086535,
+							"value": 13.165845383892425,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792199145205,
+							"value": 12.452209203723548,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792230333614,
+							"value": 11.725402471852988,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792298125635,
+							"value": 10.984932249983599,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792378830089,
+							"value": 10.230277489112762,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792465230408,
+							"value": 9.460886856110832,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792551631335,
+							"value": 8.676176346545107,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792659063246,
+							"value": 7.875526658061043,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792724414838,
+							"value": 7.058280294962822,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792810801771,
+							"value": 6.223738370355094,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792900818428,
+							"value": 5.371157067200018,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1792987269320,
+							"value": 4.499743713766844,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793093735722,
+							"value": 3.608652422031869,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793180611480,
+							"value": 2.6969792294122312,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793246422780,
+							"value": 1.7637566745259914,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793332820334,
+							"value": 0.8079477261397405,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793415755784,
+							"value": -0.17156102930858164,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793505659655,
+							"value": -1.1759670527418127,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793592059723,
+							"value": -2.206560501052838,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793678792567,
+							"value": -3.2647340143738903,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793770947733,
+							"value": -4.351993826325688,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793867684057,
+							"value": -5.469972417264591,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1793937607144,
+							"value": -6.6204429743550515,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794051639640,
+							"value": -7.805335976344326,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794129973003,
+							"value": -9.026758287975625,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794200014654,
+							"value": -10.287015232669692,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794283361387,
+							"value": -11.588636217214425,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794393512768,
+							"value": -12.934404615083082,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794472416488,
+							"value": -14.327392784172435,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794563271597,
+							"value": -15.771003311731077,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794630440765,
+							"value": -17.26901785975475,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794741154039,
+							"value": -18.825655349828004,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794819633677,
+							"value": -20.44564170747277,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794888020442,
+							"value": -22.134294025047268,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1794974906920,
+							"value": -23.897622859755845,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1795060804569,
+							"value": -25.74245754696756,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1795147256376,
+							"value": -27.676601007091907,
+							"isDue": true,
+							"completed": false
+						},
+						{
+							"date": 1795233620870,
+							"value": -29.709022747495542,
+							"isDue": true,
+							"completed": false
+						}
+					],
+					"completed": false,
+					"collapseChecklist": false,
+					"checklist": [],
+					"createdAt": "2025-11-01T13:05:48.359Z",
+					"updatedAt": "2026-11-21T23:43:56.520Z",
+					"userId": "00000000-0000-0000-0000-000000000000",
+					"isDue": true,
+					"id": "5daec0b6-0197-457d-af50-1e1712c059a0"
+				},
+				"notifications": [
+					{
+						"type": "ITEM_RECEIVED",
+						"data": {
+							"icon": "notif_harvestfeast_pie",
+							"title": "Happy Harvest Feast!",
+							"text": "Gobble gobble, you've received an assortment of pie for your Pets!",
+							"destination": "inventory/items"
+						},
+						"seen": false,
+						"id": "bc0fbb63-9c4b-4a45-b939-c5eab702711e"
+					}
+				],
+				"userV": 17120,
+				"appVersion": "5.53.1"
+			}
+		}
 	}
 ]

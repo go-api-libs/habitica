@@ -68,6 +68,11 @@ type ListTagsParams struct {
 	XAPIUser uuid.UUID
 }
 
+// AddTagToTaskParams holds the query parameters for AddTagToTask.
+type AddTagToTaskParams struct {
+	XAPIUser uuid.UUID
+}
+
 // Achievements defines a model
 type Achievements struct {
 	UltimateGearSets   UltimateGearSets   `json:"ultimateGearSets"`
@@ -367,7 +372,7 @@ type FlagsTutorialIos struct {
 
 // Group defines a model
 type Group struct {
-	Approval         Approval   `json:"approval"`
+	Approval         Approval   `json:"approval,omitzero"`
 	AssignedUsers    []struct{} `json:"assignedUsers"`
 	SharedCompletion string     `json:"sharedCompletion,omitzero"`
 	CompletedBy      *struct{}  `json:"completedBy,omitzero"`
@@ -783,6 +788,8 @@ type TaskResponse struct {
 	Success       bool          `json:"success"`
 	Data          Task          `json:"data"`
 	Notifications Notifications `json:"notifications"`
+	UserV         *int          `json:"userV,omitzero"`
+	AppVersion    string        `json:"appVersion,omitzero"`
 }
 
 // unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
