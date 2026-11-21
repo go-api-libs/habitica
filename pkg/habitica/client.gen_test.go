@@ -1329,6 +1329,163 @@ func TestClient_Error(t *testing.T) {
 			}
 		})
 	})
+
+	t.Run("ListTags", func(t *testing.T) {
+		t.Setenv("HABITICA_API_KEY", "00000000-0000-0000-0000-000000000000")
+
+		t.Run("transport error", func(t *testing.T) {
+			c, err := NewClient(WithHTTPClient(&http.Client{Transport: apitest.RoundTripFunc(
+				func(*http.Request) (*http.Response, error) { return nil, io.EOF },
+			)}))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.ListTags(t.Context(), ListTagsParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if !errors.Is(err, io.EOF) {
+				t.Fatalf("want: %v, got: %v", io.EOF, err)
+			}
+		})
+
+		t.Run("unknown status code", func(t *testing.T) {
+			srv := apitest.NewServer(t, http.StatusTeapot)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.ListTags(t.Context(), ListTagsParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if apiErr, ok := errors.AsType[*api.Error](err); !ok {
+				t.Fatalf("got: %T, want: *api.Error", err)
+			} else if apiErr.Err != api.ErrUnknownStatusCode {
+				t.Fatalf("got: %v, want: %v", apiErr.Err, api.ErrUnknownStatusCode)
+			} else if apiErr.Response.StatusCode != http.StatusTeapot {
+				t.Fatalf("got: %v, want: %v", apiErr.Response.StatusCode, http.StatusTeapot)
+			}
+		})
+
+		t.Run("unknown content type", func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "foo")
+				w.WriteHeader(http.StatusOK)
+			}))
+			t.Cleanup(srv.Close)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.ListTags(t.Context(), ListTagsParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if !errors.Is(err, api.ErrUnknownContentType) {
+				t.Fatalf("want: %v, got: %v", api.ErrUnknownContentType, err)
+			}
+		})
+
+		t.Run("decoding error", func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				_, _ = w.Write([]byte("invalid json"))
+			}))
+			t.Cleanup(srv.Close)
+
+			baseURL, err := url.Parse(srv.URL)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(baseURL))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.ListTags(t.Context(), ListTagsParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if decErr, ok := errors.AsType[*api.DecodingError](err); !ok {
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
+			} else if _, ok := errors.AsType[*jsontext.SyntacticError](decErr.Err); !ok {
+				t.Fatalf("got: %T, want: *jsontext.SyntacticError", decErr.Err)
+			}
+		})
+
+		t.Run("debug mode keeps an unknown member", func(t *testing.T) {
+			file := filepath.Join(t.TempDir(), "interactions.json")
+
+			c, err := NewClient(WithBaseURL(apitest.BodyServer(t, http.StatusOK, "application/json", apitest.WithUnknownMember(t, TagsResponse{}, jsonOpts))), WithDebugFile(file))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			for range 2 {
+				if _, err := c.ListTags(t.Context(), ListTagsParams{}); err != nil {
+					t.Fatalf("debug mode decodes leniently: %v", err)
+				}
+			}
+
+			if ias, err := cassette.InteractionsReadFile(file); err != nil {
+				t.Fatal(err)
+			} else if len(ias) != 1 {
+				t.Fatalf("the debug file holds %d calls, want the one that failed to decode, once", len(ias))
+			}
+		})
+
+		t.Run("debug mode keeps a body it cannot decode", func(t *testing.T) {
+			file := filepath.Join(t.TempDir(), "interactions.json")
+
+			c, err := NewClient(WithBaseURL(apitest.BodyServer(t, http.StatusOK, "application/json", []byte("invalid json"))), WithDebugFile(file))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.ListTags(t.Context(), ListTagsParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if _, ok := errors.AsType[*api.DecodingError](err); !ok {
+				t.Fatalf("got: %T, want: *api.DecodingError", err)
+			}
+
+			if ias, err := cassette.InteractionsReadFile(file); err != nil {
+				t.Fatal(err)
+			} else if len(ias) != 1 {
+				t.Fatalf("the debug file holds %d calls, want the one that failed to decode", len(ias))
+			}
+		})
+
+		t.Run("debug mode reports a debug file it cannot write", func(t *testing.T) {
+			// a file where the debug file's directory would be
+			blocker := filepath.Join(t.TempDir(), "file")
+			if err := os.WriteFile(blocker, nil, 0o600); err != nil {
+				t.Fatal(err)
+			}
+
+			c, err := NewClient(WithBaseURL(apitest.BodyServer(t, http.StatusOK, "application/json", []byte("invalid json"))), WithDebugFile(filepath.Join(blocker, "interactions.json")))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := c.ListTags(t.Context(), ListTagsParams{}); err == nil {
+				t.Fatal("expected error")
+			} else if _, ok := errors.AsType[*api.DecodingError](err); !ok {
+				t.Fatalf("got: %T, want the *api.DecodingError", err)
+			} else if _, ok := errors.AsType[*fs.PathError](err); !ok {
+				t.Fatalf("got: %v, want the failure to write the debug file beside it", err)
+			}
+		})
+	})
 }
 
 // TestClient_Params sets every parameter it can to a value other than its zero value, and finds each in the request,
@@ -1381,6 +1538,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("ListTasks: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "ListTasks", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("ListTasks: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if out, err := c.GetTaskByID(ctx, uuid.MustParse("2b774d70-ec8b-41c1-8967-eb6b13d962ba"), GetTaskByIDParams{
@@ -1389,6 +1550,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("GetTaskByID: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "GetTaskByID", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("GetTaskByID: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if out, err := c.GetUser(ctx, GetUserParams{
@@ -1397,6 +1562,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("GetUser: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "GetUser", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("GetUser: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if out, err := c.ScoreTask(ctx, uuid.MustParse("2b774d70-ec8b-41c1-8967-eb6b13d962ba"), "up", ScoreTaskParams{
@@ -1405,6 +1574,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("ScoreTask: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "ScoreTask", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("ScoreTask: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if _, err := c.ScoreTask(ctx, uuid.MustParse("4f2d942d-67e8-4cc0-ac08-61962296660b"), "up", ScoreTaskParams{
@@ -1421,6 +1594,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("ScoreTask: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "ScoreTask", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("ScoreTask: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if out, err := c.Cast(ctx, "smash", CastParams{
@@ -1430,6 +1607,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("Cast: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "Cast", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("Cast: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if _, err := c.Cast(ctx, "smash", CastParams{
@@ -1447,6 +1628,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("BuyHealthPotion: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "BuyHealthPotion", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("BuyHealthPotion: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if out, err := c.Cron(ctx, CronParams{
@@ -1455,6 +1640,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("Cron: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "Cron", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("Cron: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if out, err := c.ScoreTask(ctx, uuid.MustParse("91cf329e-0d0a-4c15-92a0-2e6748a470c9"), "up", ScoreTaskParams{
@@ -1463,6 +1652,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("ScoreTask: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "ScoreTask", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("ScoreTask: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if out, err := c.ScoreTask(ctx, uuid.MustParse("0278da0a-6af9-47df-b0f6-79846adb3f36"), "up", ScoreTaskParams{
@@ -1471,6 +1664,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("ScoreTask: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "ScoreTask", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("ScoreTask: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if _, err := c.ListTasks(ctx, ListTasksParams{
@@ -1488,6 +1685,10 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("ScoreTask: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "ScoreTask", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("ScoreTask: holds a value of an enum the specification does not list")
+		}
 	}
 
 	if out, err := c.GetUser(ctx, GetUserParams{
@@ -1496,5 +1697,21 @@ func TestClient_Interactions(t *testing.T) {
 		t.Fatalf("GetUser: %v", err)
 	} else {
 		apitest.DecodedAsSent(t, "GetUser", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("GetUser: holds a value of an enum the specification does not list")
+		}
+	}
+
+	if out, err := c.ListTags(ctx, ListTagsParams{
+		XAPIUser: uuid.MustParse("00000000-0000-0000-0000-000000000000"),
+	}); err != nil {
+		t.Fatalf("ListTags: %v", err)
+	} else {
+		apitest.DecodedAsSent(t, "ListTags", out, last.Body, jsonOpts)
+
+		if out != nil && out.unknownEnum() {
+			t.Errorf("ListTags: holds a value of an enum the specification does not list")
+		}
 	}
 }

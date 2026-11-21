@@ -20,6 +20,16 @@ func TestEnums_Valid(t *testing.T) {
 		t.Errorf("Direction(%v): valid, though no member", "not a member")
 	}
 
+	for _, v := range []NotificationType{NotificationTypeItemReceived} {
+		if !v.Valid() {
+			t.Errorf("NotificationType %v: not valid", v)
+		}
+	}
+
+	if NotificationType("not a member").Valid() {
+		t.Errorf("NotificationType(%v): valid, though no member", "not a member")
+	}
+
 	for _, v := range []SpellID{SpellIDFireball, SpellIDMpheal, SpellIDEarth, SpellIDFrost, SpellIDSmash, SpellIDDefensiveStance, SpellIDValorousPresence, SpellIDIntimidate, SpellIDPickPocket, SpellIDBackStab, SpellIDToolsOfTrade, SpellIDStealth, SpellIDHeal, SpellIDProtectAura, SpellIDBrightness, SpellIDHealAll, SpellIDSnowball, SpellIDSpookySparkles, SpellIDSeafoam, SpellIDShinySeed} {
 		if !v.Valid() {
 			t.Errorf("SpellID %v: not valid", v)

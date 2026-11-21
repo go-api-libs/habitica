@@ -193,6 +193,28 @@
           }
         }
       }
+    },
+    "/tags": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/X-Api-Key"
+        },
+        {
+          "$ref": "#/components/parameters/X-Api-User"
+        },
+        {
+          "$ref": "#/components/parameters/X-Client"
+        }
+      ],
+      "get": {
+        "summary": "Get a user's tags",
+        "operationId": "ListTags",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Tags"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1432,8 +1454,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": "string",
-            "example": "ITEM_RECEIVED"
+            "$ref": "#/components/schemas/NotificationType"
           },
           "data": {
             "$ref": "#/components/schemas/NotificationData"
@@ -1475,6 +1496,13 @@
           "text",
           "destination"
         ]
+      },
+      "NotificationType": {
+        "type": "string",
+        "enum": [
+          "ITEM_RECEIVED"
+        ],
+        "example": "ITEM_RECEIVED"
       },
       "Notifications": {
         "type": "array",
@@ -2075,6 +2103,63 @@
           "hp"
         ]
       },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Training"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "b11b6395-5189-4f76-bff4-b04a8801153c"
+          },
+          "challenge": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ]
+      },
+      "Tags": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Tag"
+        }
+      },
+      "TagsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Tags"
+          },
+          "notifications": {
+            "$ref": "#/components/schemas/Notifications"
+          },
+          "userV": {
+            "type": "integer",
+            "example": 17120
+          },
+          "appVersion": {
+            "type": "string",
+            "example": "5.53.1"
+          }
+        },
+        "required": [
+          "success",
+          "data",
+          "notifications",
+          "userV",
+          "appVersion"
+        ]
+      },
       "Task": {
         "type": "object",
         "properties": {
@@ -2651,7 +2736,7 @@
             "type": "object"
           },
           "tags": {
-            "$ref": "#/components/schemas/UserDataTags"
+            "$ref": "#/components/schemas/Tags"
           },
           "guilds": {
             "type": "array",
@@ -2804,7 +2889,7 @@
             "type": "object"
           },
           "tags": {
-            "$ref": "#/components/schemas/UserDataTags"
+            "$ref": "#/components/schemas/Tags"
           },
           "notifications": {
             "$ref": "#/components/schemas/Notifications"
@@ -5712,34 +5797,6 @@
         "required": [
           "name"
         ]
-      },
-      "UserDataTags": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/UserDataTagsItem"
-        }
-      },
-      "UserDataTagsItem": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "Training"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "b11b6395-5189-4f76-bff4-b04a8801153c"
-          },
-          "challenge": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "name",
-          "id"
-        ]
       }
     },
     "responses": {
@@ -5795,6 +5852,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ScoreTaskResponse"
+            }
+          }
+        }
+      },
+      "Tags": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TagsResponse"
             }
           }
         }

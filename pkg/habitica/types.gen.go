@@ -6,6 +6,7 @@ package habitica
 
 import (
 	"encoding/json/v2"
+	"slices"
 	"time"
 	"uuid"
 
@@ -59,6 +60,11 @@ type BuyHealthPotionParams struct {
 
 // CronParams holds the query parameters for Cron.
 type CronParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ListTagsParams holds the query parameters for ListTags.
+type ListTagsParams struct {
 	XAPIUser uuid.UUID
 }
 
@@ -176,6 +182,12 @@ type BuyHealthPotionResponse struct {
 	AppVersion    string        `json:"appVersion"`
 }
 
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *BuyHealthPotionResponse) unknownEnum() bool {
+	return v.Notifications.unknownEnum()
+}
+
 // CastResponse defines a model
 type CastResponse struct {
 	Success       bool             `json:"success"`
@@ -185,10 +197,23 @@ type CastResponse struct {
 	AppVersion    string           `json:"appVersion"`
 }
 
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *CastResponse) unknownEnum() bool {
+	return v.Data.unknownEnum() ||
+		v.Notifications.unknownEnum()
+}
+
 // CastResponseData defines a model
 type CastResponseData struct {
 	User User `json:"user"`
 	Task Task `json:"task"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *CastResponseData) unknownEnum() bool {
+	return v.User.unknownEnum()
 }
 
 // Challenge defines a model
@@ -204,6 +229,12 @@ type CronResponse struct {
 	Notifications Notifications `json:"notifications"`
 	UserV         int           `json:"userV"`
 	AppVersion    string        `json:"appVersion"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *CronResponse) unknownEnum() bool {
+	return v.Notifications.unknownEnum()
 }
 
 // Direction defines a model
@@ -404,10 +435,16 @@ type Messages struct {
 
 // Notification defines a model
 type Notification struct {
-	Type string           `json:"type,omitzero"`
+	Type NotificationType `json:"type,omitzero"`
 	Data NotificationData `json:"data,omitzero"`
 	Seen *bool            `json:"seen,omitzero"`
 	ID   uuid.UUID        `json:"id,omitzero"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *Notification) unknownEnum() bool {
+	return v.Type != "" && !v.Type.Valid()
 }
 
 // NotificationData defines a model
@@ -418,8 +455,31 @@ type NotificationData struct {
 	Destination string `json:"destination"`
 }
 
+// NotificationType defines a model
+type NotificationType string
+
+const (
+	NotificationTypeItemReceived NotificationType = "ITEM_RECEIVED"
+)
+
+// Valid indicates whether the value is a known member of the NotificationType enum.
+func (e NotificationType) Valid() bool {
+	switch e {
+	case NotificationTypeItemReceived:
+		return true
+	default:
+		return false
+	}
+}
+
 // Notifications defines a model
 type Notifications []Notification
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v Notifications) unknownEnum() bool {
+	return slices.ContainsFunc(v, func(x Notification) bool { return x.unknownEnum() })
+}
 
 // Party defines a model
 type Party struct {
@@ -542,6 +602,12 @@ type ScoreTaskResponse struct {
 	AppVersion    string                `json:"appVersion,omitzero"`
 }
 
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *ScoreTaskResponse) unknownEnum() bool {
+	return v.Notifications.unknownEnum()
+}
+
 // ScoreTaskResponseData defines a model
 type ScoreTaskResponseData struct {
 	Delta         float64  `json:"delta"`
@@ -615,6 +681,31 @@ type Stats struct {
 	ToNextLevel *int     `json:"toNextLevel,omitzero"`
 	MaxHealth   *int     `json:"maxHealth,omitzero"`
 	MaxMp       *int     `json:"maxMP,omitzero"`
+}
+
+// Tag defines a model
+type Tag struct {
+	Name      string    `json:"name"`
+	ID        uuid.UUID `json:"id"`
+	Challenge *bool     `json:"challenge,omitzero"`
+}
+
+// Tags defines a model
+type Tags []Tag
+
+// TagsResponse defines a model
+type TagsResponse struct {
+	Success       bool          `json:"success"`
+	Data          Tags          `json:"data"`
+	Notifications Notifications `json:"notifications"`
+	UserV         int           `json:"userV"`
+	AppVersion    string        `json:"appVersion"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *TagsResponse) unknownEnum() bool {
+	return v.Notifications.unknownEnum()
 }
 
 // Task defines a model
@@ -694,6 +785,12 @@ type TaskResponse struct {
 	Notifications Notifications `json:"notifications"`
 }
 
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *TaskResponse) unknownEnum() bool {
+	return v.Notifications.unknownEnum()
+}
+
 // Tasks defines a model
 type Tasks []Task
 
@@ -712,6 +809,12 @@ type TasksResponse struct {
 	Notifications Notifications `json:"notifications"`
 	UserV         *int          `json:"userV,omitzero"`
 	AppVersion    string        `json:"appVersion,omitzero"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *TasksResponse) unknownEnum() bool {
+	return v.Notifications.unknownEnum()
 }
 
 // Tmp defines a model
@@ -789,7 +892,7 @@ type User struct {
 	Webhooks               []struct{}          `json:"webhooks,omitzero"`
 	PushDevices            PushDevices         `json:"pushDevices,omitzero"`
 	Extra                  *struct{}           `json:"extra,omitzero"`
-	Tags                   UserDataTags        `json:"tags,omitzero"`
+	Tags                   Tags                `json:"tags,omitzero"`
 	Guilds                 []uuid.UUID         `json:"guilds,omitzero"`
 	Challenges             []uuid.UUID         `json:"challenges,omitzero"`
 	NewMessages            *struct{}           `json:"newMessages,omitzero"`
@@ -804,6 +907,13 @@ type User struct {
 	PinnedItemsOrder       []struct{}          `json:"pinnedItemsOrder,omitzero"`
 	UnderscoreSubSignature string              `json:"_subSignature,omitzero"`
 	ID                     uuid.UUID           `json:"id,omitzero"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *User) unknownEnum() bool {
+	return v.Data.unknownEnum() ||
+		v.Notifications.unknownEnum()
 }
 
 // UserData defines a model
@@ -830,7 +940,7 @@ type UserData struct {
 	Webhooks               []struct{}          `json:"webhooks"`
 	PushDevices            PushDevices         `json:"pushDevices"`
 	Extra                  struct{}            `json:"extra"`
-	Tags                   UserDataTags        `json:"tags"`
+	Tags                   Tags                `json:"tags"`
 	Notifications          Notifications       `json:"notifications"`
 	Guilds                 []uuid.UUID         `json:"guilds"`
 	Challenges             []uuid.UUID         `json:"challenges"`
@@ -846,6 +956,12 @@ type UserData struct {
 	UnderscoreSubSignature string              `json:"_subSignature"`
 	ID                     uuid.UUID           `json:"id"`
 	NeedsCron              bool                `json:"needsCron"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *UserData) unknownEnum() bool {
+	return v.Notifications.unknownEnum()
 }
 
 // UserDataHistory defines a model
@@ -1464,14 +1580,4 @@ type UserDataPreferencesTasksActiveFilter struct {
 // UserDataProfile defines a model
 type UserDataProfile struct {
 	Name string `json:"name"`
-}
-
-// UserDataTags defines a model
-type UserDataTags []UserDataTagsItem
-
-// UserDataTagsItem defines a model
-type UserDataTagsItem struct {
-	Name      string    `json:"name"`
-	ID        uuid.UUID `json:"id"`
-	Challenge *bool     `json:"challenge,omitzero"`
 }
