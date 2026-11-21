@@ -1871,31 +1871,38 @@
         "properties": {
           "m": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "x-go-name": "Monday"
           },
           "t": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "x-go-name": "Tuesday"
           },
           "w": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "x-go-name": "Wednesday"
           },
           "th": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "x-go-name": "Thursday"
           },
           "f": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "x-go-name": "Friday"
           },
           "s": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "x-go-name": "Saturday"
           },
           "su": {
             "type": "boolean",
-            "example": true
+            "example": true,
+            "x-go-name": "Sunday"
           }
         },
         "required": [

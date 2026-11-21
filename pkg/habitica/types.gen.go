@@ -589,13 +589,13 @@ type Reminders []Reminder
 
 // RepeatWeekly defines a model
 type RepeatWeekly struct {
-	M  bool `json:"m"`
-	T  bool `json:"t"`
-	W  bool `json:"w"`
-	Th bool `json:"th"`
-	F  bool `json:"f"`
-	S  bool `json:"s"`
-	Su bool `json:"su"`
+	Monday    bool `json:"m"`
+	Tuesday   bool `json:"t"`
+	Wednesday bool `json:"w"`
+	Thursday  bool `json:"th"`
+	Friday    bool `json:"f"`
+	Saturday  bool `json:"s"`
+	Sunday    bool `json:"su"`
 }
 
 // ScoreTaskResponse defines a model
