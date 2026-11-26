@@ -10,6 +10,66 @@ import (
 
 // TestEnums_Valid checks that every member of an enum is valid, and that a value of its type none is, is not.
 func TestEnums_Valid(t *testing.T) {
+	for _, v := range []AddWebhookType{AddWebhookTypeTaskActivity, AddWebhookTypeGroupChatReceived, AddWebhookTypeUserActivity, AddWebhookTypeQuestActivity} {
+		if !v.Valid() {
+			t.Errorf("AddWebhookType %v: not valid", v)
+		}
+	}
+
+	if AddWebhookType("not a member").Valid() {
+		t.Errorf("AddWebhookType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []Attribute{AttributeStrength, AttributeIntelligence, AttributePerception, AttributeConstitution} {
+		if !v.Valid() {
+			t.Errorf("Attribute %v: not valid", v)
+		}
+	}
+
+	if Attribute("not a member").Valid() {
+		t.Errorf("Attribute(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []CreateGroupPrivacy{CreateGroupPrivacyPrivate, CreateGroupPrivacyPublic} {
+		if !v.Valid() {
+			t.Errorf("CreateGroupPrivacy %v: not valid", v)
+		}
+	}
+
+	if CreateGroupPrivacy("not a member").Valid() {
+		t.Errorf("CreateGroupPrivacy(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []CreateGroupType{CreateGroupTypeGuild, CreateGroupTypeParty} {
+		if !v.Valid() {
+			t.Errorf("CreateGroupType %v: not valid", v)
+		}
+	}
+
+	if CreateGroupType("not a member").Valid() {
+		t.Errorf("CreateGroupType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []CreateUserTasksAttribute{CreateUserTasksAttributeStr, CreateUserTasksAttributeInt, CreateUserTasksAttributePer, CreateUserTasksAttributeCon} {
+		if !v.Valid() {
+			t.Errorf("CreateUserTasksAttribute %v: not valid", v)
+		}
+	}
+
+	if CreateUserTasksAttribute("not a member").Valid() {
+		t.Errorf("CreateUserTasksAttribute(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []CreateUserTasksType{CreateUserTasksTypeHabit, CreateUserTasksTypeDaily, CreateUserTasksTypeTodo, CreateUserTasksTypeReward} {
+		if !v.Valid() {
+			t.Errorf("CreateUserTasksType %v: not valid", v)
+		}
+	}
+
+	if CreateUserTasksType("not a member").Valid() {
+		t.Errorf("CreateUserTasksType(%v): valid, though no member", "not a member")
+	}
+
 	for _, v := range []Direction{DirectionUp, DirectionDown} {
 		if !v.Valid() {
 			t.Errorf("Direction %v: not valid", v)
@@ -18,6 +78,126 @@ func TestEnums_Valid(t *testing.T) {
 
 	if Direction("not a member").Valid() {
 		t.Errorf("Direction(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []EquipType{EquipTypeMount, EquipTypePet, EquipTypeCostume, EquipTypeEquipped} {
+		if !v.Valid() {
+			t.Errorf("EquipType %v: not valid", v)
+		}
+	}
+
+	if EquipType("not a member").Valid() {
+		t.Errorf("EquipType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []ErrorType{ErrorTypeBadRequest, ErrorTypeNotAuthorized, ErrorTypeNotFound} {
+		if !v.Valid() {
+			t.Errorf("ErrorType %v: not valid", v)
+		}
+	}
+
+	if ErrorType("not a member").Valid() {
+		t.Errorf("ErrorType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []Event{EventWondercon, EventGoogle6mo} {
+		if !v.Valid() {
+			t.Errorf("Event %v: not valid", v)
+		}
+	}
+
+	if Event("not a member").Valid() {
+		t.Errorf("Event(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []Frequency{FrequencyDaily, FrequencyWeekly, FrequencyMonthly, FrequencyYearly} {
+		if !v.Valid() {
+			t.Errorf("Frequency %v: not valid", v)
+		}
+	}
+
+	if Frequency("not a member").Valid() {
+		t.Errorf("Frequency(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []HourglassPurchaseType{HourglassPurchaseTypePets, HourglassPurchaseTypeMounts} {
+		if !v.Valid() {
+			t.Errorf("HourglassPurchaseType %v: not valid", v)
+		}
+	}
+
+	if HourglassPurchaseType("not a member").Valid() {
+		t.Errorf("HourglassPurchaseType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []Interaction{InteractionSendPrivateMessage, InteractionTransferGems} {
+		if !v.Valid() {
+			t.Errorf("Interaction %v: not valid", v)
+		}
+	}
+
+	if Interaction("not a member").Valid() {
+		t.Errorf("Interaction(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []KeepChallenges{KeepChallengesRemainInChallenges, KeepChallengesLeaveChallenges} {
+		if !v.Valid() {
+			t.Errorf("KeepChallenges %v: not valid", v)
+		}
+	}
+
+	if KeepChallenges("not a member").Valid() {
+		t.Errorf("KeepChallenges(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []KeepTask{KeepTaskKeep, KeepTaskRemove} {
+		if !v.Valid() {
+			t.Errorf("KeepTask %v: not valid", v)
+		}
+	}
+
+	if KeepTask("not a member").Valid() {
+		t.Errorf("KeepTask(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []KeepTasks{KeepTasksRemoveAll, KeepTasksKeepAll} {
+		if !v.Valid() {
+			t.Errorf("KeepTasks %v: not valid", v)
+		}
+	}
+
+	if KeepTasks("not a member").Valid() {
+		t.Errorf("KeepTasks(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []Language{LanguageBg, LanguageCs, LanguageDa, LanguageDe, LanguageEn, LanguageEnPirate, LanguageEnGb, LanguageEs, LanguageEs419, LanguageFr, LanguageHe, LanguageHu, LanguageID, LanguageIt, LanguageJa, LanguageNl, LanguagePl, LanguagePt, LanguagePtBr, LanguageRo, LanguageRu, LanguageSk, LanguageSr, LanguageSv, LanguageUk, LanguageZh, LanguageZhTw} {
+		if !v.Valid() {
+			t.Errorf("Language %v: not valid", v)
+		}
+	}
+
+	if Language("not a member").Valid() {
+		t.Errorf("Language(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []LeaveChallengeKeep{LeaveChallengeKeepRemoveAll, LeaveChallengeKeepKeepAll} {
+		if !v.Valid() {
+			t.Errorf("LeaveChallengeKeep %v: not valid", v)
+		}
+	}
+
+	if LeaveChallengeKeep("not a member").Valid() {
+		t.Errorf("LeaveChallengeKeep(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []Model{ModelUser, ModelGroup, ModelChallenge, ModelTag, ModelHabit, ModelDaily, ModelTodo, ModelReward} {
+		if !v.Valid() {
+			t.Errorf("Model %v: not valid", v)
+		}
+	}
+
+	if Model("not a member").Valid() {
+		t.Errorf("Model(%v): valid, though no member", "not a member")
 	}
 
 	for _, v := range []NotificationType{NotificationTypeItemReceived} {
@@ -30,6 +210,46 @@ func TestEnums_Valid(t *testing.T) {
 		t.Errorf("NotificationType(%v): valid, though no member", "not a member")
 	}
 
+	for _, v := range []Paginate{PaginateTrue, PaginateFalse} {
+		if !v.Valid() {
+			t.Errorf("Paginate %v: not valid", v)
+		}
+	}
+
+	if Paginate("not a member").Valid() {
+		t.Errorf("Paginate(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []PurchaseType{PurchaseTypeGems, PurchaseTypeEggs, PurchaseTypeHatchingPotions, PurchaseTypePremiumHatchingPotions, PurchaseTypeFood, PurchaseTypeQuests, PurchaseTypeGear, PurchaseTypePets} {
+		if !v.Valid() {
+			t.Errorf("PurchaseType %v: not valid", v)
+		}
+	}
+
+	if PurchaseType("not a member").Valid() {
+		t.Errorf("PurchaseType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []SellType{SellTypeEggs, SellTypeHatchingPotions, SellTypeFood} {
+		if !v.Valid() {
+			t.Errorf("SellType %v: not valid", v)
+		}
+	}
+
+	if SellType("not a member").Valid() {
+		t.Errorf("SellType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []SharedTaskListType{SharedTaskListTypeHabits, SharedTaskListTypeDailys, SharedTaskListTypeTodos, SharedTaskListTypeRewards} {
+		if !v.Valid() {
+			t.Errorf("SharedTaskListType %v: not valid", v)
+		}
+	}
+
+	if SharedTaskListType("not a member").Valid() {
+		t.Errorf("SharedTaskListType(%v): valid, though no member", "not a member")
+	}
+
 	for _, v := range []SpellID{SpellIDFireball, SpellIDMpheal, SpellIDEarth, SpellIDFrost, SpellIDSmash, SpellIDDefensiveStance, SpellIDValorousPresence, SpellIDIntimidate, SpellIDPickPocket, SpellIDBackStab, SpellIDToolsOfTrade, SpellIDStealth, SpellIDHeal, SpellIDProtectAura, SpellIDBrightness, SpellIDHealAll, SpellIDSnowball, SpellIDSpookySparkles, SpellIDSeafoam, SpellIDShinySeed} {
 		if !v.Valid() {
 			t.Errorf("SpellID %v: not valid", v)
@@ -40,13 +260,53 @@ func TestEnums_Valid(t *testing.T) {
 		t.Errorf("SpellID(%v): valid, though no member", "not a member")
 	}
 
-	for _, v := range []Type{TypeHabits, TypeDailys, TypeTodos, TypeRewards, TypeCompletedTodos} {
+	for _, v := range []Stat{StatStr, StatCon, StatInt, StatPer} {
 		if !v.Valid() {
-			t.Errorf("Type %v: not valid", v)
+			t.Errorf("Stat %v: not valid", v)
 		}
 	}
 
-	if Type("not a member").Valid() {
-		t.Errorf("Type(%v): valid, though no member", "not a member")
+	if Stat("not a member").Valid() {
+		t.Errorf("Stat(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []TaskListType{TaskListTypeHabits, TaskListTypeDailies, TaskListTypeTodos, TaskListTypeRewards, TaskListTypeCompletedTodos} {
+		if !v.Valid() {
+			t.Errorf("TaskListType %v: not valid", v)
+		}
+	}
+
+	if TaskListType("not a member").Valid() {
+		t.Errorf("TaskListType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []TaskType{TaskTypeHabit, TaskTypeDaily, TaskTypeTodo, TaskTypeReward} {
+		if !v.Valid() {
+			t.Errorf("TaskType %v: not valid", v)
+		}
+	}
+
+	if TaskType("not a member").Valid() {
+		t.Errorf("TaskType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []UpdateTaskAttribute{UpdateTaskAttributeStr, UpdateTaskAttributeInt, UpdateTaskAttributePer, UpdateTaskAttributeCon} {
+		if !v.Valid() {
+			t.Errorf("UpdateTaskAttribute %v: not valid", v)
+		}
+	}
+
+	if UpdateTaskAttribute("not a member").Valid() {
+		t.Errorf("UpdateTaskAttribute(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []UpdateTaskFrequency{UpdateTaskFrequencyDaily, UpdateTaskFrequencyWeekly, UpdateTaskFrequencyMonthly, UpdateTaskFrequencyYearly} {
+		if !v.Valid() {
+			t.Errorf("UpdateTaskFrequency %v: not valid", v)
+		}
+	}
+
+	if UpdateTaskFrequency("not a member").Valid() {
+		t.Errorf("UpdateTaskFrequency(%v): valid, though no member", "not a member")
 	}
 }
