@@ -27,11 +27,32 @@ var jsonOptsLenient = json.JoinOptions(jsonOpts, json.RejectUnknownMembers(false
 
 // GetUserParams holds the query parameters for GetUser.
 type GetUserParams struct {
+	// A comma-separated list of the user fields to return instead of the whole user. Notifications are always returned.
+	UserFields string
+	XAPIUser   uuid.UUID
+}
+
+// UserUpdateParams holds the query parameters for UserUpdate.
+type UserUpdateParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserDeleteParams holds the query parameters for UserDelete.
+type UserDeleteParams struct {
 	XAPIUser uuid.UUID
 }
 
 // ListTasksParams holds the query parameters for ListTasks.
 type ListTasksParams struct {
+	// Only return tasks of this type. Leave it out for all but completed To Do's.
+	Type TaskListType
+	// A date to compute each task's nextDue from.
+	DueDate  string
+	XAPIUser uuid.UUID
+}
+
+// CreateUserTasksParams holds the query parameters for CreateUserTasks.
+type CreateUserTasksParams struct {
 	// Only return tasks of this type. Leave it out for all but completed To Do's.
 	Type     TaskListType
 	XAPIUser uuid.UUID
@@ -39,6 +60,16 @@ type ListTasksParams struct {
 
 // GetTaskByIDParams holds the query parameters for GetTaskByID.
 type GetTaskByIDParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdateTaskParams holds the query parameters for UpdateTask.
+type UpdateTaskParams struct {
+	XAPIUser uuid.UUID
+}
+
+// DeleteTaskParams holds the query parameters for DeleteTask.
+type DeleteTaskParams struct {
 	XAPIUser uuid.UUID
 }
 
@@ -69,8 +100,808 @@ type ListTagsParams struct {
 	XAPIUser uuid.UUID
 }
 
+// CreateTagParams holds the query parameters for CreateTag.
+type CreateTagParams struct {
+	XAPIUser uuid.UUID
+}
+
 // AddTagToTaskParams holds the query parameters for AddTagToTask.
 type AddTagToTaskParams struct {
+	XAPIUser uuid.UUID
+}
+
+// RemoveTagFromTaskParams holds the query parameters for RemoveTagFromTask.
+type RemoveTagFromTaskParams struct {
+	XAPIUser uuid.UUID
+}
+
+// CreateChallengeParams holds the query parameters for CreateChallenge.
+type CreateChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetGroupChallengesParams holds the query parameters for GetGroupChallenges.
+type GetGroupChallengesParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetUserChallengesParams holds the query parameters for GetUserChallenges.
+type GetUserChallengesParams struct {
+	// This parameter can be used to specify the page number for the user challenges result (the initial page is number 0).
+	Page float64
+	// If set to true it limits results to challenges where the user is a member, or the user owns the challenge.
+	Member string
+	// If set to owned it limits results to challenges owned by the user. If set to not_owned it limits results to challenges not owned by the user.
+	Owned string
+	// Optional query parameter to filter results to challenges that include (even partially) the search query parameter in the name or description.
+	Search string
+	// Optional comma separated list of categories. If set it limits results to challenges that are part of the given categories.
+	Categories string
+	XAPIUser   uuid.UUID
+}
+
+// GetChallengeParams holds the query parameters for GetChallenge.
+type GetChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdateChallengeParams holds the query parameters for UpdateChallenge.
+type UpdateChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// DeleteChallengeParams holds the query parameters for DeleteChallenge.
+type DeleteChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ClearFlagsChallengeParams holds the query parameters for ClearFlagsChallenge.
+type ClearFlagsChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// CloneChallengeParams holds the query parameters for CloneChallenge.
+type CloneChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ExportChallengeCsvParams holds the query parameters for ExportChallengeCsv.
+type ExportChallengeCsvParams struct {
+	XAPIUser uuid.UUID
+}
+
+// FlagChallengeParams holds the query parameters for FlagChallenge.
+type FlagChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// JoinChallengeParams holds the query parameters for JoinChallenge.
+type JoinChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// LeaveChallengeParams holds the query parameters for LeaveChallenge.
+type LeaveChallengeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetMembersForChallengeParams holds the query parameters for GetMembersForChallenge.
+type GetMembersForChallengeParams struct {
+	// Query parameter to specify the last member returned in a previous request to this route and get the next batch of results.
+	LastID uuid.UUID
+	// BETA Query parameter to specify the number of results to return. Max is 60.
+	Limit float64
+	// BETA Query parameter - If 'true' then include challenge tasks of each member
+	IncludeTasks bool
+	// If set to true then all public fields for members will be returned (similar to when making a request for a single member).
+	IncludeAllPublicFields bool
+	XAPIUser               uuid.UUID
+}
+
+// GetChallengeMemberProgressParams holds the query parameters for GetChallengeMemberProgress.
+type GetChallengeMemberProgressParams struct {
+	XAPIUser uuid.UUID
+}
+
+// SelectChallengeWinnerParams holds the query parameters for SelectChallengeWinner.
+type SelectChallengeWinnerParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ContentGetParams holds the query parameters for ContentGet.
+type ContentGetParams struct {
+	// Language code used for the items' strings. If the authenticated user makes the request, the content will return with the user's configured language.
+	Language Language
+	XAPIUser uuid.UUID
+}
+
+// GetCouponsParams holds the query parameters for GetCoupons.
+type GetCouponsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// RedeemCouponCodeParams holds the query parameters for RedeemCouponCode.
+type RedeemCouponCodeParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GenerateCouponsParams holds the query parameters for GenerateCoupons.
+type GenerateCouponsParams struct {
+	// The number of coupon codes to generate
+	Count    float64
+	XAPIUser uuid.UUID
+}
+
+// ValidateCouponParams holds the query parameters for ValidateCoupon.
+type ValidateCouponParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetGroupPlansParams holds the query parameters for GetGroupPlans.
+type GetGroupPlansParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GroupMoveTaskParams holds the query parameters for GroupMoveTask.
+type GroupMoveTaskParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetGroupsParams holds the query parameters for GetGroups.
+type GetGroupsParams struct {
+	// The type of groups to retrieve. Must be a query string representing a list of values like 'tavern,party'. Possible values are party, guilds, privateGuilds, publicGuilds, tavern.
+	Type string
+	// Public guilds support pagination. When true guilds are returned in groups of 30.
+	Paginate Paginate
+	// When pagination is enabled for public guilds this parameter can be used to specify the page number (the initial page is number 0 and not required).
+	Page     float64
+	XAPIUser uuid.UUID
+}
+
+// CreateGroupParams holds the query parameters for CreateGroup.
+type CreateGroupParams struct {
+	XAPIUser uuid.UUID
+}
+
+// CreateGroupPlanParams holds the query parameters for CreateGroupPlan.
+type CreateGroupPlanParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetGroupParams holds the query parameters for GetGroup.
+type GetGroupParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdateGroupParams holds the query parameters for UpdateGroup.
+type UpdateGroupParams struct {
+	XAPIUser uuid.UUID
+}
+
+// AddGroupManagerParams holds the query parameters for AddGroupManager.
+type AddGroupManagerParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetChatParams holds the query parameters for GetChat.
+type GetChatParams struct {
+	// The number of messages to fetch (max 400).
+	Limit float64
+	// Fetch messages older than this message ID.
+	Before   string
+	XAPIUser uuid.UUID
+}
+
+// PostChatParams holds the query parameters for PostChat.
+type PostChatParams struct {
+	// The previous chat message's UUID which will force a return of the full group chat.
+	PreviousMsg uuid.UUID
+	XAPIUser    uuid.UUID
+}
+
+// SeenChatParams holds the query parameters for SeenChat.
+type SeenChatParams struct {
+	XAPIUser uuid.UUID
+}
+
+// DeleteChatParams holds the query parameters for DeleteChat.
+type DeleteChatParams struct {
+	// The last message's ID fetched by the client so that the whole chat will be returned only if new messages have been posted in the meantime.
+	PreviousMsg uuid.UUID
+	XAPIUser    uuid.UUID
+}
+
+// ClearFlagsParams holds the query parameters for ClearFlags.
+type ClearFlagsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// FlagChatParams holds the query parameters for FlagChat.
+type FlagChatParams struct {
+	XAPIUser uuid.UUID
+}
+
+// LikeChatParams holds the query parameters for LikeChat.
+type LikeChatParams struct {
+	XAPIUser uuid.UUID
+}
+
+// InviteToGroupParams holds the query parameters for InviteToGroup.
+type InviteToGroupParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetInvitesForGroupParams holds the query parameters for GetInvitesForGroup.
+type GetInvitesForGroupParams struct {
+	// Query parameter to specify the last invite returned in a previous request to this route and get the next batch of results.
+	LastID uuid.UUID
+	// BETA Query parameter to specify the number of results to return. Max is 60.
+	Limit float64
+	// If set to true then all public fields for members will be returned (similar to when making a request for a single member).
+	IncludeAllPublicFields bool
+	XAPIUser               uuid.UUID
+}
+
+// JoinGroupParams holds the query parameters for JoinGroup.
+type JoinGroupParams struct {
+	XAPIUser uuid.UUID
+}
+
+// LeaveGroupParams holds the query parameters for LeaveGroup.
+type LeaveGroupParams struct {
+	// Whether or not to keep challenge tasks belonging to the group being left.
+	Keep     KeepTasks
+	XAPIUser uuid.UUID
+}
+
+// GetMembersForGroupParams holds the query parameters for GetMembersForGroup.
+type GetMembersForGroupParams struct {
+	// Query parameter to specify the last member returned in a previous request to this route and get the next batch of results.
+	LastID uuid.UUID
+	// BETA Query parameter to specify the number of results to return. Max is 60.
+	Limit float64
+	// If set to true then all public fields for members will be returned (similar to when making a request for a single member).
+	IncludeAllPublicFields bool
+	// If set to true, then response should include all tasks per user related to the challenge
+	IncludeTasks bool
+	XAPIUser     uuid.UUID
+}
+
+// AbortQuestParams holds the query parameters for AbortQuest.
+type AbortQuestParams struct {
+	XAPIUser uuid.UUID
+}
+
+// AcceptQuestParams holds the query parameters for AcceptQuest.
+type AcceptQuestParams struct {
+	XAPIUser uuid.UUID
+}
+
+// CancelQuestParams holds the query parameters for CancelQuest.
+type CancelQuestParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ForceQuestStartParams holds the query parameters for ForceQuestStart.
+type ForceQuestStartParams struct {
+	XAPIUser uuid.UUID
+}
+
+// InviteToQuestParams holds the query parameters for InviteToQuest.
+type InviteToQuestParams struct {
+	XAPIUser uuid.UUID
+}
+
+// LeaveQuestParams holds the query parameters for LeaveQuest.
+type LeaveQuestParams struct {
+	XAPIUser uuid.UUID
+}
+
+// RejectQuestParams holds the query parameters for RejectQuest.
+type RejectQuestParams struct {
+	XAPIUser uuid.UUID
+}
+
+// RejectGroupInviteParams holds the query parameters for RejectGroupInvite.
+type RejectGroupInviteParams struct {
+	XAPIUser uuid.UUID
+}
+
+// RemoveGroupManagerParams holds the query parameters for RemoveGroupManager.
+type RemoveGroupManagerParams struct {
+	XAPIUser uuid.UUID
+}
+
+// RemoveGroupMemberParams holds the query parameters for RemoveGroupMember.
+type RemoveGroupMemberParams struct {
+	// Query parameter - The message to send to the removed members
+	Message  string
+	XAPIUser uuid.UUID
+}
+
+// GetHeroesParams holds the query parameters for GetHeroes.
+type GetHeroesParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetHeroPartyParams holds the query parameters for GetHeroParty.
+type GetHeroPartyParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetHeroParams holds the query parameters for GetHero.
+type GetHeroParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdateHeroParams holds the query parameters for UpdateHero.
+type UpdateHeroParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetPatronsParams holds the query parameters for GetPatrons.
+type GetPatronsParams struct {
+	// The result page.
+	Page     float64
+	XAPIUser uuid.UUID
+}
+
+// GetInboxMessagesParams holds the query parameters for GetInboxMessages.
+type GetInboxMessagesParams struct {
+	// Load the messages of the selected Page - 10 Messages per Page
+	Page float64
+	// Loads only the messages of a conversation
+	Conversation uuid.UUID
+	XAPIUser     uuid.UUID
+}
+
+// GetLookingForPartyParams holds the query parameters for GetLookingForParty.
+type GetLookingForPartyParams struct {
+	// Page number, defaults to 0
+	Page     float64
+	XAPIUser uuid.UUID
+}
+
+// SendPrivateMessageParams holds the query parameters for SendPrivateMessage.
+type SendPrivateMessageParams struct {
+	XAPIUser uuid.UUID
+}
+
+// TransferGemsParams holds the query parameters for TransferGems.
+type TransferGemsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetMemberParams holds the query parameters for GetMember.
+type GetMemberParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetMemberAchievementsParams holds the query parameters for GetMemberAchievements.
+type GetMemberAchievementsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ClearUserFlagsParams holds the query parameters for ClearUserFlags.
+type ClearUserFlagsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// FlagUserParams holds the query parameters for FlagUser.
+type FlagUserParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetObjectionsToInteractionParams holds the query parameters for GetObjectionsToInteraction.
+type GetObjectionsToInteractionParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetUserModelPathsParams holds the query parameters for GetUserModelPaths.
+type GetUserModelPathsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetNewsParams holds the query parameters for GetNews.
+type GetNewsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// TellMeLaterNewsParams holds the query parameters for TellMeLaterNews.
+type TellMeLaterNewsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ReadNotificationsParams holds the query parameters for ReadNotifications.
+type ReadNotificationsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// SeeNotificationsParams holds the query parameters for SeeNotifications.
+type SeeNotificationsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ReadNotificationParams holds the query parameters for ReadNotification.
+type ReadNotificationParams struct {
+	XAPIUser uuid.UUID
+}
+
+// SeeNotificationParams holds the query parameters for SeeNotification.
+type SeeNotificationParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetReadyParams holds the query parameters for GetReady.
+type GetReadyParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ReorderTagsParams holds the query parameters for ReorderTags.
+type ReorderTagsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetStatusParams holds the query parameters for GetStatus.
+type GetStatusParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetTagParams holds the query parameters for GetTag.
+type GetTagParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdateTagParams holds the query parameters for UpdateTag.
+type UpdateTagParams struct {
+	XAPIUser uuid.UUID
+}
+
+// DeleteTagParams holds the query parameters for DeleteTag.
+type DeleteTagParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetChallengeTasksParams holds the query parameters for GetChallengeTasks.
+type GetChallengeTasksParams struct {
+	// Query parameter to return just a type of tasks.
+	Type     SharedTaskListType
+	XAPIUser uuid.UUID
+}
+
+// CreateChallengeTasksParams holds the query parameters for CreateChallengeTasks.
+type CreateChallengeTasksParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ClearCompletedTodosParams holds the query parameters for ClearCompletedTodos.
+type ClearCompletedTodosParams struct {
+	XAPIUser uuid.UUID
+}
+
+// GetGroupTasksParams holds the query parameters for GetGroupTasks.
+type GetGroupTasksParams struct {
+	// Query parameter to return just a type of tasks
+	Type     SharedTaskListType
+	XAPIUser uuid.UUID
+}
+
+// CreateGroupTasksParams holds the query parameters for CreateGroupTasks.
+type CreateGroupTasksParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UnlinkAllTasksParams holds the query parameters for UnlinkAllTasks.
+type UnlinkAllTasksParams struct {
+	// Specifies if tasks should be kept(keep-all) or removed(remove-all) after the unlink.
+	Keep     KeepTasks
+	XAPIUser uuid.UUID
+}
+
+// UnlinkOneTaskParams holds the query parameters for UnlinkOneTask.
+type UnlinkOneTaskParams struct {
+	// Specifies if the task should be kept(keep) or removed(remove).
+	Keep     KeepTask
+	XAPIUser uuid.UUID
+}
+
+// AssignTaskParams holds the query parameters for AssignTask.
+type AssignTaskParams struct {
+	XAPIUser uuid.UUID
+}
+
+// AddChecklistItemParams holds the query parameters for AddChecklistItem.
+type AddChecklistItemParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdateChecklistItemParams holds the query parameters for UpdateChecklistItem.
+type UpdateChecklistItemParams struct {
+	XAPIUser uuid.UUID
+}
+
+// RemoveChecklistItemParams holds the query parameters for RemoveChecklistItem.
+type RemoveChecklistItemParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ScoreChecklistItemParams holds the query parameters for ScoreChecklistItem.
+type ScoreChecklistItemParams struct {
+	XAPIUser uuid.UUID
+}
+
+// MoveTaskParams holds the query parameters for MoveTask.
+type MoveTaskParams struct {
+	XAPIUser uuid.UUID
+}
+
+// TaskNeedsWorkParams holds the query parameters for TaskNeedsWork.
+type TaskNeedsWorkParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UnassignTaskParams holds the query parameters for UnassignTask.
+type UnassignTaskParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserAllocateParams holds the query parameters for UserAllocate.
+type UserAllocateParams struct {
+	// The Stat to increase. Default is 'str'
+	Stat     Stat
+	XAPIUser uuid.UUID
+}
+
+// UserAllocateBulkParams holds the query parameters for UserAllocateBulk.
+type UserAllocateBulkParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserAllocateNowParams holds the query parameters for UserAllocateNow.
+type UserAllocateNowParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserGetAnonymizedParams holds the query parameters for UserGetAnonymized.
+type UserGetAnonymizedParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserLoginLocalParams holds the query parameters for UserLoginLocal.
+type UserLoginLocalParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserRegisterLocalParams holds the query parameters for UserRegisterLocal.
+type UserRegisterLocalParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ResetPasswordSetNewOneParams holds the query parameters for ResetPasswordSetNewOne.
+type ResetPasswordSetNewOneParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserDeleteSocialParams holds the query parameters for UserDeleteSocial.
+type UserDeleteSocialParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdateEmailParams holds the query parameters for UpdateEmail.
+type UpdateEmailParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdatePasswordParams holds the query parameters for UpdatePassword.
+type UpdatePasswordParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UpdateUsernameParams holds the query parameters for UpdateUsername.
+type UpdateUsernameParams struct {
+	XAPIUser uuid.UUID
+}
+
+// BlockUserParams holds the query parameters for BlockUser.
+type BlockUserParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserBuyArmoireParams holds the query parameters for UserBuyArmoire.
+type UserBuyArmoireParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserBuyGearParams holds the query parameters for UserBuyGear.
+type UserBuyGearParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserBuyMysterySetParams holds the query parameters for UserBuyMysterySet.
+type UserBuyMysterySetParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserBuyQuestParams holds the query parameters for UserBuyQuest.
+type UserBuyQuestParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserBuySpecialSpellParams holds the query parameters for UserBuySpecialSpell.
+type UserBuySpecialSpellParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserBuyParams holds the query parameters for UserBuy.
+type UserBuyParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserChangeClassParams holds the query parameters for UserChangeClass.
+type UserChangeClassParams struct {
+	// Query parameter - ?class={warrior|rogue|wizard|healer}
+	Class    string
+	XAPIUser uuid.UUID
+}
+
+// SetCustomDayStartParams holds the query parameters for SetCustomDayStart.
+type SetCustomDayStartParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserDisableClassesParams holds the query parameters for UserDisableClasses.
+type UserDisableClassesParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserEquipParams holds the query parameters for UserEquip.
+type UserEquipParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserFeedParams holds the query parameters for UserFeed.
+type UserFeedParams struct {
+	// The amount of food to feed. Note: Pet can eat 50 units. Preferred food offers 5 units per food, other food 2 units.
+	Amount   float64
+	XAPIUser uuid.UUID
+}
+
+// UserHatchParams holds the query parameters for UserHatch.
+type UserHatchParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserGetInAppRewardsParams holds the query parameters for UserGetInAppRewards.
+type UserGetInAppRewardsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserGetBuyListParams holds the query parameters for UserGetBuyList.
+type UserGetBuyListParams struct {
+	XAPIUser uuid.UUID
+}
+
+// MarkPmsReadParams holds the query parameters for MarkPmsRead.
+type MarkPmsReadParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ClearMessagesParams holds the query parameters for ClearMessages.
+type ClearMessagesParams struct {
+	XAPIUser uuid.UUID
+}
+
+// DeleteMessageParams holds the query parameters for DeleteMessage.
+type DeleteMessageParams struct {
+	XAPIUser uuid.UUID
+}
+
+// MovePinnedItemParams holds the query parameters for MovePinnedItem.
+type MovePinnedItemParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserOpenMysteryItemParams holds the query parameters for UserOpenMysteryItem.
+type UserOpenMysteryItemParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserPurchaseHourglassParams holds the query parameters for UserPurchaseHourglass.
+type UserPurchaseHourglassParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserPurchaseParams holds the query parameters for UserPurchase.
+type UserPurchaseParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserReadCardParams holds the query parameters for UserReadCard.
+type UserReadCardParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserRebirthParams holds the query parameters for UserRebirth.
+type UserRebirthParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserReleaseBothParams holds the query parameters for UserReleaseBoth.
+type UserReleaseBothParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserReleaseMountsParams holds the query parameters for UserReleaseMounts.
+type UserReleaseMountsParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserRerollParams holds the query parameters for UserReroll.
+type UserRerollParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserResetParams holds the query parameters for UserReset.
+type UserResetParams struct {
+	XAPIUser uuid.UUID
+}
+
+// ResetPasswordParams holds the query parameters for ResetPassword.
+type ResetPasswordParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserReviveParams holds the query parameters for UserRevive.
+type UserReviveParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserSellParams holds the query parameters for UserSell.
+type UserSellParams struct {
+	// The amount to sell
+	Amount   float64
+	XAPIUser uuid.UUID
+}
+
+// UserSleepParams holds the query parameters for UserSleep.
+type UserSleepParams struct {
+	XAPIUser uuid.UUID
+}
+
+// StatSyncParams holds the query parameters for StatSync.
+type StatSyncParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserUnlockParams holds the query parameters for UserUnlock.
+type UserUnlockParams struct {
+	// Full path to unlock. See "content" API call for list of items.
+	Path     string
+	XAPIUser uuid.UUID
+}
+
+// UserGetWebhookParams holds the query parameters for UserGetWebhook.
+type UserGetWebhookParams struct {
+	XAPIUser uuid.UUID
+}
+
+// AddWebhookParams holds the query parameters for AddWebhook.
+type AddWebhookParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserUpdateWebhookParams holds the query parameters for UserUpdateWebhook.
+type UserUpdateWebhookParams struct {
+	XAPIUser uuid.UUID
+}
+
+// UserDeleteWebhookParams holds the query parameters for UserDeleteWebhook.
+type UserDeleteWebhookParams struct {
+	XAPIUser uuid.UUID
+}
+
+// WorldStateGetParams holds the query parameters for WorldStateGet.
+type WorldStateGetParams struct {
 	XAPIUser uuid.UUID
 }
 
@@ -118,11 +949,61 @@ type AchievementsQuests struct {
 	Atom2        int `json:"atom2"`
 }
 
+// AddChecklistItem defines a model
+type AddChecklistItem struct {
+	// Whether the checklist item is checked off.
+	Completed *bool `json:"completed,omitzero"`
+	// The text of the checklist item
+	Text string `json:"text"`
+}
+
+// AddWebhook defines a model
+type AddWebhook struct {
+	// If the webhook should be enabled
+	Enabled *bool `json:"enabled,omitzero"`
+	// The webhook's id
+	ID uuid.UUID `json:"id,omitzero"`
+	// A label to remind you what this webhook does
+	Label string `json:"label,omitzero"`
+	// The webhook's options. Will differ depending on type. Required for groupChatReceived type. If a webhook supports options, the default values are displayed in the examples below
+	Options *struct{} `json:"options,omitzero"`
+	// The webhook's type.
+	Type AddWebhookType `json:"type,omitzero"`
+	// The webhook's URL
+	URL string `json:"url"`
+}
+
+// The webhook's type.
+type AddWebhookType string
+
+const (
+	AddWebhookTypeTaskActivity      AddWebhookType = "taskActivity"
+	AddWebhookTypeGroupChatReceived AddWebhookType = "groupChatReceived"
+	AddWebhookTypeUserActivity      AddWebhookType = "userActivity"
+	AddWebhookTypeQuestActivity     AddWebhookType = "questActivity"
+)
+
+// Valid indicates whether the value is a known member of the AddWebhookType enum.
+func (e AddWebhookType) Valid() bool {
+	switch e {
+	case AddWebhookTypeTaskActivity, AddWebhookTypeGroupChatReceived, AddWebhookTypeUserActivity, AddWebhookTypeQuestActivity:
+		return true
+	default:
+		return false
+	}
+}
+
 // Approval defines a model
 type Approval struct {
 	Required  bool `json:"required"`
 	Approved  bool `json:"approved"`
 	Requested bool `json:"requested"`
+}
+
+// AssignTask defines a model
+type AssignTask struct {
+	// Array of user IDs to be assigned to the task
+	AssignedUserIDs []uuid.UUID `json:"assignedUserIds,omitzero"`
 }
 
 // A character attribute: strength, intelligence, perception or constitution.
@@ -249,6 +1130,205 @@ type Challenge struct {
 	ID     uuid.UUID `json:"id,omitzero"`
 }
 
+// CreateChallenge defines a model
+type CreateChallenge struct {
+	// An object representing the challenge to be created
+	Challenge struct{} `json:"challenge"`
+	// A detailed description of the challenge
+	Description string `json:"description,omitzero"`
+	// The id of the group to which the challenge belongs
+	Group uuid.UUID `json:"group"`
+	// The full name of the challenge
+	Name string `json:"name"`
+	// Whether or not a challenge is an official Habitica challenge (requires admin).
+	Official *bool `json:"official,omitzero"`
+	// Number of gems offered as a prize to challenge winner.
+	Prize *float64 `json:"prize,omitzero"`
+	// A shortened name for the challenge, to be used as a tag.
+	ShortName string `json:"shortName"`
+	// A short summary advertising the main purpose of the challenge; maximum 250 characters; if not supplied, challenge.name will be used.
+	Summary string `json:"summary,omitzero"`
+}
+
+// CreateChallengeTasks defines a model
+type CreateChallengeTasks struct {
+	// User's attribute to use, options are: "str", "int", "per", "con".
+	Attribute UpdateTaskAttribute `json:"attribute,omitzero"`
+	// Determines if a checklist will be displayed
+	CollapseChecklist *bool `json:"collapseChecklist,omitzero"`
+	// Due date to be shown in task list. Only valid for type "todo."
+	Date *struct{} `json:"date,omitzero"`
+	// Array of integers. Only valid for type "daily"
+	DaysOfMonth []int `json:"daysOfMonth"`
+	// Only valid for type "habit" If true, enables the "-" under "Directions/Action" for "Bad habits"
+	Down *bool `json:"down,omitzero"`
+	// Value of frequency must be "daily", the number of days until this daily task is available again.
+	EveryX *float64 `json:"everyX,omitzero"`
+	// Values "weekly" and "monthly" enable use of the "repeat" field. All frequency values enable use of the "everyX" field. Value "monthly" enables use of the "weeksOfMonth" and "daysOfMonth" fields. Frequency is only valid for type "daily".
+	Frequency UpdateTaskFrequency `json:"frequency,omitzero"`
+	// Extra notes
+	Notes string `json:"notes,omitzero"`
+	// Difficulty, options are 0.1, 1, 1.5, 2; equivalent of Trivial, Easy, Medium, Hard.
+	Priority *float64 `json:"priority,omitzero"`
+	// Array of reminders, each an object that must include: a UUID, startDate and time. For example {"id":"ed427623-9a69-4aac-9852-13deb9c190c3", "startDate":"1/16/17","time":"1/16/17" }
+	Reminders []string `json:"reminders,omitzero"`
+	// List of objects for days of the week, Days that are true will be repeated upon. Only valid for type "daily". Any days not specified will be marked as true. Days are: su, m, t, w, th, f, s. Value of frequency must be "weekly". For example, to skip repeats on Mon and Fri: "repeat":{"f":false,"m":false}
+	Repeat string `json:"repeat,omitzero"`
+	// Date when the task will first become available. Only valid for type "daily"
+	StartDate *struct{} `json:"startDate,omitzero"`
+	// Number of days that the task has consecutively been checked off. Only valid for type "daily"
+	Streak *float64 `json:"streak,omitzero"`
+	// The text to be displayed for the task
+	Text string `json:"text"`
+	// Task type, options are: "habit", "daily", "todo", "reward".
+	Type CreateUserTasksType `json:"type"`
+	// Only valid for type "habit" If true, enables the "+" under "Directions/Action" for "Good habits"
+	Up *bool `json:"up,omitzero"`
+	// Only valid for type "reward." The cost in gold of the reward
+	Value *float64 `json:"value,omitzero"`
+	// Array of integers. Only valid for type "daily"
+	WeeksOfMonth []int `json:"weeksOfMonth"`
+}
+
+// CreateGroup defines a model
+type CreateGroup struct {
+	Name string `json:"name"`
+	// Privacy of group (party MUST be private)
+	Privacy CreateGroupPrivacy `json:"privacy"`
+	// Type of group (guild or party)
+	Type CreateGroupType `json:"type"`
+}
+
+// Privacy of group (party MUST be private)
+type CreateGroupPrivacy string
+
+const (
+	CreateGroupPrivacyPrivate CreateGroupPrivacy = "private"
+	CreateGroupPrivacyPublic  CreateGroupPrivacy = "public"
+)
+
+// Valid indicates whether the value is a known member of the CreateGroupPrivacy enum.
+func (e CreateGroupPrivacy) Valid() bool {
+	switch e {
+	case CreateGroupPrivacyPrivate, CreateGroupPrivacyPublic:
+		return true
+	default:
+		return false
+	}
+}
+
+// Type of group (guild or party)
+type CreateGroupType string
+
+const (
+	CreateGroupTypeGuild CreateGroupType = "guild"
+	CreateGroupTypeParty CreateGroupType = "party"
+)
+
+// Valid indicates whether the value is a known member of the CreateGroupType enum.
+func (e CreateGroupType) Valid() bool {
+	switch e {
+	case CreateGroupTypeGuild, CreateGroupTypeParty:
+		return true
+	default:
+		return false
+	}
+}
+
+// CreateUserTasks defines a model
+type CreateUserTasks struct {
+	// Alias to assign to task
+	Alias string `json:"alias,omitzero"`
+	// User's attribute to use, options are: "str", "int", "per", "con"
+	Attribute CreateUserTasksAttribute `json:"attribute,omitzero"`
+	// An array of checklist items. For example, [{"text":"buy tools", "completed":true}, {"text":"build shed", "completed":false}]
+	Checklist []struct{} `json:"checklist,omitzero"`
+	// Determines if a checklist will be displayed
+	CollapseChecklist *bool `json:"collapseChecklist,omitzero"`
+	// Due date to be shown in task list. Only valid for type "todo."
+	Date *struct{} `json:"date,omitzero"`
+	// Array of integers. Only valid for type "daily"
+	DaysOfMonth []int `json:"daysOfMonth"`
+	// Only valid for type "habit" If true, enables the "-" under "Directions/Action" for "Bad habits"
+	Down *bool `json:"down,omitzero"`
+	// Value of frequency must be "daily", the number of days until this daily task is available again.
+	EveryX *float64 `json:"everyX,omitzero"`
+	// Values "weekly" and "monthly" enable use of the "repeat" field. All frequency values enable use of the "everyX" field. Value "monthly" enables use of the "weeksOfMonth" and "daysOfMonth" fields. Frequency is only valid for type "daily".
+	Frequency UpdateTaskFrequency `json:"frequency,omitzero"`
+	// Extra notes
+	Notes string `json:"notes,omitzero"`
+	// Difficulty, options are 0.1, 1, 1.5, 2; equivalent of Trivial, Easy, Medium, Hard.
+	Priority *float64 `json:"priority,omitzero"`
+	// Array of reminders, each an object that must include: a UUID, startDate and time. For example {"id":"ed427623-9a69-4aac-9852-13deb9c190c3", "startDate":"1/16/17","time":"1/16/17" }
+	Reminders []string `json:"reminders,omitzero"`
+	// List of objects for days of the week, Days that are true will be repeated upon. Only valid for type "daily". Any days not specified will be marked as true. Days are: su, m, t, w, th, f, s. Value of frequency must be "weekly". For example, to skip repeats on Mon and Fri: "repeat":{"f":false,"m":false}
+	Repeat string `json:"repeat,omitzero"`
+	// Date when the task will first become available. Only valid for type "daily"
+	StartDate *struct{} `json:"startDate,omitzero"`
+	// Number of days that the task has consecutively been checked off. Only valid for type "daily"
+	Streak *float64 `json:"streak,omitzero"`
+	// Array of UUIDs of tags
+	Tags []string `json:"tags,omitzero"`
+	// The text to be displayed for the task
+	Text string `json:"text"`
+	// Task type, options are: "habit", "daily", "todo", "reward".
+	Type CreateUserTasksType `json:"type"`
+	// Only valid for type "habit" If true, enables the "+" under "Directions/Action" for "Good habits"-
+	Up *bool `json:"up,omitzero"`
+	// Only valid for type "reward." The cost in gold of the reward. Should be greater then or equal to 0.
+	Value *float64 `json:"value,omitzero"`
+	// Array of integers. Only valid for type "daily"
+	WeeksOfMonth []int `json:"weeksOfMonth"`
+}
+
+// User's attribute to use, options are: "str", "int", "per", "con"
+type CreateUserTasksAttribute string
+
+const (
+	CreateUserTasksAttributeStr CreateUserTasksAttribute = "str"
+	CreateUserTasksAttributeInt CreateUserTasksAttribute = "int"
+	CreateUserTasksAttributePer CreateUserTasksAttribute = "per"
+	CreateUserTasksAttributeCon CreateUserTasksAttribute = "con"
+)
+
+// Valid indicates whether the value is a known member of the CreateUserTasksAttribute enum.
+func (e CreateUserTasksAttribute) Valid() bool {
+	switch e {
+	case CreateUserTasksAttributeStr, CreateUserTasksAttributeInt, CreateUserTasksAttributePer, CreateUserTasksAttributeCon:
+		return true
+	default:
+		return false
+	}
+}
+
+// Task type, options are: "habit", "daily", "todo", "reward".
+type CreateUserTasksType string
+
+const (
+	CreateUserTasksTypeHabit  CreateUserTasksType = "habit"
+	CreateUserTasksTypeDaily  CreateUserTasksType = "daily"
+	CreateUserTasksTypeTodo   CreateUserTasksType = "todo"
+	CreateUserTasksTypeReward CreateUserTasksType = "reward"
+)
+
+// Valid indicates whether the value is a known member of the CreateUserTasksType enum.
+func (e CreateUserTasksType) Valid() bool {
+	switch e {
+	case CreateUserTasksTypeHabit, CreateUserTasksTypeDaily, CreateUserTasksTypeTodo, CreateUserTasksTypeReward:
+		return true
+	default:
+		return false
+	}
+}
+
+// A username and a password.
+type Credentials struct {
+	// The user's password if they use local authentication. Omit if they use social auth.
+	Password string `json:"password"`
+	// The new username
+	Username string `json:"username"`
+}
+
 // CronResponse defines a model
 type CronResponse struct {
 	Success       bool          `json:"success"`
@@ -261,6 +1341,27 @@ type CronResponse struct {
 // unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
 // records.
 func (v *CronResponse) unknownEnum() bool {
+	return v.Notifications.unknownEnum()
+}
+
+// What an endpoint returns that the specification has no recording of: its data may be anything.
+type DataResponse struct {
+	// Whether the request succeeded.
+	Success bool `json:"success"`
+	// What the endpoint returns.
+	Data *struct{} `json:"data,omitzero"`
+	// A message about the outcome, if any.
+	Message       string        `json:"message,omitzero"`
+	Notifications Notifications `json:"notifications,omitzero"`
+	// The version of the user document.
+	UserV *int `json:"userV,omitzero"`
+	// The version of the server.
+	AppVersion string `json:"appVersion,omitzero"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *DataResponse) unknownEnum() bool {
 	return v.Notifications.unknownEnum()
 }
 
@@ -292,6 +1393,26 @@ type Drop struct {
 	Dialog  string `json:"dialog"`
 	Premium *bool  `json:"premium,omitzero"`
 	Limited *bool  `json:"limited,omitzero"`
+}
+
+// What to equip: a mount, a pet, a costume or battle gear.
+type EquipType string
+
+const (
+	EquipTypeMount    EquipType = "mount"
+	EquipTypePet      EquipType = "pet"
+	EquipTypeCostume  EquipType = "costume"
+	EquipTypeEquipped EquipType = "equipped"
+)
+
+// Valid indicates whether the value is a known member of the EquipType enum.
+func (e EquipType) Valid() bool {
+	switch e {
+	case EquipTypeMount, EquipTypePet, EquipTypeCostume, EquipTypeEquipped:
+		return true
+	default:
+		return false
+	}
 }
 
 // An error the server returns.
@@ -327,6 +1448,38 @@ func (e ErrorType) Valid() bool {
 	default:
 		return false
 	}
+}
+
+// Event defines a model
+type Event string
+
+const (
+	EventWondercon Event = "wondercon"
+	EventGoogle6mo Event = "google_6mo"
+)
+
+// Valid indicates whether the value is a known member of the Event enum.
+func (e Event) Valid() bool {
+	switch e {
+	case EventWondercon, EventGoogle6mo:
+		return true
+	default:
+		return false
+	}
+}
+
+// FlagChat defines a model
+type FlagChat struct {
+	// explain why the message was flagged
+	Comment string `json:"comment,omitzero"`
+}
+
+// FlagUser defines a model
+type FlagUser struct {
+	// explain why the user was flagged
+	Comment string `json:"comment,omitzero"`
+	// URL or view from which the user was flagged
+	Source string `json:"source,omitzero"`
 }
 
 // Flags defines a model
@@ -448,12 +1601,193 @@ type Group struct {
 	CompletedBy      *struct{}  `json:"completedBy,omitzero"`
 }
 
+// A manager of a group.
+type GroupManager struct {
+	// The user _id of the member to promote to manager
+	ManagerID uuid.UUID `json:"managerId"`
+}
+
+// What to buy with Mystic Hourglasses.
+type HourglassPurchaseType string
+
+const (
+	HourglassPurchaseTypePets   HourglassPurchaseType = "pets"
+	HourglassPurchaseTypeMounts HourglassPurchaseType = "mounts"
+)
+
+// Valid indicates whether the value is a known member of the HourglassPurchaseType enum.
+func (e HourglassPurchaseType) Valid() bool {
+	switch e {
+	case HourglassPurchaseTypePets, HourglassPurchaseTypeMounts:
+		return true
+	default:
+		return false
+	}
+}
+
 // Inbox defines a model
 type Inbox struct {
 	OptOut      bool       `json:"optOut"`
 	Messages    Messages   `json:"messages"`
 	Blocks      []struct{} `json:"blocks"`
 	NewMessages int        `json:"newMessages"`
+}
+
+// Interaction defines a model
+type Interaction string
+
+const (
+	InteractionSendPrivateMessage Interaction = "send-private-message"
+	InteractionTransferGems       Interaction = "transfer-gems"
+)
+
+// Valid indicates whether the value is a known member of the Interaction enum.
+func (e Interaction) Valid() bool {
+	switch e {
+	case InteractionSendPrivateMessage, InteractionTransferGems:
+		return true
+	default:
+		return false
+	}
+}
+
+// InviteToGroup defines a model
+type InviteToGroup struct {
+	// The email address of the user being invited.
+	Email string `json:"email"`
+	// An array of objects, each representing one email address to invite.
+	Emails []struct{} `json:"emails,omitzero"`
+	// The name of the user being invited.
+	Name string `json:"name,omitzero"`
+	// An array of uuids to invite
+	Uuids []struct{} `json:"uuids,omitzero"`
+}
+
+// Whether or not to remain in the challenges of the group being left.
+type KeepChallenges string
+
+const (
+	KeepChallengesRemainInChallenges KeepChallenges = "remain-in-challenges"
+	KeepChallengesLeaveChallenges    KeepChallenges = "leave-challenges"
+)
+
+// Valid indicates whether the value is a known member of the KeepChallenges enum.
+func (e KeepChallenges) Valid() bool {
+	switch e {
+	case KeepChallengesRemainInChallenges, KeepChallengesLeaveChallenges:
+		return true
+	default:
+		return false
+	}
+}
+
+// Whether to keep or remove the task.
+type KeepTask string
+
+const (
+	KeepTaskKeep   KeepTask = "keep"
+	KeepTaskRemove KeepTask = "remove"
+)
+
+// Valid indicates whether the value is a known member of the KeepTask enum.
+func (e KeepTask) Valid() bool {
+	switch e {
+	case KeepTaskKeep, KeepTaskRemove:
+		return true
+	default:
+		return false
+	}
+}
+
+// Whether to keep or remove the tasks.
+type KeepTasks string
+
+const (
+	KeepTasksRemoveAll KeepTasks = "remove-all"
+	KeepTasksKeepAll   KeepTasks = "keep-all"
+)
+
+// Valid indicates whether the value is a known member of the KeepTasks enum.
+func (e KeepTasks) Valid() bool {
+	switch e {
+	case KeepTasksRemoveAll, KeepTasksKeepAll:
+		return true
+	default:
+		return false
+	}
+}
+
+// Language defines a model
+type Language string
+
+const (
+	LanguageBg       Language = "bg"
+	LanguageCs       Language = "cs"
+	LanguageDa       Language = "da"
+	LanguageDe       Language = "de"
+	LanguageEn       Language = "en"
+	LanguageEnPirate Language = "en@pirate"
+	LanguageEnGb     Language = "en_GB"
+	LanguageEs       Language = "es"
+	LanguageEs419    Language = "es_419"
+	LanguageFr       Language = "fr"
+	LanguageHe       Language = "he"
+	LanguageHu       Language = "hu"
+	LanguageID       Language = "id"
+	LanguageIt       Language = "it"
+	LanguageJa       Language = "ja"
+	LanguageNl       Language = "nl"
+	LanguagePl       Language = "pl"
+	LanguagePt       Language = "pt"
+	LanguagePtBr     Language = "pt_BR"
+	LanguageRo       Language = "ro"
+	LanguageRu       Language = "ru"
+	LanguageSk       Language = "sk"
+	LanguageSr       Language = "sr"
+	LanguageSv       Language = "sv"
+	LanguageUk       Language = "uk"
+	LanguageZh       Language = "zh"
+	LanguageZhTw     Language = "zh_TW"
+)
+
+// Valid indicates whether the value is a known member of the Language enum.
+func (e Language) Valid() bool {
+	switch e {
+	case LanguageBg, LanguageCs, LanguageDa, LanguageDe, LanguageEn, LanguageEnPirate, LanguageEnGb, LanguageEs, LanguageEs419, LanguageFr, LanguageHe, LanguageHu, LanguageID, LanguageIt, LanguageJa, LanguageNl, LanguagePl, LanguagePt, LanguagePtBr, LanguageRo, LanguageRu, LanguageSk, LanguageSr, LanguageSv, LanguageUk, LanguageZh, LanguageZhTw:
+		return true
+	default:
+		return false
+	}
+}
+
+// LeaveChallenge defines a model
+type LeaveChallenge struct {
+	// Whether or not to keep or remove the challenge's tasks.
+	Keep LeaveChallengeKeep `json:"keep,omitzero"`
+}
+
+// Whether or not to keep or remove the challenge's tasks.
+type LeaveChallengeKeep string
+
+const (
+	LeaveChallengeKeepRemoveAll LeaveChallengeKeep = "remove-all"
+	LeaveChallengeKeepKeepAll   LeaveChallengeKeep = "keep-all"
+)
+
+// Valid indicates whether the value is a known member of the LeaveChallengeKeep enum.
+func (e LeaveChallengeKeep) Valid() bool {
+	switch e {
+	case LeaveChallengeKeepRemoveAll, LeaveChallengeKeepKeepAll:
+		return true
+	default:
+		return false
+	}
+}
+
+// LeaveGroup defines a model
+type LeaveGroup struct {
+	// Whether or not to remain in the challenges of the group being left.
+	KeepChallenges KeepChallenges `json:"keepChallenges,omitzero"`
 }
 
 // ListUserDataHistoryExp defines a model
@@ -508,6 +1842,30 @@ type Messages struct {
 	ZeroSixEightFe676885443ffA0cd673d7b766f01        Message  `json:"068fe676-8854-43ff-a0cd-673d7b766f01"`
 }
 
+// Model defines a model
+type Model string
+
+const (
+	ModelUser      Model = "user"
+	ModelGroup     Model = "group"
+	ModelChallenge Model = "challenge"
+	ModelTag       Model = "tag"
+	ModelHabit     Model = "habit"
+	ModelDaily     Model = "daily"
+	ModelTodo      Model = "todo"
+	ModelReward    Model = "reward"
+)
+
+// Valid indicates whether the value is a known member of the Model enum.
+func (e Model) Valid() bool {
+	switch e {
+	case ModelUser, ModelGroup, ModelChallenge, ModelTag, ModelHabit, ModelDaily, ModelTodo, ModelReward:
+		return true
+	default:
+		return false
+	}
+}
+
 // Notification defines a model
 type Notification struct {
 	Type NotificationType `json:"type,omitzero"`
@@ -556,6 +1914,24 @@ func (v Notifications) unknownEnum() bool {
 	return slices.ContainsFunc(v, func(x Notification) bool { return x.unknownEnum() })
 }
 
+// Paginate defines a model
+type Paginate string
+
+const (
+	PaginateTrue  Paginate = "true"
+	PaginateFalse Paginate = "false"
+)
+
+// Valid indicates whether the value is a known member of the Paginate enum.
+func (e Paginate) Valid() bool {
+	switch e {
+	case PaginateTrue, PaginateFalse:
+		return true
+	default:
+		return false
+	}
+}
+
 // Party defines a model
 type Party struct {
 	Quest          PartyQuest `json:"quest"`
@@ -586,6 +1962,36 @@ type PinnedItem struct {
 
 // PinnedItems defines a model
 type PinnedItems []PinnedItem
+
+// PostChat defines a model
+type PostChat struct {
+	// Message The message to post
+	Message string `json:"message"`
+}
+
+// The type of item to buy.
+type PurchaseType string
+
+const (
+	PurchaseTypeGems                   PurchaseType = "gems"
+	PurchaseTypeEggs                   PurchaseType = "eggs"
+	PurchaseTypeHatchingPotions        PurchaseType = "hatchingPotions"
+	PurchaseTypePremiumHatchingPotions PurchaseType = "premiumHatchingPotions"
+	PurchaseTypeFood                   PurchaseType = "food"
+	PurchaseTypeQuests                 PurchaseType = "quests"
+	PurchaseTypeGear                   PurchaseType = "gear"
+	PurchaseTypePets                   PurchaseType = "pets"
+)
+
+// Valid indicates whether the value is a known member of the PurchaseType enum.
+func (e PurchaseType) Valid() bool {
+	switch e {
+	case PurchaseTypeGems, PurchaseTypeEggs, PurchaseTypeHatchingPotions, PurchaseTypePremiumHatchingPotions, PurchaseTypeFood, PurchaseTypeQuests, PurchaseTypeGear, PurchaseTypePets:
+		return true
+	default:
+		return false
+	}
+}
 
 // Purchased defines a model
 type Purchased struct {
@@ -657,6 +2063,14 @@ type Reminder struct {
 // Reminders defines a model
 type Reminders []Reminder
 
+// ReorderTags defines a model
+type ReorderTags struct {
+	// Id of the tag to move
+	TagID uuid.UUID `json:"tagId"`
+	// Position the tag is moving to
+	To float64 `json:"to"`
+}
+
 // RepeatWeekly defines a model
 type RepeatWeekly struct {
 	Monday    bool `json:"m"`
@@ -666,6 +2080,20 @@ type RepeatWeekly struct {
 	Friday    bool `json:"f"`
 	Saturday  bool `json:"s"`
 	Sunday    bool `json:"su"`
+}
+
+// ResetPassword defines a model
+type ResetPassword struct {
+	// The email address of the user
+	Email string `json:"email"`
+}
+
+// ResetPasswordSetNewOne defines a model
+type ResetPasswordSetNewOne struct {
+	// Password confirmation.
+	ConfirmPassword string `json:"confirmPassword"`
+	// The new password.
+	NewPassword string `json:"newPassword"`
 }
 
 // ScoreTaskResponse defines a model
@@ -702,6 +2130,65 @@ type ScoreTaskResponseData struct {
 	Training      Training `json:"training"`
 }
 
+// SeeNotifications defines a model
+type SeeNotifications struct {
+	// Required. Array of notification ID strings to mark as seen.
+	NotificationIDs []string `json:"notificationIds"`
+}
+
+// The type of item to sell.
+type SellType string
+
+const (
+	SellTypeEggs            SellType = "eggs"
+	SellTypeHatchingPotions SellType = "hatchingPotions"
+	SellTypeFood            SellType = "food"
+)
+
+// Valid indicates whether the value is a known member of the SellType enum.
+func (e SellType) Valid() bool {
+	switch e {
+	case SellTypeEggs, SellTypeHatchingPotions, SellTypeFood:
+		return true
+	default:
+		return false
+	}
+}
+
+// SendPrivateMessage defines a model
+type SendPrivateMessage struct {
+	// The message
+	Message string `json:"message"`
+	// The id of the user to contact
+	ToUserID uuid.UUID `json:"toUserId"`
+}
+
+// SetCustomDayStart defines a model
+type SetCustomDayStart struct {
+	// The hour number 0-23 for day to begin. If not supplied, will default to 0.
+	DayStart *float64 `json:"dayStart,omitzero"`
+}
+
+// A type of task to list.
+type SharedTaskListType string
+
+const (
+	SharedTaskListTypeHabits  SharedTaskListType = "habits"
+	SharedTaskListTypeDailys  SharedTaskListType = "dailys"
+	SharedTaskListTypeTodos   SharedTaskListType = "todos"
+	SharedTaskListTypeRewards SharedTaskListType = "rewards"
+)
+
+// Valid indicates whether the value is a known member of the SharedTaskListType enum.
+func (e SharedTaskListType) Valid() bool {
+	switch e {
+	case SharedTaskListTypeHabits, SharedTaskListTypeDailys, SharedTaskListTypeTodos, SharedTaskListTypeRewards:
+		return true
+	default:
+		return false
+	}
+}
+
 // A skill, by class. Mage: fireball (Burst of Flames), mpheal (Ethereal Surge), earth (Earthquake), frost (Chilling Frost). Warrior: smash (Brutal Smash), defensiveStance (Defensive Stance), valorousPresence (Valorous Presence), intimidate (Intimidating Gaze). Rogue: pickPocket (Pickpocket), backStab (Backstab), toolsOfTrade (Tools of the Trade), stealth (Stealth). Healer: heal (Healing Light), protectAura (Protective Aura), brightness (Searing Brightness), healAll (Blessing). Transformation items: snowball, spookySparkles, seafoam, shinySeed.
 type SpellID string
 
@@ -732,6 +2219,26 @@ const (
 func (e SpellID) Valid() bool {
 	switch e {
 	case SpellIDFireball, SpellIDMpheal, SpellIDEarth, SpellIDFrost, SpellIDSmash, SpellIDDefensiveStance, SpellIDValorousPresence, SpellIDIntimidate, SpellIDPickPocket, SpellIDBackStab, SpellIDToolsOfTrade, SpellIDStealth, SpellIDHeal, SpellIDProtectAura, SpellIDBrightness, SpellIDHealAll, SpellIDSnowball, SpellIDSpookySparkles, SpellIDSeafoam, SpellIDShinySeed:
+		return true
+	default:
+		return false
+	}
+}
+
+// Stat defines a model
+type Stat string
+
+const (
+	StatStr Stat = "str"
+	StatCon Stat = "con"
+	StatInt Stat = "int"
+	StatPer Stat = "per"
+)
+
+// Valid indicates whether the value is a known member of the Stat enum.
+func (e Stat) Valid() bool {
+	switch e {
+	case StatStr, StatCon, StatInt, StatPer:
 		return true
 	default:
 		return false
@@ -989,12 +2496,128 @@ type Training struct {
 	Con int     `json:"con"`
 }
 
+// TransferGems defines a model
+type TransferGems struct {
+	// The number of gems to send
+	GemAmount int `json:"gemAmount"`
+	// The message to the user
+	Message string `json:"message"`
+	// The user to send the gift to
+	ToUserID uuid.UUID `json:"toUserId"`
+}
+
 // UltimateGearSets defines a model
 type UltimateGearSets struct {
 	Warrior bool `json:"warrior"`
 	Rogue   bool `json:"rogue"`
 	Wizard  bool `json:"wizard"`
 	Healer  bool `json:"healer"`
+}
+
+// UpdateChallenge defines a model
+type UpdateChallenge struct {
+	// The new challenge description.
+	Description string `json:"description,omitzero"`
+	// The new full name of the challenge.
+	Name string `json:"name,omitzero"`
+	// The new challenge summary.
+	Summary string `json:"summary,omitzero"`
+}
+
+// UpdateEmail defines a model
+type UpdateEmail struct {
+	// The new email address.
+	NewEmail string `json:"newEmail"`
+	// The user password.
+	Password string `json:"password"`
+}
+
+// UpdatePassword defines a model
+type UpdatePassword struct {
+	// New password confirmation
+	ConfirmPassword string `json:"confirmPassword"`
+	// The new password
+	NewPassword string `json:"newPassword"`
+	// The old password
+	Password string `json:"password"`
+}
+
+// UpdateTask defines a model
+type UpdateTask struct {
+	// User's attribute to use, options are: "str", "int", "per", "con".
+	Attribute UpdateTaskAttribute `json:"attribute,omitzero"`
+	// Determines if a checklist will be displayed
+	CollapseChecklist *bool `json:"collapseChecklist,omitzero"`
+	// Due date to be shown in task list. Only valid for type "todo."
+	Date *struct{} `json:"date,omitzero"`
+	// Array of integers. Only valid for type "daily"
+	DaysOfMonth []int `json:"daysOfMonth"`
+	// Only valid for type "habit" If true, enables the "-" under "Directions/Action" for "Bad habits".
+	Down *bool `json:"down,omitzero"`
+	// Value of frequency must be "daily", the number of days until this daily task is available again.
+	EveryX *float64 `json:"everyX,omitzero"`
+	// Values "weekly" and "monthly" enable use of the "repeat" field. All frequency values enable use of the "everyX" field. Value "monthly" enables use of the "weeksOfMonth" and "daysOfMonth" fields. Frequency is only valid for type "daily".
+	Frequency UpdateTaskFrequency `json:"frequency,omitzero"`
+	// Extra notes
+	Notes string `json:"notes,omitzero"`
+	// Difficulty, options are 0.1, 1, 1.5, 2; equivalent of Trivial, Easy, Medium, Hard.
+	Priority *float64 `json:"priority,omitzero"`
+	// Array of reminders, each an object that must include: a UUID, startDate and time.
+	Reminders []string `json:"reminders,omitzero"`
+	// List of objects for days of the week, Days that are true will be repeated upon. Only valid for type "daily". Any days not specified will be marked as true. Days are: su, m, t, w, th, f, s. Value of frequency must be "weekly". For example, to skip repeats on Mon and Fri: "repeat":{"f":false,"m":false}
+	Repeat string `json:"repeat,omitzero"`
+	// Date when the task will first become available. Only valid for type "daily".
+	StartDate *struct{} `json:"startDate,omitzero"`
+	// Number of days that the task has consecutively been checked off. Only valid for type "daily",
+	Streak *float64 `json:"streak,omitzero"`
+	// The text to be displayed for the task
+	Text string `json:"text,omitzero"`
+	// Only valid for type "habit" If true, enables the "+" under "Directions/Action" for "Good habits".
+	Up *bool `json:"up,omitzero"`
+	// Only valid for type "reward." The cost in gold of the reward
+	Value *float64 `json:"value,omitzero"`
+	// Array of integers. Only valid for type "daily"
+	WeeksOfMonth []int `json:"weeksOfMonth"`
+}
+
+// User's attribute to use, options are: "str", "int", "per", "con".
+type UpdateTaskAttribute string
+
+const (
+	UpdateTaskAttributeStr UpdateTaskAttribute = "str"
+	UpdateTaskAttributeInt UpdateTaskAttribute = "int"
+	UpdateTaskAttributePer UpdateTaskAttribute = "per"
+	UpdateTaskAttributeCon UpdateTaskAttribute = "con"
+)
+
+// Valid indicates whether the value is a known member of the UpdateTaskAttribute enum.
+func (e UpdateTaskAttribute) Valid() bool {
+	switch e {
+	case UpdateTaskAttributeStr, UpdateTaskAttributeInt, UpdateTaskAttributePer, UpdateTaskAttributeCon:
+		return true
+	default:
+		return false
+	}
+}
+
+// Values "weekly" and "monthly" enable use of the "repeat" field. All frequency values enable use of the "everyX" field. Value "monthly" enables use of the "weeksOfMonth" and "daysOfMonth" fields. Frequency is only valid for type "daily".
+type UpdateTaskFrequency string
+
+const (
+	UpdateTaskFrequencyDaily   UpdateTaskFrequency = "daily"
+	UpdateTaskFrequencyWeekly  UpdateTaskFrequency = "weekly"
+	UpdateTaskFrequencyMonthly UpdateTaskFrequency = "monthly"
+	UpdateTaskFrequencyYearly  UpdateTaskFrequency = "yearly"
+)
+
+// Valid indicates whether the value is a known member of the UpdateTaskFrequency enum.
+func (e UpdateTaskFrequency) Valid() bool {
+	switch e {
+	case UpdateTaskFrequencyDaily, UpdateTaskFrequencyWeekly, UpdateTaskFrequencyMonthly, UpdateTaskFrequencyYearly:
+		return true
+	default:
+		return false
+	}
 }
 
 // User defines a model
@@ -1048,6 +2671,12 @@ type User struct {
 func (v *User) unknownEnum() bool {
 	return v.Data.unknownEnum() ||
 		v.Notifications.unknownEnum()
+}
+
+// UserAllocateBulk defines a model
+type UserAllocateBulk struct {
+	// Body parameter
+	Stats struct{} `json:"stats"`
 }
 
 // UserData defines a model
@@ -1713,5 +3342,46 @@ type UserDataPreferencesTasksActiveFilter struct {
 
 // UserDataProfile defines a model
 type UserDataProfile struct {
+	// The name of the tag to be added.
 	Name string `json:"name"`
+}
+
+// UserDelete defines a model
+type UserDelete struct {
+	// User's optional feedback explaining reasons for deletion
+	Feedback string `json:"feedback"`
+	// The user's password if the account uses local authentication, otherwise the localized word "DELETE"
+	Password string `json:"password"`
+}
+
+// UserPurchase defines a model
+type UserPurchase struct {
+	// Count of items to buy. Defaults to 1 and is ignored for items where quantity is irrelevant.
+	Quantity *int `json:"quantity,omitzero"`
+}
+
+// UserRegisterLocal defines a model
+type UserRegisterLocal struct {
+	// Password confirmation
+	ConfirmPassword string `json:"confirmPassword"`
+	// Email address of the new user
+	Email string `json:"email"`
+	// Password for the new user
+	Password string `json:"password"`
+	// Login name of the new user. Must be 1-36 characters, containing only a-z, 0-9, hyphens (-), or underscores (_).
+	Username string `json:"username"`
+}
+
+// UserUpdateWebhook defines a model
+type UserUpdateWebhook struct {
+	// If the webhook should be enabled
+	Enabled *bool `json:"enabled,omitzero"`
+	// A label to remind you what this webhook does
+	Label string `json:"label,omitzero"`
+	// The webhook's options. Will differ depending on type. The options are enumerated in the add webhook examples.
+	Options *struct{} `json:"options,omitzero"`
+	// The webhook's type.
+	Type AddWebhookType `json:"type,omitzero"`
+	// The webhook's URL
+	URL string `json:"url,omitzero"`
 }
