@@ -32,7 +32,8 @@ type GetUserParams struct {
 
 // ListTasksParams holds the query parameters for ListTasks.
 type ListTasksParams struct {
-	Type     Type
+	// Only return tasks of this type. Leave it out for all but completed To Do's.
+	Type     TaskListType
 	XAPIUser uuid.UUID
 }
 
@@ -48,7 +49,7 @@ type ScoreTaskParams struct {
 
 // CastParams holds the query parameters for Cast.
 type CastParams struct {
-	// The ID of the target task
+	// The ID of the party member or task to cast the skill on. Leave it out to cast it on the user or their party.
 	TargetID uuid.UUID
 	XAPIUser uuid.UUID
 }
@@ -122,6 +123,26 @@ type Approval struct {
 	Required  bool `json:"required"`
 	Approved  bool `json:"approved"`
 	Requested bool `json:"requested"`
+}
+
+// A character attribute: strength, intelligence, perception or constitution.
+type Attribute string
+
+const (
+	AttributeStrength     Attribute = "str"
+	AttributeIntelligence Attribute = "int"
+	AttributePerception   Attribute = "per"
+	AttributeConstitution Attribute = "con"
+)
+
+// Valid indicates whether the value is a known member of the Attribute enum.
+func (e Attribute) Valid() bool {
+	switch e {
+	case AttributeStrength, AttributeIntelligence, AttributePerception, AttributeConstitution:
+		return true
+	default:
+		return false
+	}
 }
 
 // Auth defines a model
@@ -218,7 +239,8 @@ type CastResponseData struct {
 // unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
 // records.
 func (v *CastResponseData) unknownEnum() bool {
-	return v.User.unknownEnum()
+	return v.User.unknownEnum() ||
+		v.Task.unknownEnum()
 }
 
 // Challenge defines a model
@@ -242,7 +264,7 @@ func (v *CronResponse) unknownEnum() bool {
 	return v.Notifications.unknownEnum()
 }
 
-// Direction defines a model
+// Which way to score a task: up, to check it off or for a positive habit, or down, for a negative habit or to uncheck it.
 type Direction string
 
 const (
@@ -272,11 +294,39 @@ type Drop struct {
 	Limited *bool  `json:"limited,omitzero"`
 }
 
-// Error defines a model
+// An error the server returns.
 type Error struct {
-	Success bool   `json:"success"`
-	Err     string `json:"error"`
+	// Always false.
+	Success bool `json:"success"`
+	// The kind of error.
+	Err ErrorType `json:"error"`
+	// What went wrong, such as "Not enough mana."
 	Message string `json:"message"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *Error) unknownEnum() bool {
+	return v.Err != "" && !v.Err.Valid()
+}
+
+// The kind of error.
+type ErrorType string
+
+const (
+	ErrorTypeBadRequest    ErrorType = "BadRequest"
+	ErrorTypeNotAuthorized ErrorType = "NotAuthorized"
+	ErrorTypeNotFound      ErrorType = "NotFound"
+)
+
+// Valid indicates whether the value is a known member of the ErrorType enum.
+func (e ErrorType) Valid() bool {
+	switch e {
+	case ErrorTypeBadRequest, ErrorTypeNotAuthorized, ErrorTypeNotFound:
+		return true
+	default:
+		return false
+	}
 }
 
 // Flags defines a model
@@ -368,6 +418,26 @@ type FlagsTutorialIos struct {
 	GroupPets   bool `json:"groupPets"`
 	InviteParty bool `json:"inviteParty"`
 	ReorderTask bool `json:"reorderTask"`
+}
+
+// How often a daily repeats. Weekly and monthly use repeat; every one uses everyX; monthly uses weeksOfMonth and daysOfMonth.
+type Frequency string
+
+const (
+	FrequencyDaily   Frequency = "daily"
+	FrequencyWeekly  Frequency = "weekly"
+	FrequencyMonthly Frequency = "monthly"
+	FrequencyYearly  Frequency = "yearly"
+)
+
+// Valid indicates whether the value is a known member of the Frequency enum.
+func (e Frequency) Valid() bool {
+	switch e {
+	case FrequencyDaily, FrequencyWeekly, FrequencyMonthly, FrequencyYearly:
+		return true
+	default:
+		return false
+	}
 }
 
 // Group defines a model
@@ -632,7 +702,7 @@ type ScoreTaskResponseData struct {
 	Training      Training `json:"training"`
 }
 
-// SpellID defines a model
+// A skill, by class. Mage: fireball (Burst of Flames), mpheal (Ethereal Surge), earth (Earthquake), frost (Chilling Frost). Warrior: smash (Brutal Smash), defensiveStance (Defensive Stance), valorousPresence (Valorous Presence), intimidate (Intimidating Gaze). Rogue: pickPocket (Pickpocket), backStab (Backstab), toolsOfTrade (Tools of the Trade), stealth (Stealth). Healer: heal (Healing Light), protectAura (Protective Aura), brightness (Searing Brightness), healAll (Blessing). Transformation items: snowball, spookySparkles, seafoam, shinySeed.
 type SpellID string
 
 const (
@@ -718,56 +788,85 @@ type Task struct {
 	// The ID of the task.
 	UnderscoreID uuid.UUID `json:"_id"`
 	// The ID of the user who owns the tasks.
-	UserID            uuid.UUID    `json:"userId"`
-	Text              string       `json:"text"`
-	Alias             string       `json:"alias,omitzero"`
-	Type              string       `json:"type"`
-	Notes             string       `json:"notes"`
-	Tags              []uuid.UUID  `json:"tags"`
-	Value             float64      `json:"value"`
-	Priority          float64      `json:"priority"`
-	Attribute         string       `json:"attribute"`
-	Challenge         Challenge    `json:"challenge"`
-	Group             Group        `json:"group"`
-	Reminders         Reminders    `json:"reminders"`
-	CreatedAt         time.Time    `json:"createdAt"`
-	UpdatedAt         time.Time    `json:"updatedAt"`
-	History           TaskHistory  `json:"history,omitzero"`
-	Down              *bool        `json:"down,omitzero"`
-	Up                *bool        `json:"up,omitzero"`
-	ID                uuid.UUID    `json:"id"`
-	CounterUp         *int         `json:"counterUp,omitzero"`
-	CounterDown       *int         `json:"counterDown,omitzero"`
-	Frequency         string       `json:"frequency,omitzero"`
-	ByHabitica        *bool        `json:"byHabitica,omitzero"`
-	Repeat            RepeatWeekly `json:"repeat,omitzero"`
-	EveryX            *int         `json:"everyX,omitzero"`
-	Streak            *int         `json:"streak,omitzero"`
-	NextDue           []time.Time  `json:"nextDue,omitzero"`
-	YesterDaily       *bool        `json:"yesterDaily,omitzero"`
-	Completed         *bool        `json:"completed,omitzero"`
-	CollapseChecklist *bool        `json:"collapseChecklist,omitzero"`
-	StartDate         time.Time    `json:"startDate,omitzero"`
-	DaysOfMonth       []int        `json:"daysOfMonth,omitzero"`
-	WeeksOfMonth      []struct{}   `json:"weeksOfMonth,omitzero"`
-	Checklist         []struct{}   `json:"checklist,omitzero"`
-	IsDue             *bool        `json:"isDue,omitzero"`
-	Date              time.Time    `json:"date,omitzero"`
-	Delta             *float64     `json:"delta,omitzero"`
-	UnderscoreTmp     Tmp          `json:"_tmp,omitzero"`
-	Hp                *int         `json:"hp,omitzero"`
-	Mp                *float64     `json:"mp,omitzero"`
-	Exp               *float64     `json:"exp,omitzero"`
-	Gp                *float64     `json:"gp,omitzero"`
-	Lvl               *int         `json:"lvl,omitzero"`
-	Class             string       `json:"class,omitzero"`
-	Points            *int         `json:"points,omitzero"`
-	Str               *int         `json:"str,omitzero"`
-	Con               *int         `json:"con,omitzero"`
-	Int               *int         `json:"int,omitzero"`
-	Per               *int         `json:"per,omitzero"`
-	Buffs             Buffs        `json:"buffs,omitzero"`
-	Training          Training     `json:"training,omitzero"`
+	UserID uuid.UUID `json:"userId"`
+	// The text shown for the task.
+	Text string `json:"text"`
+	// The task's alias, which may stand in for its ID.
+	Alias string `json:"alias,omitzero"`
+	// The type of a task.
+	Type TaskType `json:"type"`
+	// Extra notes.
+	Notes string `json:"notes"`
+	// The IDs of the task's tags.
+	Tags []uuid.UUID `json:"tags"`
+	// The task's value; of a reward, its cost in gold.
+	Value float64 `json:"value"`
+	// The difficulty: 0.1, 1, 1.5 or 2, for trivial, easy, medium or hard.
+	Priority float64 `json:"priority"`
+	// The attribute the task trains.
+	Attribute Attribute `json:"attribute"`
+	Challenge Challenge `json:"challenge"`
+	Group     Group     `json:"group"`
+	// The reminders.
+	Reminders Reminders   `json:"reminders"`
+	CreatedAt time.Time   `json:"createdAt"`
+	UpdatedAt time.Time   `json:"updatedAt"`
+	History   TaskHistory `json:"history,omitzero"`
+	// Whether a habit can be scored down, as a bad habit.
+	Down *bool `json:"down,omitzero"`
+	// Whether a habit can be scored up, as a good habit.
+	Up          *bool     `json:"up,omitzero"`
+	ID          uuid.UUID `json:"id"`
+	CounterUp   *int      `json:"counterUp,omitzero"`
+	CounterDown *int      `json:"counterDown,omitzero"`
+	// How often a daily repeats.
+	Frequency  Frequency `json:"frequency,omitzero"`
+	ByHabitica *bool     `json:"byHabitica,omitzero"`
+	// The days of the week a weekly daily repeats on.
+	Repeat RepeatWeekly `json:"repeat,omitzero"`
+	// How many periods of its frequency pass before a daily is due again.
+	EveryX *int `json:"everyX,omitzero"`
+	// How many days in a row a daily has been checked off.
+	Streak      *int        `json:"streak,omitzero"`
+	NextDue     []time.Time `json:"nextDue,omitzero"`
+	YesterDaily *bool       `json:"yesterDaily,omitzero"`
+	Completed   *bool       `json:"completed,omitzero"`
+	// Whether the checklist is collapsed.
+	CollapseChecklist *bool `json:"collapseChecklist,omitzero"`
+	// When a daily first becomes due.
+	StartDate time.Time `json:"startDate,omitzero"`
+	// The days of the month a monthly daily is due on.
+	DaysOfMonth []int `json:"daysOfMonth,omitzero"`
+	// The weeks of the month a monthly daily is due in.
+	WeeksOfMonth []struct{} `json:"weeksOfMonth,omitzero"`
+	// The checklist items.
+	Checklist []struct{} `json:"checklist,omitzero"`
+	IsDue     *bool      `json:"isDue,omitzero"`
+	// The due date of a To Do.
+	Date          time.Time `json:"date,omitzero"`
+	Delta         *float64  `json:"delta,omitzero"`
+	UnderscoreTmp Tmp       `json:"_tmp,omitzero"`
+	Hp            *int      `json:"hp,omitzero"`
+	Mp            *float64  `json:"mp,omitzero"`
+	Exp           *float64  `json:"exp,omitzero"`
+	Gp            *float64  `json:"gp,omitzero"`
+	Lvl           *int      `json:"lvl,omitzero"`
+	Class         string    `json:"class,omitzero"`
+	Points        *int      `json:"points,omitzero"`
+	Str           *int      `json:"str,omitzero"`
+	Con           *int      `json:"con,omitzero"`
+	Int           *int      `json:"int,omitzero"`
+	Per           *int      `json:"per,omitzero"`
+	Buffs         Buffs     `json:"buffs,omitzero"`
+	Training      Training  `json:"training,omitzero"`
+}
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v *Task) unknownEnum() bool {
+	return v.Type != "" && !v.Type.Valid() ||
+		v.Attribute != "" && !v.Attribute.Valid() ||
+		v.Frequency != "" && !v.Frequency.Valid()
 }
 
 // TaskActivity defines a model
@@ -783,6 +882,27 @@ type TaskActivity struct {
 // TaskHistory defines a model
 type TaskHistory []TaskActivity
 
+// A type of task to list. Completed To Do's are only the 30 most recently completed.
+type TaskListType string
+
+const (
+	TaskListTypeHabits         TaskListType = "habits"
+	TaskListTypeDailies        TaskListType = "dailys"
+	TaskListTypeTodos          TaskListType = "todos"
+	TaskListTypeRewards        TaskListType = "rewards"
+	TaskListTypeCompletedTodos TaskListType = "completedTodos"
+)
+
+// Valid indicates whether the value is a known member of the TaskListType enum.
+func (e TaskListType) Valid() bool {
+	switch e {
+	case TaskListTypeHabits, TaskListTypeDailies, TaskListTypeTodos, TaskListTypeRewards, TaskListTypeCompletedTodos:
+		return true
+	default:
+		return false
+	}
+}
+
 // TaskResponse defines a model
 type TaskResponse struct {
 	Success       bool          `json:"success"`
@@ -795,11 +915,38 @@ type TaskResponse struct {
 // unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
 // records.
 func (v *TaskResponse) unknownEnum() bool {
-	return v.Notifications.unknownEnum()
+	return v.Data.unknownEnum() ||
+		v.Notifications.unknownEnum()
+}
+
+// The type of a task.
+type TaskType string
+
+const (
+	TaskTypeHabit  TaskType = "habit"
+	TaskTypeDaily  TaskType = "daily"
+	TaskTypeTodo   TaskType = "todo"
+	TaskTypeReward TaskType = "reward"
+)
+
+// Valid indicates whether the value is a known member of the TaskType enum.
+func (e TaskType) Valid() bool {
+	switch e {
+	case TaskTypeHabit, TaskTypeDaily, TaskTypeTodo, TaskTypeReward:
+		return true
+	default:
+		return false
+	}
 }
 
 // Tasks defines a model
 type Tasks []Task
+
+// unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
+// records.
+func (v Tasks) unknownEnum() bool {
+	return slices.ContainsFunc(v, func(x Task) bool { return x.unknownEnum() })
+}
 
 // TasksOrder defines a model
 type TasksOrder struct {
@@ -821,7 +968,8 @@ type TasksResponse struct {
 // unknownEnum reports whether v holds a value of an enum the specification does not list, a response debug mode
 // records.
 func (v *TasksResponse) unknownEnum() bool {
-	return v.Notifications.unknownEnum()
+	return v.Data.unknownEnum() ||
+		v.Notifications.unknownEnum()
 }
 
 // Tmp defines a model
@@ -839,27 +987,6 @@ type Training struct {
 	Per int     `json:"per"`
 	Str float64 `json:"str"`
 	Con int     `json:"con"`
-}
-
-// Type defines a model
-type Type string
-
-const (
-	TypeHabits         Type = "habits"
-	TypeDailys         Type = "dailys"
-	TypeTodos          Type = "todos"
-	TypeRewards        Type = "rewards"
-	TypeCompletedTodos Type = "completedTodos"
-)
-
-// Valid indicates whether the value is a known member of the Type enum.
-func (e Type) Valid() bool {
-	switch e {
-	case TypeHabits, TypeDailys, TypeTodos, TypeRewards, TypeCompletedTodos:
-		return true
-	default:
-		return false
-	}
 }
 
 // UltimateGearSets defines a model

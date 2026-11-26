@@ -10,6 +10,16 @@ import (
 
 // TestEnums_Valid checks that every member of an enum is valid, and that a value of its type none is, is not.
 func TestEnums_Valid(t *testing.T) {
+	for _, v := range []Attribute{AttributeStrength, AttributeIntelligence, AttributePerception, AttributeConstitution} {
+		if !v.Valid() {
+			t.Errorf("Attribute %v: not valid", v)
+		}
+	}
+
+	if Attribute("not a member").Valid() {
+		t.Errorf("Attribute(%v): valid, though no member", "not a member")
+	}
+
 	for _, v := range []Direction{DirectionUp, DirectionDown} {
 		if !v.Valid() {
 			t.Errorf("Direction %v: not valid", v)
@@ -18,6 +28,26 @@ func TestEnums_Valid(t *testing.T) {
 
 	if Direction("not a member").Valid() {
 		t.Errorf("Direction(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []ErrorType{ErrorTypeBadRequest, ErrorTypeNotAuthorized, ErrorTypeNotFound} {
+		if !v.Valid() {
+			t.Errorf("ErrorType %v: not valid", v)
+		}
+	}
+
+	if ErrorType("not a member").Valid() {
+		t.Errorf("ErrorType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []Frequency{FrequencyDaily, FrequencyWeekly, FrequencyMonthly, FrequencyYearly} {
+		if !v.Valid() {
+			t.Errorf("Frequency %v: not valid", v)
+		}
+	}
+
+	if Frequency("not a member").Valid() {
+		t.Errorf("Frequency(%v): valid, though no member", "not a member")
 	}
 
 	for _, v := range []NotificationType{NotificationTypeItemReceived} {
@@ -40,13 +70,23 @@ func TestEnums_Valid(t *testing.T) {
 		t.Errorf("SpellID(%v): valid, though no member", "not a member")
 	}
 
-	for _, v := range []Type{TypeHabits, TypeDailys, TypeTodos, TypeRewards, TypeCompletedTodos} {
+	for _, v := range []TaskListType{TaskListTypeHabits, TaskListTypeDailies, TaskListTypeTodos, TaskListTypeRewards, TaskListTypeCompletedTodos} {
 		if !v.Valid() {
-			t.Errorf("Type %v: not valid", v)
+			t.Errorf("TaskListType %v: not valid", v)
 		}
 	}
 
-	if Type("not a member").Valid() {
-		t.Errorf("Type(%v): valid, though no member", "not a member")
+	if TaskListType("not a member").Valid() {
+		t.Errorf("TaskListType(%v): valid, though no member", "not a member")
+	}
+
+	for _, v := range []TaskType{TaskTypeHabit, TaskTypeDaily, TaskTypeTodo, TaskTypeReward} {
+		if !v.Valid() {
+			t.Errorf("TaskType %v: not valid", v)
+		}
+	}
+
+	if TaskType("not a member").Valid() {
+		t.Errorf("TaskType(%v): valid, though no member", "not a member")
 	}
 }

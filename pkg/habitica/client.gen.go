@@ -180,7 +180,9 @@ func (c *Client) GetUser(ctx context.Context, params GetUserParams) (*User, erro
 	}
 }
 
-// GET /tasks/user
+// Returns the user's tasks of every type but completed To Do's, which must be requested on their own.
+//
+//	GET /tasks/user
 func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TasksResponse, error) {
 	u := c.baseURL.JoinPath("tasks", "user")
 
@@ -237,7 +239,7 @@ func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TasksR
 		default:
 			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
 		}
-	case http.StatusBadRequest:
+	case http.StatusBadRequest, http.StatusUnauthorized:
 		// An error returned by the server, e.g. Not Found
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
@@ -245,6 +247,13 @@ func (c *Client) ListTasks(ctx context.Context, params ListTasksParams) (*TasksR
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
 					return nil, err
+				}
+			}
+
+			// a value of an enum the specification does not list decodes, but is news
+			if ia != nil && out.unknownEnum() {
+				if err := c.keep(ia); err != nil {
+					return nil, fmt.Errorf("recording the call: %w", err)
 				}
 			}
 
@@ -320,12 +329,34 @@ func (c *Client) GetTaskByID(ctx context.Context, taskID uuid.UUID, params GetTa
 		default:
 			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
 		}
+	case http.StatusNotFound:
+		// An error returned by the server, e.g. Not Found
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out Error
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
+				}
+			}
+
+			// a value of an enum the specification does not list decodes, but is news
+			if ia != nil && out.unknownEnum() {
+				if err := c.keep(ia); err != nil {
+					return nil, fmt.Errorf("recording the call: %w", err)
+				}
+			}
+
+			return nil, api.NewErrCustom(rsp, &out)
+		default:
+			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
+		}
 	default:
 		return nil, c.failed(ia, api.NewErrUnknownStatusCode(rsp))
 	}
 }
 
-// Score a task
+// Returns the user's stats after scoring, with the delta of the task's value and any item dropped.
 //
 //	POST /tasks/{taskId}/score/{direction}
 func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Direction, params ScoreTaskParams) (*ScoreTaskResponse, error) {
@@ -386,6 +417,13 @@ func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Dire
 				}
 			}
 
+			// a value of an enum the specification does not list decodes, but is news
+			if ia != nil && out.unknownEnum() {
+				if err := c.keep(ia); err != nil {
+					return nil, fmt.Errorf("recording the call: %w", err)
+				}
+			}
+
 			return nil, api.NewErrCustom(rsp, &out)
 		default:
 			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
@@ -395,7 +433,7 @@ func (c *Client) ScoreTask(ctx context.Context, taskID uuid.UUID, direction Dire
 	}
 }
 
-// Cast a skill (spell) on a target
+// Casts a skill of the user's class, or uses a transformation item, on the user, their party, a party member or a task. Returns the targets it changed; of a party member, only the fields needed. The user is always returned.
 //
 //	POST /user/class/cast/{spellId}
 func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (*CastResponse, error) {
@@ -454,7 +492,7 @@ func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (
 		default:
 			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
 		}
-	case http.StatusUnauthorized:
+	case http.StatusBadRequest, http.StatusUnauthorized, http.StatusNotFound:
 		// An error returned by the server, e.g. Not Found
 		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
 		case "application/json":
@@ -462,6 +500,13 @@ func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (
 			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
 				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
 					return nil, err
+				}
+			}
+
+			// a value of an enum the specification does not list decodes, but is news
+			if ia != nil && out.unknownEnum() {
+				if err := c.keep(ia); err != nil {
+					return nil, fmt.Errorf("recording the call: %w", err)
 				}
 			}
 
@@ -474,7 +519,9 @@ func (c *Client) Cast(ctx context.Context, spellID SpellID, params CastParams) (
 	}
 }
 
-// POST /user/buy-health-potion
+// Buy a health potion
+//
+//	POST /user/buy-health-potion
 func (c *Client) BuyHealthPotion(ctx context.Context, params BuyHealthPotionParams) (*BuyHealthPotionResponse, error) {
 	u := c.baseURL.JoinPath("user", "buy-health-potion")
 	req := (&http.Request{
@@ -519,6 +566,28 @@ func (c *Client) BuyHealthPotion(ctx context.Context, params BuyHealthPotionPara
 			}
 
 			return &out, nil
+		default:
+			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
+		}
+	case http.StatusBadRequest:
+		// An error returned by the server, e.g. Not Found
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out Error
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
+				}
+			}
+
+			// a value of an enum the specification does not list decodes, but is news
+			if ia != nil && out.unknownEnum() {
+				if err := c.keep(ia); err != nil {
+					return nil, fmt.Errorf("recording the call: %w", err)
+				}
+			}
+
+			return nil, api.NewErrCustom(rsp, &out)
 		default:
 			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
 		}
@@ -637,7 +706,7 @@ func (c *Client) ListTags(ctx context.Context, params ListTagsParams) (*TagsResp
 	}
 }
 
-// Add a tag to a task
+// Returns the updated task.
 //
 //	POST /tasks/{taskId}/tags/{tagId}
 func (c *Client) AddTagToTask(ctx context.Context, taskID uuid.UUID, tagID uuid.UUID, params AddTagToTaskParams) (*TaskResponse, error) {
@@ -684,6 +753,28 @@ func (c *Client) AddTagToTask(ctx context.Context, taskID uuid.UUID, tagID uuid.
 			}
 
 			return &out, nil
+		default:
+			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
+		}
+	case http.StatusBadRequest, http.StatusNotFound:
+		// An error returned by the server, e.g. Not Found
+		switch mt, _, _ := strings.Cut(rsp.Header.Get("Content-Type"), ";"); mt {
+		case "application/json":
+			var out Error
+			if err := json.UnmarshalRead(rsp.Body, &out, jsonOpts); err != nil {
+				if err := api.DecodeLenient(rsp, err, ia, cmp.Or(c.debugFile, defaultDebugFile), &out, jsonOpts); err != nil {
+					return nil, err
+				}
+			}
+
+			// a value of an enum the specification does not list decodes, but is news
+			if ia != nil && out.unknownEnum() {
+				if err := c.keep(ia); err != nil {
+					return nil, fmt.Errorf("recording the call: %w", err)
+				}
+			}
+
+			return nil, api.NewErrCustom(rsp, &out)
 		default:
 			return nil, c.failed(ia, api.NewErrUnknownContentType(rsp))
 		}

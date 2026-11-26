@@ -49,12 +49,17 @@
         }
       ],
       "get": {
+        "summary": "Get a user's tasks",
+        "description": "Returns the user's tasks of every type but completed To Do's, which must be requested on their own.",
         "operationId": "ListTasks",
         "responses": {
           "200": {
             "$ref": "#/components/responses/TasksResponse"
           },
           "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
             "$ref": "#/components/responses/Error"
           },
           "502": {
@@ -84,6 +89,9 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/TaskResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -108,6 +116,7 @@
       ],
       "post": {
         "summary": "Score a task",
+        "description": "Returns the user's stats after scoring, with the delta of the task's value and any item dropped.",
         "operationId": "ScoreTask",
         "responses": {
           "200": {
@@ -138,13 +147,20 @@
         }
       ],
       "post": {
-        "description": "Cast a skill (spell) on a target",
+        "summary": "Cast a skill (spell) on a target",
+        "description": "Casts a skill of the user's class, or uses a transformation item, on the user, their party, a party member or a task. Returns the targets it changed; of a party member, only the fields needed. The user is always returned.",
         "operationId": "Cast",
         "responses": {
           "200": {
             "$ref": "#/components/responses/Cast"
           },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
           "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
             "$ref": "#/components/responses/Error"
           }
         }
@@ -163,10 +179,14 @@
         }
       ],
       "post": {
+        "summary": "Buy a health potion",
         "operationId": "BuyHealthPotion",
         "responses": {
           "200": {
             "$ref": "#/components/responses/BuyHealthPotion"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -236,10 +256,17 @@
       ],
       "post": {
         "summary": "Add a tag to a task",
+        "description": "Returns the updated task.",
         "operationId": "AddTagToTask",
         "responses": {
           "200": {
             "$ref": "#/components/responses/TaskResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -461,6 +488,23 @@
           "required",
           "approved",
           "requested"
+        ]
+      },
+      "Attribute": {
+        "description": "A character attribute: strength, intelligence, perception or constitution.",
+        "type": "string",
+        "enum": [
+          "str",
+          "int",
+          "per",
+          "con"
+        ],
+        "example": "str",
+        "x-enum-varnames": [
+          "Strength",
+          "Intelligence",
+          "Perception",
+          "Constitution"
         ]
       },
       "Auth": {
@@ -783,6 +827,7 @@
         ]
       },
       "Direction": {
+        "description": "Which way to score a task: up, to check it off or for a positive habit, or down, for a negative habit or to uncheck it.",
         "type": "string",
         "enum": [
           "up",
@@ -833,17 +878,19 @@
         ]
       },
       "Error": {
+        "description": "An error the server returns.",
         "type": "object",
         "properties": {
           "success": {
+            "description": "Always false.",
             "type": "boolean",
             "example": false
           },
           "error": {
-            "type": "string",
-            "example": "NotAuthorized"
+            "$ref": "#/components/schemas/ErrorType"
           },
           "message": {
+            "description": "What went wrong, such as \"Not enough mana.\"",
             "type": "string",
             "example": "Not enough mana."
           }
@@ -853,6 +900,16 @@
           "error",
           "message"
         ]
+      },
+      "ErrorType": {
+        "description": "The kind of error.",
+        "type": "string",
+        "enum": [
+          "BadRequest",
+          "NotAuthorized",
+          "NotFound"
+        ],
+        "example": "NotFound"
       },
       "Flags": {
         "type": "object",
@@ -1228,6 +1285,17 @@
           "inviteParty",
           "reorderTask"
         ]
+      },
+      "Frequency": {
+        "description": "How often a daily repeats. Weekly and monthly use repeat; every one uses everyX; monthly uses weeksOfMonth and daysOfMonth.",
+        "type": "string",
+        "enum": [
+          "daily",
+          "weekly",
+          "monthly",
+          "yearly"
+        ],
+        "example": "weekly"
       },
       "Group": {
         "type": "object",
@@ -2028,6 +2096,7 @@
         ]
       },
       "SpellID": {
+        "description": "A skill, by class. Mage: fireball (Burst of Flames), mpheal (Ethereal Surge), earth (Earthquake), frost (Chilling Frost). Warrior: smash (Brutal Smash), defensiveStance (Defensive Stance), valorousPresence (Valorous Presence), intimidate (Intimidating Gaze). Rogue: pickPocket (Pickpocket), backStab (Backstab), toolsOfTrade (Tools of the Trade), stealth (Stealth). Healer: heal (Healing Light), protectAura (Protective Aura), brightness (Searing Brightness), healAll (Blessing). Transformation items: snowball, spookySparkles, seafoam, shinySeed.",
         "type": "string",
         "enum": [
           "fireball",
@@ -2210,22 +2279,25 @@
             "example": "b0413351-405f-416f-8787-947ec1c85199"
           },
           "text": {
+            "description": "The text shown for the task.",
             "type": "string",
             "example": "Eating Healthy"
           },
           "alias": {
+            "description": "The task's alias, which may stand in for its ID.",
             "type": "string",
             "example": "prac31"
           },
           "type": {
-            "type": "string",
-            "example": "habit"
+            "$ref": "#/components/schemas/TaskType"
           },
           "notes": {
+            "description": "Extra notes.",
             "type": "string",
             "example": ""
           },
           "tags": {
+            "description": "The IDs of the task's tags.",
             "type": "array",
             "items": {
               "type": "string",
@@ -2234,18 +2306,20 @@
             }
           },
           "value": {
+            "description": "The task's value; of a reward, its cost in gold.",
             "type": "number",
             "format": "double",
             "example": 29.599561531838347
           },
           "priority": {
+            "description": "The difficulty: 0.1, 1, 1.5 or 2, for trivial, easy, medium or hard.",
             "type": "number",
             "format": "double",
             "example": 1.5
           },
           "attribute": {
-            "type": "string",
-            "example": "str"
+            "description": "The attribute the task trains.",
+            "$ref": "#/components/schemas/Attribute"
           },
           "challenge": {
             "$ref": "#/components/schemas/Challenge"
@@ -2254,6 +2328,7 @@
             "$ref": "#/components/schemas/Group"
           },
           "reminders": {
+            "description": "The reminders.",
             "$ref": "#/components/schemas/Reminders"
           },
           "createdAt": {
@@ -2270,10 +2345,12 @@
             "$ref": "#/components/schemas/TaskHistory"
           },
           "down": {
+            "description": "Whether a habit can be scored down, as a bad habit.",
             "type": "boolean",
             "example": true
           },
           "up": {
+            "description": "Whether a habit can be scored up, as a good habit.",
             "type": "boolean",
             "example": true
           },
@@ -2291,21 +2368,24 @@
             "example": 0
           },
           "frequency": {
-            "type": "string",
-            "example": "daily"
+            "description": "How often a daily repeats.",
+            "$ref": "#/components/schemas/Frequency"
           },
           "byHabitica": {
             "type": "boolean",
             "example": false
           },
           "repeat": {
+            "description": "The days of the week a weekly daily repeats on.",
             "$ref": "#/components/schemas/RepeatWeekly"
           },
           "everyX": {
+            "description": "How many periods of its frequency pass before a daily is due again.",
             "type": "integer",
             "example": 1
           },
           "streak": {
+            "description": "How many days in a row a daily has been checked off.",
             "type": "integer",
             "example": 1194
           },
@@ -2326,15 +2406,18 @@
             "example": false
           },
           "collapseChecklist": {
+            "description": "Whether the checklist is collapsed.",
             "type": "boolean",
             "example": false
           },
           "startDate": {
+            "description": "When a daily first becomes due.",
             "type": "string",
             "format": "date-time",
             "example": "2021-07-17T22:00:00.000Z"
           },
           "daysOfMonth": {
+            "description": "The days of the month a monthly daily is due on.",
             "type": "array",
             "items": {
               "type": "integer",
@@ -2342,12 +2425,14 @@
             }
           },
           "weeksOfMonth": {
+            "description": "The weeks of the month a monthly daily is due in.",
             "type": "array",
             "items": {
               "type": "object"
             }
           },
           "checklist": {
+            "description": "The checklist items.",
             "type": "array",
             "items": {
               "type": "object"
@@ -2358,6 +2443,7 @@
             "example": true
           },
           "date": {
+            "description": "The due date of a To Do.",
             "type": "string",
             "format": "date-time",
             "example": "2021-09-26T00:13:00.000Z"
@@ -2483,6 +2569,25 @@
           "$ref": "#/components/schemas/TaskActivity"
         }
       },
+      "TaskListType": {
+        "description": "A type of task to list. Completed To Do's are only the 30 most recently completed.",
+        "type": "string",
+        "enum": [
+          "habits",
+          "dailys",
+          "todos",
+          "rewards",
+          "completedTodos"
+        ],
+        "example": "habits",
+        "x-enum-varnames": [
+          "Habits",
+          "Dailies",
+          "Todos",
+          "Rewards",
+          "CompletedTodos"
+        ]
+      },
       "TaskResponse": {
         "type": "object",
         "properties": {
@@ -2510,6 +2615,17 @@
           "data",
           "notifications"
         ]
+      },
+      "TaskType": {
+        "description": "The type of a task.",
+        "type": "string",
+        "enum": [
+          "habit",
+          "daily",
+          "todo",
+          "reward"
+        ],
+        "example": "daily"
       },
       "Tasks": {
         "type": "array",
@@ -2644,17 +2760,6 @@
           "str",
           "con"
         ]
-      },
-      "Type": {
-        "type": "string",
-        "enum": [
-          "habits",
-          "dailys",
-          "todos",
-          "rewards",
-          "completedTodos"
-        ],
-        "example": "habits"
       },
       "UltimateGearSets": {
         "type": "object",
@@ -5983,7 +6088,7 @@
       "spellId": {
         "name": "spellId",
         "in": "path",
-        "description": "The name of the spell or skill",
+        "description": "The skill to cast.",
         "required": true,
         "schema": {
           "$ref": "#/components/schemas/SpellID"
@@ -5992,6 +6097,7 @@
       "tagId": {
         "name": "tagId",
         "in": "path",
+        "description": "The ID of the tag.",
         "required": true,
         "schema": {
           "type": "string",
@@ -6001,7 +6107,7 @@
       "targetId": {
         "name": "targetId",
         "in": "query",
-        "description": "The ID of the target task",
+        "description": "The ID of the party member or task to cast the skill on. Leave it out to cast it on the user or their party.",
         "schema": {
           "type": "string",
           "format": "uuid",
@@ -6011,7 +6117,7 @@
       "taskId": {
         "name": "taskId",
         "in": "path",
-        "description": "The task id or alias",
+        "description": "The task's ID or alias.",
         "required": true,
         "schema": {
           "type": "string",
@@ -6021,8 +6127,9 @@
       "type": {
         "name": "type",
         "in": "query",
+        "description": "Only return tasks of this type. Leave it out for all but completed To Do's.",
         "schema": {
-          "$ref": "#/components/schemas/Type"
+          "$ref": "#/components/schemas/TaskListType"
         }
       }
     }
