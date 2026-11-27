@@ -10,9 +10,9 @@ tool (
 )
 
 require (
-	github.com/MarkRosemaker/cassette v0.0.0-20261127155824-197919b5429c
-	github.com/MarkRosemaker/jsonutil v0.0.0-20261127154739-135cbaefd886
-	github.com/go-api-libs/api v0.0.0-20261127155855-e5b9ff99e44b
+	github.com/MarkRosemaker/cassette v0.0.0-20261127170207-3afd4a75907a
+	github.com/MarkRosemaker/jsonutil v0.0.0-20261127170131-4c1915dbe001
+	github.com/go-api-libs/api v0.0.0-20261127170236-f953c19a178c
 	github.com/go-api-libs/types v0.0.0-20261127001931-55d1cb77be3b
 )
 
